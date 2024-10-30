@@ -2,6 +2,7 @@
 A simple to use website to track various aspects about a TTRPG campaign as a player/Party.  Including Party Members, Currency, Dates (In World and Actual), Magic Items (Permanent and Consumable), vehicles, and hirelings.
 
 ## Installation
+To quickly get started with this use
 ```bash
 docker build .
 docker-compose run web bash
@@ -9,6 +10,7 @@ python manage.py migrate
 python manage.py createsuperuser
 exit
 ```
+For Better Security you will need to create the environmental Variables.  Copy the .env.example, rename it to .env, and edit the default values to your liking.  Then run the commands above.
 
 ## Getting Started
 To Start the site run
