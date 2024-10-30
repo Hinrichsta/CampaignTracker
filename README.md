@@ -3,10 +3,11 @@ A simple to use website to track various aspects about a TTRPG campaign as a pla
 
 ## Installation
 ```bash
-docker-build .
-docker-compose run django bash
+docker build .
+docker-compose run web bash
 python manage.py migrate
 python manage.py createsuperuser
+exit
 ```
 
 ## Getting Started
