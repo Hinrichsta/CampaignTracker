@@ -19,7 +19,7 @@ class Receivable(models.Model):
     gp = models.IntegerField()
     sp = models.IntegerField()
     cp = models.IntegerField()
-    payer = models.ForeignKey(Party, on_delete=models.CASCADE, null=True, blank=True)
+    payer = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -33,7 +33,7 @@ class Payable(models.Model):
     sp = models.IntegerField()
     cp = models.IntegerField()
     payee = models.CharField(max_length=255)
-    payer = models.ForeignKey(Party, on_delete=models.CASCADE, null=True, blank=True)
+    payer = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -87,14 +87,14 @@ class MagicItems(models.Model):
     status = models.CharField(max_length=1, choices=status_types)
     creator = models.CharField(max_length=1, choices=creator_types)
     link = models.URLField()
-    powner = models.ForeignKey(Party, on_delete=models.CASCADE, null=True, blank=True)
+    powner = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True, blank=True)
     vowner = models.ForeignKey(Vehicles, on_delete=models.CASCADE, null=True, blank=True)
     howner = models.ForeignKey(Hirelings, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name
     
-class ConsumableItems(models.Model):
+class ConsumItems(models.Model):
     consume_types = {
         "P": "Potion",
         "S": "Scroll",      
@@ -106,3 +106,6 @@ class ConsumableItems(models.Model):
     type = models.CharField(max_length=1, choices=consume_types)
     amount = models.IntegerField()
     link = models.URLField()
+
+    def __str__(self):
+        return self.name
