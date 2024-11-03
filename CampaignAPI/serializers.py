@@ -9,7 +9,7 @@ class Campaign_Serial(serializers.ModelSerializer):
 class Party_Serial(serializers.ModelSerializer):
     class Meta:
         model = PartyMember
-        fields = ['id','characterName','player','class_name','species','notes','active','campaign']
+        fields = ['id','characterName','player','class_name','species','notes','active','joinDate','leaveDate','campaign']
 
 class Receivable_Serial(serializers.ModelSerializer):
     class Meta:

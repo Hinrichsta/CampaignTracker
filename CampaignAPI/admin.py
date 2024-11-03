@@ -19,7 +19,7 @@ class CampaginAdmin(admin.ModelAdmin):
 
 class PartyAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
-    list_display = ('characterName','player','class_name','species','notes','active','campaign')
+    list_display = ('characterName','player','class_name','species','notes','active','joinDate','leaveDate','campaign')
 
     #Searchable Fields
     search_fields = ('characterName','player','campaign')
@@ -31,7 +31,7 @@ class PartyAdmin(admin.ModelAdmin):
     list_display_links = ('campaign',)
 
     #Field Order
-    partyfields = ('characterName','player','class_name','species','notes','active','campaign')
+    partyfields = ('characterName','player','class_name','species','notes','active','joinDate','leaveDate','campaign')
 
 
 class ReceiveAdmin(admin.ModelAdmin):

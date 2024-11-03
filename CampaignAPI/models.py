@@ -12,12 +12,12 @@ class Campaign(models.Model):
 class PartyMember(models.Model):
     characterName = models.CharField(max_length=255)
     player = models.CharField(max_length=255)
-    class_name = models.CharField('class', db_column='class', max_length=255)
+    class_name = models.CharField(max_length=255)
     species = models.CharField(max_length=255)
     notes = models.TextField(blank=True)
     active = models.BooleanField()
     joinDate = models.DateField()
-    leaveDate = models.DateField(blank=True)
+    leaveDate = models.DateField(blank=True, null=True)
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
