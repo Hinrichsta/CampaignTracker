@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PartyMember,Receivable,Payable,Vehicles,Hirelings,MagicItems,ConsumableItems
+from .models import PartyMember,Receivable,Payable,Vehicles,Hirelings,MagicItems,ConsumItems
 
 class PartyAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
@@ -120,4 +120,4 @@ admin.site.register(Payable, PayAdmin)
 admin.site.register(Vehicles, VehicleAdmin)
 admin.site.register(Hirelings, HireAdmin)
 admin.site.register(MagicItems, ItemAdmin)
-admin.site.register(ConsumableItems, ConsumeAdmin)
+admin.site.register(ConsumItems, ConsumeAdmin)

@@ -5,8 +5,11 @@ class PartyMember(models.Model):
     player = models.CharField(max_length=255)
     role = models.CharField(max_length=255)
     race = models.CharField(max_length=255)
-    notes = models.TextField()
+    notes = models.TextField(blank=True)
     active = models.BooleanField()
+
+    class Meta:
+        verbose_name_plural = "Party Members"
 
     def __str__(self):
         return self.name
@@ -14,12 +17,15 @@ class PartyMember(models.Model):
 class Receivable(models.Model):
     irl_date = models.DateField()
     ig_date = models.CharField(max_length=255)
-    description = models.TextField()
-    pp = models.IntegerField()
-    gp = models.IntegerField()
-    sp = models.IntegerField()
-    cp = models.IntegerField()
+    description = models.TextField(blank=True)
+    pp = models.IntegerField(blank=True)
+    gp = models.IntegerField(blank=True)
+    sp = models.IntegerField(blank=True)
+    cp = models.IntegerField(blank=True)
     payer = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "Receivables"
 
     def __str__(self):
         return self.name
@@ -27,13 +33,16 @@ class Receivable(models.Model):
 class Payable(models.Model):
     irl_date = models.DateField()
     ig_date = models.CharField(max_length=255)
-    description = models.TextField()
-    pp = models.IntegerField()
-    gp = models.IntegerField()
-    sp = models.IntegerField()
-    cp = models.IntegerField()
-    payee = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    pp = models.IntegerField(blank=True)
+    gp = models.IntegerField(blank=True)
+    sp = models.IntegerField(blank=True)
+    cp = models.IntegerField(blank=True)
+    payee = models.CharField(max_length=255,blank=True)
     payer = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "Payables"
 
     def __str__(self):
         return self.name
@@ -42,7 +51,10 @@ class Vehicles(models.Model):
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
     size = models.TextField()
-    equipment = models.TextField()
+    equipment = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name_plural = "Vehicles"
 
     def __str__(self):
         return self.name
@@ -52,7 +64,10 @@ class Hirelings(models.Model):
     race = models.CharField(max_length=255)
     stats = models.URLField()
     vehicle = models.ForeignKey(Vehicles, on_delete=models.CASCADE, null=True, blank=True)
-    equipment = models.TextField()
+    equipment = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name_plural = "Hirelings"
 
     def __str__(self):
         return self.name
@@ -82,14 +97,17 @@ class MagicItems(models.Model):
     irl_date = models.DateField()
     ig_date = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
-    notes = models.TextField()
+    notes = models.TextField(blank=True)
     rarity = models.CharField(max_length=1, choices=rarity_types)
     status = models.CharField(max_length=1, choices=status_types)
     creator = models.CharField(max_length=1, choices=creator_types)
-    link = models.URLField()
+    link = models.URLField(blank=True)
     powner = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True, blank=True)
     vowner = models.ForeignKey(Vehicles, on_delete=models.CASCADE, null=True, blank=True)
     howner = models.ForeignKey(Hirelings, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "Magic Items"
 
     def __str__(self):
         return self.name
@@ -102,10 +120,13 @@ class ConsumItems(models.Model):
     }
 
     name = models.CharField(max_length=255)
-    notes = models.TextField()
+    notes = models.TextField(blank=True)
     type = models.CharField(max_length=1, choices=consume_types)
     amount = models.IntegerField()
-    link = models.URLField()
+    link = models.URLField(blank=True)
 
+    class Meta:
+        verbose_name_plural = "Consumable Items"
+    
     def __str__(self):
         return self.name
