@@ -12,7 +12,7 @@ class CampaginAdmin(admin.ModelAdmin):
     list_filter = ('campaignName',)
 
     #Details Page
-    list_display_links = ()
+    list_display_links = ('campaignName',)
 
     #Field Order
     partyfields = ('campaignName',)
@@ -25,10 +25,10 @@ class PartyAdmin(admin.ModelAdmin):
     search_fields = ('characterName','player','campaign')
 
     #Filter Fields
-    list_filter = ('characterName','player','campaign')
+    list_filter = ('characterName','player','campaign','active')
 
     #Details Page
-    list_display_links = ('campaign',)
+    list_display_links = ('characterName',)
 
     #Field Order
     partyfields = ('characterName','player','class_name','species','notes','active','joinDate','leaveDate','campaign')
@@ -45,7 +45,7 @@ class ReceiveAdmin(admin.ModelAdmin):
     list_filter = ('irl_date','ig_date','payer','campaign')
 
     #Details Page
-    list_display_links = ('payer','campaign')
+    list_display_links = ('payer',)
 
     #Field Order
     receivefields = ('irl_date','ig_date','description','pp','gp','sp','cp','payer')
@@ -61,7 +61,7 @@ class PayAdmin(admin.ModelAdmin):
     list_filter = ('irl_date','ig_date','payer','campaign')
 
     #Details Page
-    list_display_links = ('payer','campaign')
+    list_display_links = ('payer',)
 
     #Field Order
     payfields = ('irl_date','ig_date','description','pp','gp','sp','cp','payer','campaign')
@@ -77,7 +77,7 @@ class VehicleAdmin(admin.ModelAdmin):
     list_filter = ('name','type','campaign')
 
     #Details Page
-    list_display_links = ('campaign',)
+    list_display_links = ('name',)
 
     #Field Order
     vehiclefields = ('name','type','size','equipment','campaign')
@@ -93,7 +93,7 @@ class HireAdmin(admin.ModelAdmin):
     list_filter = ('vehicle','campaign')
 
     #Details Page
-    list_display_links = ('vehicle','campaign')
+    list_display_links = ('name',)
 
     #Field Order
     hirefields = ('name','race','stats','vehicle','equipment','campaign')
@@ -109,7 +109,7 @@ class ItemAdmin(admin.ModelAdmin):
     list_filter = ('rarity','campaign')
 
     #Details Page
-    list_display_links = ('powner','vowner','howner','campaign')
+    list_display_links = ('name',)
 
     #Field Order
     itemfields = ('name','notes','rarity','status','creator','link','irl_date','ig_date','powner','vowner','howner','campaign')
@@ -125,7 +125,7 @@ class ConsumeAdmin(admin.ModelAdmin):
     list_filter = ('type','amount','campaign')
 
     #Details Page
-    list_display_links = ('campaign',)
+    list_display_links = ('name',)
 
     #Field Order
     consumefields = ('name','type','amount','link','notes','campaign')

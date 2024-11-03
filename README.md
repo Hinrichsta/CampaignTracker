@@ -1,5 +1,5 @@
 # TTRPG Campaign Tracker Site
-A simple to use website to track various aspects about a TTRPG campaign as a player/Party.  Including Party Members, Currency, Dates (In World and Actual), Magic Items (Permanent and Consumable), vehicles, and hirelings.
+A simple website that allows for the tracking of player information for a campaign.  Allows for individual campaigns to track party members, payments/income, magic items/consummable items, vehicles, and hirelings with.
 
 ## Installation
 To quickly get started with this use
