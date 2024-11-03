@@ -1,18 +1,30 @@
 from django.db import models
 
+class Campaign(models.Model):
+    campaignName = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name_plural = "Campaigns"
+
+    def __str__(self):
+        return self.campaignName
+
 class PartyMember(models.Model):
-    name = models.CharField(max_length=255)
+    characterName = models.CharField(max_length=255)
     player = models.CharField(max_length=255)
-    role = models.CharField(max_length=255)
-    race = models.CharField(max_length=255)
+    class_name = models.CharField('class', db_column='class', max_length=255)
+    species = models.CharField(max_length=255)
     notes = models.TextField(blank=True)
     active = models.BooleanField()
+    joinDate = models.DateField()
+    leaveDate = models.DateField(blank=True)
+    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Party Members"
 
     def __str__(self):
-        return self.name
+        return self.characterName
 
 class Receivable(models.Model):
     irl_date = models.DateField()
@@ -23,6 +35,7 @@ class Receivable(models.Model):
     sp = models.IntegerField(blank=True)
     cp = models.IntegerField(blank=True)
     payer = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Receivables"
@@ -40,6 +53,7 @@ class Payable(models.Model):
     cp = models.IntegerField(blank=True)
     payee = models.CharField(max_length=255,blank=True)
     payer = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Payables"
@@ -52,6 +66,7 @@ class Vehicles(models.Model):
     type = models.CharField(max_length=255)
     size = models.TextField()
     equipment = models.TextField(blank=True)
+    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Vehicles"
@@ -65,6 +80,7 @@ class Hirelings(models.Model):
     stats = models.URLField()
     vehicle = models.ForeignKey(Vehicles, on_delete=models.CASCADE, null=True, blank=True)
     equipment = models.TextField(blank=True)
+    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Hirelings"
@@ -105,6 +121,7 @@ class MagicItems(models.Model):
     powner = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True, blank=True)
     vowner = models.ForeignKey(Vehicles, on_delete=models.CASCADE, null=True, blank=True)
     howner = models.ForeignKey(Hirelings, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Magic Items"
@@ -124,6 +141,7 @@ class ConsumItems(models.Model):
     type = models.CharField(max_length=1, choices=consume_types)
     amount = models.IntegerField()
     link = models.URLField(blank=True)
+    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Consumable Items"

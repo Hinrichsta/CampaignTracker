@@ -27,6 +27,13 @@ def authenticate_user(request):
     # Authentication failed
     return None, (401, 'Unauthorized', {'WWW-Authenticate': 'Basic realm="CampaignTracker"'})
 
+class Campaign_Views(viewsets.ModelViewSet):
+    """
+    """
+    queryset = Campaign.objects.all()
+    serializer_class = Campaign_Serial
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
 class Party_Views(viewsets.ModelViewSet):
     """
     """

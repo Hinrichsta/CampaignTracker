@@ -1,119 +1,136 @@
 from django.contrib import admin
-from .models import PartyMember,Receivable,Payable,Vehicles,Hirelings,MagicItems,ConsumItems
+from .models import Campaign,PartyMember,Receivable,Payable,Vehicles,Hirelings,MagicItems,ConsumItems
 
-class PartyAdmin(admin.ModelAdmin):
+class CampaginAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
-    list_display = ('name','player','role','race','notes','active')
+    list_display = ('campaignName',)
 
     #Searchable Fields
-    search_fields = ('name','player')
+    search_fields = ('campaignName',)
 
     #Filter Fields
-    list_filter = ('name','player')
+    list_filter = ('campaignName',)
 
     #Details Page
     list_display_links = ()
 
     #Field Order
-    partyfields = ('name','player','role','race','notes','active')
+    partyfields = ('campaignName',)
+
+class PartyAdmin(admin.ModelAdmin):
+    #Fields listed in the admin interface
+    list_display = ('characterName','player','class_name','species','notes','active','campaign')
+
+    #Searchable Fields
+    search_fields = ('characterName','player','campaign')
+
+    #Filter Fields
+    list_filter = ('characterName','player','campaign')
+
+    #Details Page
+    list_display_links = ('campaign',)
+
+    #Field Order
+    partyfields = ('characterName','player','class_name','species','notes','active','campaign')
 
 
 class ReceiveAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
-    list_display = ('irl_date','ig_date','description','pp','gp','sp','cp','payer')
+    list_display = ('irl_date','ig_date','description','pp','gp','sp','cp','payer','campaign')
 
     #Searchable Fields
-    search_fields = ('description','payer')
+    search_fields = ('description','payer','campaign')
 
     #Filter Fields
-    list_filter = ('irl_date','ig_date','payer')
+    list_filter = ('irl_date','ig_date','payer','campaign')
 
     #Details Page
-    list_display_links = ('payer',)
+    list_display_links = ('payer','campaign')
 
     #Field Order
     receivefields = ('irl_date','ig_date','description','pp','gp','sp','cp','payer')
     
 class PayAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
-    list_display = ('irl_date','ig_date','description','pp','gp','sp','cp','payee','payer')
+    list_display = ('irl_date','ig_date','description','pp','gp','sp','cp','payee','payer','campaign')
 
     #Searchable Fields
-    search_fields = ('description','payer')
+    search_fields = ('description','payer','campaign')
 
     #Filter Fields
-    list_filter = ('irl_date','ig_date','payer')
+    list_filter = ('irl_date','ig_date','payer','campaign')
 
     #Details Page
-    list_display_links = ('payer',)
+    list_display_links = ('payer','campaign')
 
     #Field Order
-    payfields = ('irl_date','ig_date','description','pp','gp','sp','cp','payer')
+    payfields = ('irl_date','ig_date','description','pp','gp','sp','cp','payer','campaign')
 
 class VehicleAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
-    list_display = ('name','type','size','equipment')
+    list_display = ('name','type','size','equipment','campaign')
 
     #Searchable Fields
-    search_fields = ('name','type')
+    search_fields = ('name','type','campaign')
 
     #Filter Fields
-    list_filter = ('name','type')
+    list_filter = ('name','type','campaign')
 
     #Details Page
-    list_display_links = ()
+    list_display_links = ('campaign',)
 
     #Field Order
-    vehiclefields = ('name','type','size','equipment')
+    vehiclefields = ('name','type','size','equipment','campaign')
 
 class HireAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
-    list_display = ('name','race','stats','vehicle','equipment')
+    list_display = ('name','race','stats','vehicle','equipment','campaign')
 
     #Searchable Fields
-    search_fields = ('name',)
+    search_fields = ('name','campaign')
 
     #Filter Fields
-    list_filter = ('vehicle',)
+    list_filter = ('vehicle','campaign')
 
     #Details Page
-    list_display_links = ('vehicle',)
+    list_display_links = ('vehicle','campaign')
 
     #Field Order
-    hirefields = ('name','race','stats','vehicle','equipment')
+    hirefields = ('name','race','stats','vehicle','equipment','campaign')
 
 class ItemAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
-    list_display = ('irl_date','ig_date','name','notes','rarity','status','creator','link','powner','vowner','howner')
+    list_display = ('irl_date','ig_date','name','notes','rarity','status','creator','link','powner','vowner','howner','campaign')
 
     #Searchable Fields
-    search_fields = ('name','rarity')
+    search_fields = ('name','rarity','campaign')
 
     #Filter Fields
-    list_filter = ('rarity',)
+    list_filter = ('rarity','campaign')
 
     #Details Page
-    list_display_links = ('powner','vowner','howner')
+    list_display_links = ('powner','vowner','howner','campaign')
 
     #Field Order
-    itemfields = ('name','notes','rarity','status','creator','link','irl_date','ig_date','powner','vowner','howner')
+    itemfields = ('name','notes','rarity','status','creator','link','irl_date','ig_date','powner','vowner','howner','campaign')
 
 class ConsumeAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
-    list_display = ('name','notes','type','amount','link')
+    list_display = ('name','notes','type','amount','link','campaign')
 
     #Searchable Fields
-    search_fields = ('name',)
+    search_fields = ('name','campaign')
 
     #Filter Fields
-    list_filter = ('type','amount')
+    list_filter = ('type','amount','campaign')
 
     #Details Page
-    list_display_links = ()
+    list_display_links = ('campaign',)
 
     #Field Order
-    consumefields = ('name','type','amount','link','notes')
+    consumefields = ('name','type','amount','link','notes','campaign')
 
+admin.site.register(Campaign, CampaginAdmin)
 admin.site.register(PartyMember, PartyAdmin)
 admin.site.register(Receivable, ReceiveAdmin)
 admin.site.register(Payable, PayAdmin)
