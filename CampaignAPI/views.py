@@ -27,11 +27,11 @@ def authenticate_user(request):
     # Authentication failed
     return None, (401, 'Unauthorized', {'WWW-Authenticate': 'Basic realm="CampaignTracker"'})
 
-class Campaign_Views(viewsets.ModelViewSet):
+class CampaignCore_Views(viewsets.ModelViewSet):
     """
     """
     queryset = CampaignCore.objects.all()
-    serializer_class = Campaign_Serial
+    serializer_class = CampaignCore_Serial
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class Party_Views(viewsets.ModelViewSet):
@@ -81,4 +81,25 @@ class ConsumItems_Views(viewsets.ModelViewSet):
     """
     queryset = ConsumItems.objects.all()
     serializer_class = ConsumItems_Serial
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+class CalendarCore_Views(viewsets.ModelViewSet):
+    """
+    """
+    queryset = CalendarCore.objects.all()
+    serializer_class = CalendarCore_Serial
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+class CalMonth_Views(viewsets.ModelViewSet):
+    """
+    """ 
+    queryset = CalMonth.objects.all()
+    serializer_class = CalMonth_Serial
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+class CalEvent_Views(viewsets.ModelViewSet):
+    """
+    """ 
+    queryset = CalEvent.objects.all()
+    serializer_class = CalEvent_Serial
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]

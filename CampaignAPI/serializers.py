@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from CampaignAPI.models import CampaignCore,PartyMember,Receivable,Payable,Vehicles,Hirelings,MagicItems,ConsumItems
+from CampaignAPI.models import CampaignCore,PartyMember,Receivable,Payable,Vehicles,Hirelings,MagicItems,ConsumItems,CalendarCore,CalMonth,CalEvent
 
-class Campaign_Serial(serializers.ModelSerializer):
+class CampaignCore_Serial(serializers.ModelSerializer):
     class Meta:
         model = CampaignCore
         fields = ['campaign_name',]
@@ -40,3 +40,18 @@ class ConsumItems_Serial(serializers.ModelSerializer):
     class Meta:
         model = ConsumItems
         fields = ['id','name','notes','type','amount','link','campaign']
+
+class CalendarCore_Serial(serializers.ModelSerializer):
+    class Meta:
+        model = CalendarCore
+        fields = ['id','name','current_day','current_month','current_year','current_era','campaign']
+
+class CalMonth_Serial(serializers.ModelSerializer):
+    class Meta:
+        model = CalMonth
+        fields = ['id','name','calendar','order_num','day_count']
+
+class CalEvent_Serial(serializers.ModelSerializer):
+    class Meta:
+        model = CalEvent
+        fields = ['id','name','calendar','month','day','year','description']

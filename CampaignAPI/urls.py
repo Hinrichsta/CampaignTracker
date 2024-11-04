@@ -5,12 +5,12 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-Campaign_List = Campaign_Views.as_view({
+CampaignCore_List = CampaignCore_Views.as_view({
     'get': 'list',
     'post': 'create'
 })
 
-Campaign_Info = Campaign_Views.as_view({
+CampaignCore_Info = CampaignCore_Views.as_view({
     'get': 'retrieve',
     'put': 'update',
     'delete': 'destroy'
@@ -93,11 +93,44 @@ ConsumItem_Info = ConsumItems_Views.as_view({
     'delete': 'destroy'
 })
 
+CalendarCore_List = ConsumItems_Views.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+
+CalendarCore_Info = ConsumItems_Views.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'delete': 'destroy'
+})
+
+CalMonth_List = ConsumItems_Views.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+
+CalMonth_Info = ConsumItems_Views.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'delete': 'destroy'
+})
+
+CalEvent_List = ConsumItems_Views.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+
+CalEvent_Info = ConsumItems_Views.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'delete': 'destroy'
+})
+
 urlpatterns = [
     path('auth/', TokenObtainPairView.as_view(), name='token_get'),
     path('auth/renew', TokenRefreshView.as_view(), name='token_renew'),
-    path('campaign/', Campaign_List, name="Campaigns"),
-    path('campaign/<int:pk>', Campaign_Info, name="CampaignInfo"),
+    path('campaigncore/', CampaignCore_List, name="Campaigns"),
+    path('campaigncore/<int:pk>', CampaignCore_Info, name="CampaignInfo"),
     path('party/',Party_List, name='PartyMembers'),
     path('party/<int:pk>',Party_Member_Info, name='Member_Info'),
     path('receivables/',Receivable_List, name='Receivables'),
@@ -112,4 +145,10 @@ urlpatterns = [
     path('magic-items/<int:pk>',MagicItem_Info, name='MagicItem_Info'),
     path('consummable-items/',ConsumItems_List, name='ConsumeItems'),
     path('conssumable-items/<int:pk>',ConsumItem_Info, name='ConsumeItem_info'),
+    path('calendarcore/',CalendarCore_List, name='CalendarCore'),
+    path('calendarcore/<int:pk>',CalendarCore_Info, name='CalendarCore_info'),
+    path('calmonth/',CalMonth_List, name='CalMonth'),
+    path('calmonth/<int:pk>',CalMonth_Info, name='CalMonth_info'),
+    path('calevent/',CalEvent_List, name='CalEvent'),
+    path('calevent/<int:pk>',CalEvent_Info, name='CalEvent_info'),
 ]

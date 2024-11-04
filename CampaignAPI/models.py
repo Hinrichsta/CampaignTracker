@@ -4,7 +4,7 @@ class CampaignCore(models.Model):
     campaign_name = models.CharField(max_length=255)
 
     class Meta:
-        verbose_name_plural = "Campaigns"
+        verbose_name_plural = "Campaign Cores"
 
     def __str__(self):
         return self.campaign_name
@@ -55,7 +55,7 @@ class Payable(models.Model):
     party_trans = models.BooleanField()
     payee = models.CharField(max_length=255,blank=True)
     payer = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True, blank=True)
-    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Payables"
@@ -68,7 +68,7 @@ class Vehicles(models.Model):
     type = models.CharField(max_length=255)
     size = models.TextField()
     equipment = models.TextField(blank=True)
-    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Vehicles"
@@ -82,7 +82,7 @@ class Hirelings(models.Model):
     stats = models.URLField()
     vehicle = models.ForeignKey(Vehicles, on_delete=models.CASCADE, null=True, blank=True)
     equipment = models.TextField(blank=True)
-    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Hirelings"
@@ -123,7 +123,7 @@ class MagicItems(models.Model):
     powner = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True, blank=True)
     vowner = models.ForeignKey(Vehicles, on_delete=models.CASCADE, null=True, blank=True)
     howner = models.ForeignKey(Hirelings, on_delete=models.CASCADE, null=True, blank=True)
-    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Magic Items"
@@ -143,10 +143,50 @@ class ConsumItems(models.Model):
     type = models.CharField(max_length=1, choices=consume_types)
     amount = models.IntegerField()
     link = models.URLField(blank=True)
-    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Consumable Items"
     
+    def __str__(self):
+        return self.name
+    
+class CalendarCore(models.Model):
+    name = models.CharField(max_length=255)
+    current_day = models.SmallIntegerField()
+    current_month = models.SmallIntegerField()
+    current_year = models.SmallIntegerField()
+    current_era = models.CharField(max_length=10)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "Calendar Cores"
+
+    def __str__(self):
+        return self.name
+    
+class CalMonth(models.Model):
+    name = models.CharField(max_length=255)
+    order_num = models.SmallIntegerField()
+    day_count = models.SmallIntegerField()
+    calendar = models.ForeignKey(CalendarCore, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "Calendar Months"
+
+    def __str__(self):
+        return self.name
+
+class CalEvent(models.Model):
+    name = models.CharField(max_length=255)
+    calendar = models.ForeignKey(CalendarCore, on_delete=models.CASCADE, null=True, blank=True)
+    month = models.ForeignKey(CalMonth, on_delete=models.CASCADE, null=True, blank=True)
+    day = models.SmallIntegerField()
+    year = models.SmallIntegerField()
+    description = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name_plural = "Calendar Events"
+
     def __str__(self):
         return self.name

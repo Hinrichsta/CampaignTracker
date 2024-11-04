@@ -30,7 +30,7 @@ As a **Former Player**, I want to **Delete shared information**, So I can **Dest
   - Disallow deletion if below a certain role.
 
 
-## Mis-User Story 1
+## Mis-User Story 2
 As a **Bad GameMaster**, I want to **add incorrect information**, So I can **Make the game harder for my players**.
 
 ### Mitigation

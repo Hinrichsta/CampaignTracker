@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import CampaignCore,PartyMember,Receivable,Payable,Vehicles,Hirelings,MagicItems,ConsumItems
+from .models import CampaignCore,PartyMember,Receivable,Payable,Vehicles,Hirelings,MagicItems,ConsumItems,CalendarCore,CalMonth,CalEvent
 
-class CampaginAdmin(admin.ModelAdmin):
+class CampaginCoreAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
     list_display = ('campaign_name',)
 
@@ -130,7 +130,55 @@ class ConsumeAdmin(admin.ModelAdmin):
     #Field Order
     consumefields = ('name','type','amount','link','notes','campaign')
 
-admin.site.register(CampaignCore, CampaginAdmin)
+class CalendarCoreAdmin(admin.ModelAdmin):
+    #Fields listed in the admin interface
+    list_display = ('name','current_day','current_month','current_year','current_era','campaign')
+
+    #Searchable Fields
+    search_fields = ('name',)
+
+    #Filter Fields
+    list_filter = ('campaign',)
+
+    #Details Page
+    list_display_links = ('name',)
+
+    #Field Order
+    consumefields = ('name','current_day','current_month','current_year','current_era','campaign')
+
+class CalMonthAdmin(admin.ModelAdmin):
+    #Fields listed in the admin interface
+    list_display = ('name','calendar','order_num','day_count')
+
+    #Searchable Fields
+    search_fields = ('name',)
+
+    #Filter Fields
+    list_filter = ('calendar',)
+
+    #Details Page
+    list_display_links = ('name',)
+
+    #Field Order
+    consumefields = ('name','calendar','order_num','day_count')
+
+class CalEventAdmin(admin.ModelAdmin):
+    #Fields listed in the admin interface
+    list_display = ('name','calendar','month','day','year','description')
+
+    #Searchable Fields
+    search_fields = ('name',)
+
+    #Filter Fields
+    list_filter = ('calendar',)
+
+    #Details Page
+    list_display_links = ('name',)
+
+    #Field Order
+    consumefields = ('name','calendar','month','day','year','description')
+
+admin.site.register(CampaignCore, CampaginCoreAdmin)
 admin.site.register(PartyMember, PartyAdmin)
 admin.site.register(Receivable, ReceiveAdmin)
 admin.site.register(Payable, PayAdmin)
@@ -138,3 +186,6 @@ admin.site.register(Vehicles, VehicleAdmin)
 admin.site.register(Hirelings, HireAdmin)
 admin.site.register(MagicItems, ItemAdmin)
 admin.site.register(ConsumItems, ConsumeAdmin)
+admin.site.register(CalendarCore, CalendarCoreAdmin)
+admin.site.register(CalMonth, CalMonthAdmin)
+admin.site.register(CalEvent, CalEventAdmin)
