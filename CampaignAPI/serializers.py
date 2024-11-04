@@ -4,22 +4,22 @@ from CampaignAPI.models import Campaign,PartyMember,Receivable,Payable,Vehicles,
 class Campaign_Serial(serializers.ModelSerializer):
     class Meta:
         model = Campaign
-        fields = ['campaignName',]
+        fields = ['campaign_name',]
 
 class Party_Serial(serializers.ModelSerializer):
     class Meta:
         model = PartyMember
-        fields = ['id','characterName','player','class_name','species','notes','active','joinDate','leaveDate','campaign']
+        fields = ['id','character_name','player','class_name','species','notes','active','join_date','leave_date','campaign']
 
 class Receivable_Serial(serializers.ModelSerializer):
     class Meta:
         model = Receivable
-        fields = ['id','irl_date','ig_date','description','pp','gp','sp','cp','payer','campaign']
+        fields = ['id','irl_date','ig_date','description','pp','gp','sp','cp','party_trans','payer','campaign']
 
 class Payable_Serial(serializers.ModelSerializer):
     class Meta:
         model = Payable
-        fields = ['id','irl_date','ig_date','description','pp','gp','sp','cp','payee','payer','campaign']
+        fields = ['id','irl_date','ig_date','description','pp','gp','sp','cp','party_trans','payee','payer','campaign']
 
 class Vehicles_Serial(serializers.ModelSerializer):
     class Meta:

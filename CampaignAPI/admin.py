@@ -3,40 +3,40 @@ from .models import Campaign,PartyMember,Receivable,Payable,Vehicles,Hirelings,M
 
 class CampaginAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
-    list_display = ('campaignName',)
+    list_display = ('campaign_name',)
 
     #Searchable Fields
-    search_fields = ('campaignName',)
+    search_fields = ('campaign_name',)
 
     #Filter Fields
-    list_filter = ('campaignName',)
+    list_filter = ('campaign_name',)
 
     #Details Page
-    list_display_links = ('campaignName',)
+    list_display_links = ('campaign_name',)
 
     #Field Order
-    partyfields = ('campaignName',)
+    partyfields = ('campaign_name',)
 
 class PartyAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
-    list_display = ('characterName','player','class_name','species','notes','active','joinDate','leaveDate','campaign')
+    list_display = ('character_name','player','class_name','species','notes','active','join_date','leave_date','campaign')
 
     #Searchable Fields
-    search_fields = ('characterName','player','campaign')
+    search_fields = ('character_name','player','campaign')
 
     #Filter Fields
-    list_filter = ('characterName','player','campaign','active')
+    list_filter = ('character_name','player','campaign','active')
 
     #Details Page
-    list_display_links = ('characterName',)
+    list_display_links = ('character_name',)
 
     #Field Order
-    partyfields = ('characterName','player','class_name','species','notes','active','joinDate','leaveDate','campaign')
+    partyfields = ('character_name','player','class_name','species','notes','active','join_date','leave_date','campaign')
 
 
 class ReceiveAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
-    list_display = ('irl_date','ig_date','description','pp','gp','sp','cp','payer','campaign')
+    list_display = ('irl_date','ig_date','description','pp','gp','sp','cp','party_trans','payer','campaign')
 
     #Searchable Fields
     search_fields = ('description','payer','campaign')
@@ -48,11 +48,11 @@ class ReceiveAdmin(admin.ModelAdmin):
     list_display_links = ('payer',)
 
     #Field Order
-    receivefields = ('irl_date','ig_date','description','pp','gp','sp','cp','payer')
+    receivefields = ('irl_date','ig_date','description','pp','gp','sp','cp','party_trans','payer','campaign')
     
 class PayAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
-    list_display = ('irl_date','ig_date','description','pp','gp','sp','cp','payee','payer','campaign')
+    list_display = ('irl_date','ig_date','description','pp','gp','sp','cp','party_trans','payee','payer','campaign')
 
     #Searchable Fields
     search_fields = ('description','payer','campaign')
@@ -64,7 +64,7 @@ class PayAdmin(admin.ModelAdmin):
     list_display_links = ('payer',)
 
     #Field Order
-    payfields = ('irl_date','ig_date','description','pp','gp','sp','cp','payer','campaign')
+    payfields = ('irl_date','ig_date','description','pp','gp','sp','cp','party_trans','payee','payer','campaign')
 
 class VehicleAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface

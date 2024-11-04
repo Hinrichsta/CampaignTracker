@@ -1,30 +1,30 @@
 from django.db import models
 
 class Campaign(models.Model):
-    campaignName = models.CharField(max_length=255)
+    campaign_name = models.CharField(max_length=255)
 
     class Meta:
         verbose_name_plural = "Campaigns"
 
     def __str__(self):
-        return self.campaignName
+        return self.campaign_name
 
 class PartyMember(models.Model):
-    characterName = models.CharField(max_length=255)
+    character_name = models.CharField(max_length=255)
     player = models.CharField(max_length=255)
     class_name = models.CharField(max_length=255)
     species = models.CharField(max_length=255)
     notes = models.TextField(blank=True)
     active = models.BooleanField()
-    joinDate = models.DateField()
-    leaveDate = models.DateField(blank=True, null=True)
+    join_date = models.DateField()
+    leave_date = models.DateField(blank=True, null=True)
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Party Members"
 
     def __str__(self):
-        return self.characterName
+        return self.character_name
 
 class Receivable(models.Model):
     irl_date = models.DateField()
@@ -34,6 +34,7 @@ class Receivable(models.Model):
     gp = models.IntegerField(blank=True)
     sp = models.IntegerField(blank=True)
     cp = models.IntegerField(blank=True)
+    party_trans = models.BooleanField()
     payer = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True, blank=True)
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
 
@@ -41,7 +42,7 @@ class Receivable(models.Model):
         verbose_name_plural = "Receivables"
 
     def __str__(self):
-        return self.name
+        return self.description
 
 class Payable(models.Model):
     irl_date = models.DateField()
@@ -51,6 +52,7 @@ class Payable(models.Model):
     gp = models.IntegerField(blank=True)
     sp = models.IntegerField(blank=True)
     cp = models.IntegerField(blank=True)
+    party_trans = models.BooleanField()
     payee = models.CharField(max_length=255,blank=True)
     payer = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True, blank=True)
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
@@ -59,7 +61,7 @@ class Payable(models.Model):
         verbose_name_plural = "Payables"
 
     def __str__(self):
-        return self.name
+        return self.description
 
 class Vehicles(models.Model):
     name = models.CharField(max_length=255)
