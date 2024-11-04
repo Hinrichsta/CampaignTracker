@@ -30,7 +30,7 @@ def authenticate_user(request):
 class Campaign_Views(viewsets.ModelViewSet):
     """
     """
-    queryset = Campaign.objects.all()
+    queryset = CampaignCore.objects.all()
     serializer_class = Campaign_Serial
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 

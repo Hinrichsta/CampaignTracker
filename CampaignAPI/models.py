@@ -1,6 +1,6 @@
 from django.db import models
 
-class Campaign(models.Model):
+class CampaignCore(models.Model):
     campaign_name = models.CharField(max_length=255)
 
     class Meta:
@@ -18,7 +18,7 @@ class PartyMember(models.Model):
     active = models.BooleanField()
     join_date = models.DateField()
     leave_date = models.DateField(blank=True, null=True)
-    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Party Members"
@@ -36,7 +36,7 @@ class Receivable(models.Model):
     cp = models.IntegerField(blank=True)
     party_trans = models.BooleanField()
     payer = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True, blank=True)
-    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Receivables"

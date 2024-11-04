@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from CampaignAPI.models import Campaign,PartyMember,Receivable,Payable,Vehicles,Hirelings,MagicItems,ConsumItems
+from CampaignAPI.models import CampaignCore,PartyMember,Receivable,Payable,Vehicles,Hirelings,MagicItems,ConsumItems
 
 class Campaign_Serial(serializers.ModelSerializer):
     class Meta:
-        model = Campaign
+        model = CampaignCore
         fields = ['campaign_name',]
 
 class Party_Serial(serializers.ModelSerializer):

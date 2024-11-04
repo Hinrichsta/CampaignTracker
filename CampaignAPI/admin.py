@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Campaign,PartyMember,Receivable,Payable,Vehicles,Hirelings,MagicItems,ConsumItems
+from .models import CampaignCore,PartyMember,Receivable,Payable,Vehicles,Hirelings,MagicItems,ConsumItems
 
 class CampaginAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
@@ -130,7 +130,7 @@ class ConsumeAdmin(admin.ModelAdmin):
     #Field Order
     consumefields = ('name','type','amount','link','notes','campaign')
 
-admin.site.register(Campaign, CampaginAdmin)
+admin.site.register(CampaignCore, CampaginAdmin)
 admin.site.register(PartyMember, PartyAdmin)
 admin.site.register(Receivable, ReceiveAdmin)
 admin.site.register(Payable, PayAdmin)
