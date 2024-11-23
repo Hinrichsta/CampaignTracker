@@ -3,19 +3,20 @@ from .models import CampaignCore,PartyMember,Receivable,Payable,Vehicles,Hirelin
 
 class CampaginCoreAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
-    list_display = ('campaign_name',)
+    list_display = ('campaign_name', 'owner')
 
     #Searchable Fields
-    search_fields = ('campaign_name',)
+    search_fields = ('campaign_name','owner')
 
     #Filter Fields
-    list_filter = ('campaign_name',)
+    list_filter = ('campaign_name','owner')
 
     #Details Page
     list_display_links = ('campaign_name',)
 
     #Field Order
-    partyfields = ('campaign_name',)
+    partyfields = ('campaign_name','owner')
+
 
 class PartyAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface

@@ -1,10 +1,15 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
 from CampaignAPI.models import CampaignCore,PartyMember,Receivable,Payable,Vehicles,Hirelings,MagicItems,ConsumItems,CalendarCore,CalMonth,CalEvent
 
+
+
 class CampaignCore_Serial(serializers.ModelSerializer):
+    users = serializers.PrimaryKeyRelatedField(many=True, queryset=User.objects.all())
+    
     class Meta:
         model = CampaignCore
-        fields = ['campaign_name',]
+        fields = ['campaign_name','owner', 'users']
 
 class Party_Serial(serializers.ModelSerializer):
     class Meta:

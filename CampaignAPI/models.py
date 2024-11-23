@@ -1,7 +1,10 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class CampaignCore(models.Model):
     campaign_name = models.CharField(max_length=255)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    users = models.ManyToManyField(User, related_name='campaign_users')
 
     class Meta:
         verbose_name_plural = "Campaign Cores"

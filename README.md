@@ -5,7 +5,7 @@ A simple website that allows for the tracking of player information for a campai
 To quickly get started with this use
 ```bash
 docker build .
-docker-compose run web bash
+docker-compose run django bash
 python manage.py migrate
 python manage.py createsuperuser
 exit

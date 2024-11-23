@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework import viewsets, permissions
 from CampaignAPI.models import *
 from CampaignAPI.serializers import *
+from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
 def authenticate_user(request):
@@ -26,6 +27,7 @@ def authenticate_user(request):
 
     # Authentication failed
     return None, (401, 'Unauthorized', {'WWW-Authenticate': 'Basic realm="CampaignTracker"'})
+
 
 class CampaignCore_Views(viewsets.ModelViewSet):
     """
