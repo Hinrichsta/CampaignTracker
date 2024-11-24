@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework import viewsets, permissions
 from CampaignAPI.models import *
 from CampaignAPI.serializers import *
+from .permissions import *
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
@@ -34,74 +35,81 @@ class CampaignCore_Views(viewsets.ModelViewSet):
     """
     queryset = CampaignCore.objects.all()
     serializer_class = CampaignCore_Serial
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAdminUser, IsCampaignOwner]
+
+class CampaignUsers_Views(viewsets.ModelViewSet):
+    """
+    """
+    queryset = CampaignUsers.objects.all()
+    serializer_class = CampaignUsers_Serial
+    permission_classes = [permissions.IsAdminUser, IsCampaignOwner]
 
 class Party_Views(viewsets.ModelViewSet):
     """
     """
     queryset = PartyMember.objects.all()
     serializer_class = Party_Serial
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    [permissions.IsAdminUser, IsCampaignOwner]
 
 class Receivable_Views(viewsets.ModelViewSet):
     """
     """
     queryset = Receivable.objects.all()
     serializer_class = Receivable_Serial
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    [permissions.IsAdminUser, IsCampaignOwner]
 
 class Payable_Views(viewsets.ModelViewSet):
     """
     """
     queryset = Payable.objects.all()
     serializer_class = Payable_Serial
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    [permissions.IsAdminUser, IsCampaignOwner]
 
 class Vehicles_Views(viewsets.ModelViewSet):
     """
     """
     queryset = Vehicles.objects.all()
     serializer_class = Vehicles_Serial
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    [permissions.IsAdminUser, IsCampaignOwner]
 
 class Hirelings_Views(viewsets.ModelViewSet):
     """
     """
     queryset = Hirelings.objects.all()
     serializer_class = Hirelings_Serial
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    [permissions.IsAdminUser, IsCampaignOwner]
 
 class MagicItems_Views(viewsets.ModelViewSet):
     """
     """
     queryset = MagicItems.objects.all()
     serializer_class = MagicItems_Serial
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    [permissions.IsAdminUser, IsCampaignOwner]
 
 class ConsumItems_Views(viewsets.ModelViewSet):
     """
     """
     queryset = ConsumItems.objects.all()
     serializer_class = ConsumItems_Serial
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    [permissions.IsAdminUser, IsCampaignOwner]
 
 class CalendarCore_Views(viewsets.ModelViewSet):
     """
     """
     queryset = CalendarCore.objects.all()
     serializer_class = CalendarCore_Serial
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAdminUser, IsCampaignOwner]
 
 class CalMonth_Views(viewsets.ModelViewSet):
     """
     """ 
     queryset = CalMonth.objects.all()
     serializer_class = CalMonth_Serial
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAdminUser, IsCampaignOwner]
 
 class CalEvent_Views(viewsets.ModelViewSet):
     """
     """ 
     queryset = CalEvent.objects.all()
     serializer_class = CalEvent_Serial
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAdminUser, IsCampaignOwner]

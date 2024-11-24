@@ -1,21 +1,44 @@
 from django.contrib import admin
-from .models import CampaignCore,PartyMember,Receivable,Payable,Vehicles,Hirelings,MagicItems,ConsumItems,CalendarCore,CalMonth,CalEvent
+from .models import CampaignCore,CampaignUsers,PartyMember,Receivable,Payable,Vehicles,Hirelings,MagicItems,ConsumItems,CalendarCore,CalMonth,CalEvent
+
+class CampaignUsersInline(admin.StackedInline):
+    model = CampaignUsers
 
 class CampaginCoreAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
-    list_display = ('campaign_name', 'owner')
+    list_display = ('campaign_name',)
 
     #Searchable Fields
-    search_fields = ('campaign_name','owner')
+    search_fields = ('campaign_name',)
 
     #Filter Fields
-    list_filter = ('campaign_name','owner')
+    list_filter = ('campaign_name',)
 
     #Details Page
     list_display_links = ('campaign_name',)
 
     #Field Order
-    partyfields = ('campaign_name','owner')
+    partyfields = ('campaign_name',)
+
+    inlines = [
+        CampaignUsersInline,
+    ]
+
+class CampaignUsersAdmin(admin.ModelAdmin):
+    #Fields listed in the admin interface
+    list_display = ('campaign', 'user', 'role')
+
+    #Searchable Fields
+    search_fields = ('campaign', 'user', 'role')
+
+    #Filter Fields
+    list_filter = ('campaign', 'user', 'role')
+
+    #Details Page
+    list_display_links = ('campaign','user')
+
+    #Field Order
+    partyfields = ('campaign', 'user', 'role')
 
 
 class PartyAdmin(admin.ModelAdmin):
@@ -180,6 +203,7 @@ class CalEventAdmin(admin.ModelAdmin):
     consumefields = ('name','calendar','month','day','year','description')
 
 admin.site.register(CampaignCore, CampaginCoreAdmin)
+admin.site.register(CampaignUsers,CampaignUsersAdmin)
 admin.site.register(PartyMember, PartyAdmin)
 admin.site.register(Receivable, ReceiveAdmin)
 admin.site.register(Payable, PayAdmin)

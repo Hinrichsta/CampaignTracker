@@ -16,6 +16,17 @@ CampaignCore_Info = CampaignCore_Views.as_view({
     'delete': 'destroy'
 })
 
+CampaignUsers_List = CampaignUsers_Views.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+
+CampaignUsers_Info = CampaignUsers_Views.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'delete': 'destroy'
+})
+
 Party_List = Party_Views.as_view({
     'get': 'list',
     'post': 'create'
@@ -131,6 +142,8 @@ urlpatterns = [
     path('auth/renew', TokenRefreshView.as_view(), name='token_renew'),
     path('campaigncore/', CampaignCore_List, name="Campaigns"),
     path('campaigncore/<int:pk>', CampaignCore_Info, name="CampaignInfo"),
+    path('campaignUsers/', CampaignUsers_List, name="CampaignUsers"),
+    path('campaignUsers/<int:pk>', CampaignUsers_Info, name="CampaignUsersInfo"),
     path('party/',Party_List, name='PartyMembers'),
     path('party/<int:pk>',Party_Member_Info, name='Member_Info'),
     path('receivables/',Receivable_List, name='Receivables'),

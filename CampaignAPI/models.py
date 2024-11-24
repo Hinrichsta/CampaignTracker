@@ -3,25 +3,39 @@ from django.contrib.auth.models import User
 
 class CampaignCore(models.Model):
     campaign_name = models.CharField(max_length=255)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    users = models.ManyToManyField(User, related_name='campaign_users')
 
     class Meta:
         verbose_name_plural = "Campaign Cores"
 
     def __str__(self):
         return self.campaign_name
+    
+class CampaignUsers(models.Model):
+    role_types = {
+        "S": "Super Admin",
+        "O": "Owner",
+        "A": "Admin",
+        "P": "Player",
+        "V": "Viewer"
+    }
+        
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE,blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=1, choices=role_types)
+
+    class Meta:
+        verbose_name_plural = "Campaign Users"
 
 class PartyMember(models.Model):
     character_name = models.CharField(max_length=255)
-    player = models.CharField(max_length=255)
+    player = models.ForeignKey(User, on_delete=models.CASCADE,blank=True, null=True)
     class_name = models.CharField(max_length=255)
     species = models.CharField(max_length=255)
     notes = models.TextField(blank=True)
     active = models.BooleanField()
     join_date = models.DateField()
     leave_date = models.DateField(blank=True, null=True)
-    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Party Members"
@@ -39,7 +53,7 @@ class Receivable(models.Model):
     cp = models.IntegerField(blank=True)
     party_trans = models.BooleanField()
     payer = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True, blank=True)
-    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Receivables"
@@ -58,7 +72,7 @@ class Payable(models.Model):
     party_trans = models.BooleanField()
     payee = models.CharField(max_length=255,blank=True)
     payer = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True, blank=True)
-    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Payables"
@@ -71,7 +85,7 @@ class Vehicles(models.Model):
     type = models.CharField(max_length=255)
     size = models.TextField()
     equipment = models.TextField(blank=True)
-    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Vehicles"
@@ -85,7 +99,7 @@ class Hirelings(models.Model):
     stats = models.URLField()
     vehicle = models.ForeignKey(Vehicles, on_delete=models.CASCADE, null=True, blank=True)
     equipment = models.TextField(blank=True)
-    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Hirelings"
@@ -126,7 +140,7 @@ class MagicItems(models.Model):
     powner = models.ForeignKey(PartyMember, on_delete=models.CASCADE, null=True, blank=True)
     vowner = models.ForeignKey(Vehicles, on_delete=models.CASCADE, null=True, blank=True)
     howner = models.ForeignKey(Hirelings, on_delete=models.CASCADE, null=True, blank=True)
-    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Magic Items"
@@ -146,7 +160,7 @@ class ConsumItems(models.Model):
     type = models.CharField(max_length=1, choices=consume_types)
     amount = models.IntegerField()
     link = models.URLField(blank=True)
-    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Consumable Items"
@@ -160,7 +174,7 @@ class CalendarCore(models.Model):
     current_month = models.SmallIntegerField()
     current_year = models.SmallIntegerField()
     current_era = models.CharField(max_length=10)
-    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE, null=True, blank=True)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Calendar Cores"
@@ -172,7 +186,7 @@ class CalMonth(models.Model):
     name = models.CharField(max_length=255)
     order_num = models.SmallIntegerField()
     day_count = models.SmallIntegerField()
-    calendar = models.ForeignKey(CalendarCore, on_delete=models.CASCADE, null=True, blank=True)
+    calendar = models.ForeignKey(CalendarCore, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Calendar Months"
@@ -182,7 +196,7 @@ class CalMonth(models.Model):
 
 class CalEvent(models.Model):
     name = models.CharField(max_length=255)
-    calendar = models.ForeignKey(CalendarCore, on_delete=models.CASCADE, null=True, blank=True)
+    calendar = models.ForeignKey(CalendarCore, on_delete=models.CASCADE)
     month = models.ForeignKey(CalMonth, on_delete=models.CASCADE, null=True, blank=True)
     day = models.SmallIntegerField()
     year = models.SmallIntegerField()
