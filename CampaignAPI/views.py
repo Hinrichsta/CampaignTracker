@@ -33,9 +33,17 @@ def authenticate_user(request):
 class CampaignCore_Views(viewsets.ModelViewSet):
     """
     """
-    queryset = CampaignCore.objects.all()
+    #queryset = CampaignCore.objects.all()
     serializer_class = CampaignCore_Serial
     permission_classes = [permissions.IsAdminUser, IsCampaignOwner]
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return CampaignCore.objects.filter(purchaser=user)
 
 class CampaignUsers_Views(viewsets.ModelViewSet):
     """
