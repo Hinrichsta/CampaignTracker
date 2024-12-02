@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 class CampaignCore(models.Model):
     campaign_name = models.CharField(max_length=255)
+    description = models.TextField(blank=True,null=True)
 
     class Meta:
         verbose_name_plural = "Campaign Cores"
@@ -187,6 +188,7 @@ class CalMonth(models.Model):
     order_num = models.SmallIntegerField()
     day_count = models.SmallIntegerField()
     calendar = models.ForeignKey(CalendarCore, on_delete=models.CASCADE)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Calendar Months"
@@ -197,6 +199,7 @@ class CalMonth(models.Model):
 class CalEvent(models.Model):
     name = models.CharField(max_length=255)
     calendar = models.ForeignKey(CalendarCore, on_delete=models.CASCADE)
+    campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
     month = models.ForeignKey(CalMonth, on_delete=models.CASCADE, null=True, blank=True)
     day = models.SmallIntegerField()
     year = models.SmallIntegerField()

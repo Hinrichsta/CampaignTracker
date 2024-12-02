@@ -7,7 +7,7 @@ from CampaignAPI.models import CampaignCore,CampaignUsers,PartyMember,Receivable
 class CampaignCore_Serial(serializers.ModelSerializer):
     class Meta:
         model = CampaignCore
-        fields = ['campaign_name']
+        fields = ['id','campaign_name','description']
 
 class CampaignUsers_Serial(serializers.ModelSerializer):
     class Meta:
@@ -57,9 +57,9 @@ class CalendarCore_Serial(serializers.ModelSerializer):
 class CalMonth_Serial(serializers.ModelSerializer):
     class Meta:
         model = CalMonth
-        fields = ['id','name','calendar','order_num','day_count']
+        fields = ['id','name','calendar','order_num','day_count','campaign']
 
 class CalEvent_Serial(serializers.ModelSerializer):
     class Meta:
         model = CalEvent
-        fields = ['id','name','calendar','month','day','year','description']
+        fields = ['id','name','calendar','month','day','year','description','campaign']

@@ -6,7 +6,7 @@ class CampaignUsersInline(admin.StackedInline):
 
 class CampaginCoreAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
-    list_display = ('campaign_name',)
+    list_display = ('campaign_name','description')
 
     #Searchable Fields
     search_fields = ('campaign_name',)
@@ -18,7 +18,7 @@ class CampaginCoreAdmin(admin.ModelAdmin):
     list_display_links = ('campaign_name',)
 
     #Field Order
-    partyfields = ('campaign_name',)
+    partyfields = ('campaign_name','description')
 
     inlines = [
         CampaignUsersInline,
@@ -172,35 +172,35 @@ class CalendarCoreAdmin(admin.ModelAdmin):
 
 class CalMonthAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
-    list_display = ('name','calendar','order_num','day_count')
+    list_display = ('name','calendar','order_num','day_count','campaign')
 
     #Searchable Fields
     search_fields = ('name',)
 
     #Filter Fields
-    list_filter = ('calendar',)
+    list_filter = ('calendar','campaign')
 
     #Details Page
     list_display_links = ('name',)
 
     #Field Order
-    consumefields = ('name','calendar','order_num','day_count')
+    consumefields = ('name','calendar','order_num','day_count','campaign')
 
 class CalEventAdmin(admin.ModelAdmin):
     #Fields listed in the admin interface
-    list_display = ('name','calendar','month','day','year','description')
+    list_display = ('name','calendar','month','day','year','description','campaign')
 
     #Searchable Fields
     search_fields = ('name',)
 
     #Filter Fields
-    list_filter = ('calendar',)
+    list_filter = ('calendar','campaign')
 
     #Details Page
     list_display_links = ('name',)
 
     #Field Order
-    consumefields = ('name','calendar','month','day','year','description')
+    consumefields = ('name','calendar','month','day','year','description','campaign')
 
 admin.site.register(CampaignCore, CampaginCoreAdmin)
 admin.site.register(CampaignUsers,CampaignUsersAdmin)
