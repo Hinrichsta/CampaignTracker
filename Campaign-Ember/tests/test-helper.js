@@ -1,5 +1,5 @@
-import Application from 'money-bags/app';
-import config from 'money-bags/config/environment';
+import Application from 'campaign-ember/app';
+import config from 'campaign-ember/config/environment';
 import * as QUnit from 'qunit';
 import { setApplication } from '@ember/test-helpers';
 import { setup } from 'qunit-dom';

@@ -2,7 +2,7 @@
 
 module.exports = function (environment) {
   const ENV = {
-    modulePrefix: 'money-bags',
+    modulePrefix: 'campaign-ember',
     environment,
     rootURL: '/',
     locationType: 'history',
