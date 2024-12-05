@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 class CampaignCore(models.Model):
     campaign_name = models.CharField(max_length=255)
     description = models.TextField(blank=True,null=True)
+    public = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = "Campaign Cores"

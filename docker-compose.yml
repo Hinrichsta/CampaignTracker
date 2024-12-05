@@ -28,15 +28,15 @@ services:
       - path: ".env"
         required: false
   
-  ember:
-    build: ./Campaign-Ember
-    ports: 
-      - 443:80
-    depends_on:
-      postgres:
-        condition: "service_started"
-      django:
-        condition: "service_started"
+#  ember:
+#    build: ./Campaign-Ember
+#    ports: 
+#      - 443:80
+#    depends_on:
+#      postgres:
+#        condition: "service_started"
+#      django:
+#        condition: "service_started"
     
 
 volumes:

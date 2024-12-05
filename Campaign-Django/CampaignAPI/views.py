@@ -55,24 +55,24 @@ class CampaignUsers_Views(viewsets.ModelViewSet):
     """
     queryset = CampaignUsers.objects.all()
     serializer_class = CampaignUsers_Serial
-    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
 
-    def get_permissions(self):
-        """
-        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-        
-        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-        """
-        if self.action == 'list' or 'retrieve':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-        if self.action == 'create' or 'update' or 'partial_update':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-        if self.action == 'destroy':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
-        else:
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-            
-        return [permission() for permission in permission_classes]
+#    def get_permissions(self):
+#        """
+#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
+#        
+#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
+#        """
+#        if self.action == 'list' or 'retrieve':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
+#        if self.action == 'create' or 'update' or 'partial_update':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
+#        if self.action == 'destroy':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#        else:
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#            
+#        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         """
@@ -102,24 +102,25 @@ class Party_Views(viewsets.ModelViewSet):
     """
     queryset = PartyMember.objects.all()
     serializer_class = Party_Serial
-    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
 
-    def get_permissions(self):
-        """
-        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-        
-        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-        """
-        if self.action == 'list' or 'retrieve':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-        if self.action == 'create' or 'update' or 'partial_update':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-        if self.action == 'destroy':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
-        else:
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-            
-        return [permission() for permission in permission_classes]
+#    def get_permissions(self):
+#        """
+#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
+#        
+#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
+#        """
+#        if self.action == 'list' or 'retrieve':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
+#        elif self.action == 'create' or 'update' or 'partial_update':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
+#        elif self.action == 'destroy':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#        else:
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#        
+#            
+#        return [permission() for permission in permission_classes]
         
 
     def get_queryset(self):
@@ -150,24 +151,23 @@ class Receivable_Views(viewsets.ModelViewSet):
     """
     queryset = Receivable.objects.all()
     serializer_class = Receivable_Serial
-    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
 
-    def get_permissions(self):
-        """
-        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-        
-        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-        """
-        if self.action == 'list' or 'retrieve':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-        if self.action == 'create' or 'update' or 'partial_update':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-        if self.action == 'destroy':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
-        else:
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-
-        return [permission() for permission in permission_classes]
+#    def get_permissions(self):
+#        """
+#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
+#        
+#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
+#        """
+#        if self.action == 'list' or 'retrieve':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
+#        elif self.action == 'create' or 'update' or 'partial_update':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
+#        elif self.action == 'destroy':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#        else:
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         """
@@ -197,24 +197,24 @@ class Payable_Views(viewsets.ModelViewSet):
     """
     queryset = Payable.objects.all()
     serializer_class = Payable_Serial
-    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
 
-    def get_permissions(self):
-        """
-        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-        
-        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-        """
-        if self.action == 'list' or 'retrieve':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-        if self.action == 'create' or 'update' or 'partial_update':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-        if self.action == 'destroy':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
-        else:
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-
-        return [permission() for permission in permission_classes]
+#    def get_permissions(self):
+#        """
+#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
+#        
+#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
+#        """
+#        if self.action == 'list' or 'retrieve':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
+#        if self.action == 'create' or 'update' or 'partial_update':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
+#        if self.action == 'destroy':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#        else:
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#
+#        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         """
@@ -244,24 +244,24 @@ class Vehicles_Views(viewsets.ModelViewSet):
     """
     queryset = Vehicles.objects.all()
     serializer_class = Vehicles_Serial
-    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
 
-    def get_permissions(self):
-        """
-        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-        
-        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-        """
-        if self.action == 'list' or 'retrieve':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-        if self.action == 'create' or 'update' or 'partial_update':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-        if self.action == 'destroy':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
-        else:
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-            
-        return [permission() for permission in permission_classes]
+#   def get_permissions(self):
+#       """
+#       Sets what permissions a user needs to perform an action based on the HTTP method they are using
+#       
+#       Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
+#       """
+#       if self.action == 'list' or 'retrieve':
+#           permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
+#       if self.action == 'create' or 'update' or 'partial_update':
+#           permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
+#       if self.action == 'destroy':
+#           permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#       else:
+#           permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#           
+#       return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         """
@@ -291,24 +291,24 @@ class Hirelings_Views(viewsets.ModelViewSet):
     """
     queryset = Hirelings.objects.all()
     serializer_class = Hirelings_Serial
-    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
 
-    def get_permissions(self):
-        """
-        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-        
-        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-        """
-        if self.action == 'list' or 'retrieve':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-        if self.action == 'create' or 'update' or 'partial_update':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-        if self.action == 'destroy':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
-        else:
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-            
-        return [permission() for permission in permission_classes]
+#    def get_permissions(self):
+#        """
+#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
+#        
+#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
+#        """
+#        if self.action == 'list' or 'retrieve':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
+#        if self.action == 'create' or 'update' or 'partial_update':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
+#        if self.action == 'destroy':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#        else:
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#            
+#        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         """
@@ -338,24 +338,24 @@ class MagicItems_Views(viewsets.ModelViewSet):
     """
     queryset = MagicItems.objects.all()
     serializer_class = MagicItems_Serial
-    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
 
-    def get_permissions(self):
-        """
-        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-        
-        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-        """
-        if self.action == 'list' or 'retrieve':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-        if self.action == 'create' or 'update' or 'partial_update':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-        if self.action == 'destroy':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
-        else:
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-            
-        return [permission() for permission in permission_classes]
+#    def get_permissions(self):
+#        """
+#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
+#        
+#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
+#        """
+#        if self.action == 'list' or 'retrieve':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
+#        if self.action == 'create' or 'update' or 'partial_update':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
+#        if self.action == 'destroy':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#        else:
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#            
+#        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         """
@@ -385,24 +385,24 @@ class ConsumItems_Views(viewsets.ModelViewSet):
     """
     queryset = ConsumItems.objects.all()
     serializer_class = ConsumItems_Serial
-    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
 
-    def get_permissions(self):
-        """
-        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-        
-        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-        """
-        if self.action == 'list' or 'retrieve':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-        if self.action == 'create' or 'update' or 'partial_update':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-        if self.action == 'destroy':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
-        else:
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-            
-        return [permission() for permission in permission_classes]
+#    def get_permissions(self):
+#        """
+#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
+#        
+#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
+#        """
+#        if self.action == 'list' or 'retrieve':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
+#        if self.action == 'create' or 'update' or 'partial_update':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
+#        if self.action == 'destroy':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#        else:
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#            
+#        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         """
@@ -432,24 +432,24 @@ class CalendarCore_Views(viewsets.ModelViewSet):
     """
     queryset = CalendarCore.objects.all()
     serializer_class = CalendarCore_Serial
-    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
 
-    def get_permissions(self):
-        """
-        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-        
-        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-        """
-        if self.action == 'list' or 'retrieve':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-        if self.action == 'create' or 'update' or 'partial_update':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-        if self.action == 'destroy':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
-        else:
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-            
-        return [permission() for permission in permission_classes]
+#    def get_permissions(self):
+#        """
+#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
+#        
+#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
+#        """
+#        if self.action == 'list' or 'retrieve':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
+#        if self.action == 'create' or 'update' or 'partial_update':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
+#        if self.action == 'destroy':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#        else:
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#            
+#        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         """
@@ -479,24 +479,24 @@ class CalMonth_Views(viewsets.ModelViewSet):
     """
     queryset = CalMonth.objects.all()
     serializer_class = CalMonth_Serial
-    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
 
-    def get_permissions(self):
-        """
-        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-        
-        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-        """
-        if self.action == 'list' or 'retrieve':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-        if self.action == 'create' or 'update' or 'partial_update':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-        if self.action == 'destroy':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
-        else:
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-            
-        return [permission() for permission in permission_classes]
+#    def get_permissions(self):
+#        """
+#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
+#        
+#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
+#        """
+#        if self.action == 'list' or 'retrieve':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
+#        if self.action == 'create' or 'update' or 'partial_update':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
+#        if self.action == 'destroy':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#        else:
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#            
+#        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         """
@@ -526,24 +526,24 @@ class CalEvent_Views(viewsets.ModelViewSet):
     """
     queryset = CalEvent.objects.all()
     serializer_class = CalEvent_Serial
-    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
 
-    def get_permissions(self):
-        """
-        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-        
-        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-        """
-        if self.action == 'list' or 'retrieve':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-        if self.action == 'create' or 'update' or 'partial_update':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-        if self.action == 'destroy':
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
-        else:
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-            
-        return [permission() for permission in permission_classes]
+#    def get_permissions(self):
+#        """
+#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
+#        
+#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
+#        """
+#        if self.action == 'list' or 'retrieve':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
+#        if self.action == 'create' or 'update' or 'partial_update':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
+#        if self.action == 'destroy':
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#        else:
+#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
+#            
+#        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         """
