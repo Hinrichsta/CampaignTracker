@@ -15,20 +15,41 @@ class IsCampaignOwner(permissions.BasePermission):
     Checked to see if a User is Authenticated, and if that have the Owner Role in the Campaign User's Table.
     """
     def has_permission(self, request, view):
+        #if hasattr(request, 'campaign'):
+        #    campaign_req = request.campaign
+        #elif request.query_params.get('campaign') is not None:
+        #    campaign_req = request.query_params.get('campaign')
+        #else:
+        #    campaign_req = 0
+        #if request.user.is_authenticated & request.method in permissions.SAFE_METHODS & CampaignUsers.objects.filter(user=request.user, campaign=campaign_req, campaignusers__role="O") is not None:
+        #    return True
+        #return False
+
+        return request.user.is_authenticated
+    
+    def has_object_permission(self, request, view, obj):
+        #if request.method in permissions.SAFE_METHODS & CampaignUsers.objects.filter(user=request.user, campaign=obj.campaign, campaignusers__role="O") is not None:
+        #    return True
+        #return False
+
         if hasattr(request, 'campaign'):
             campaign_req = request.campaign
         elif request.query_params.get('campaign') is not None:
             campaign_req = request.query_params.get('campaign')
+        elif view.kwargs.get('pk') != "":
+            if "campaigncore" in request.path:
+                campaign_req = obj.id
+            else:
+                campaign_req = obj.campaign.id
         else:
-            campaign_req = 0
-        if request.user.is_authenticated & request.method in permissions.SAFE_METHODS & CampaignUsers.objects.filter(user=request.user, campaign=campaign_req, campaignusers__role="O") is not None:
-            return True
-        return False
-    
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS & CampaignUsers.objects.filter(user=request.user, campaign=obj.campaign, campaignusers__role="O") is not None:
-            return True
-        return False
+            return False
+        try:
+            campaign_user = CampaignUsers.objects.get(user=request.user, campaign=campaign_req)
+            if campaign_user.role == 'O':
+                return True
+            return False
+        except CampaignUsers.DoesNotExist:
+            return False
         
     
 class IsCampaignAdmin(permissions.BasePermission):
@@ -36,60 +57,123 @@ class IsCampaignAdmin(permissions.BasePermission):
     Checked to see if a User is Authenticated, and if that have the Admin Role in the Campaign User's Table.
     """
     def has_permission(self, request, view):
+        #if hasattr(request, 'campaign'):
+        #    campaign_req = request.campaign
+        #elif request.query_params.get('campaign') is not None:
+        #    campaign_req = request.query_params.get('campaign')
+        #else:
+        #    campaign_req = 0
+        #if request.user.is_authenticated & request.method in permissions.SAFE_METHODS & CampaignUsers.objects.filter(user=request.user, campaign=campaign_req, campaignusers__role="A") is not None:
+        #    return True
+        #return False
+    
+        return request.user.is_authenticated
+    
+    def has_object_permission(self, request, view, obj):
+        #if request.method in permissions.SAFE_METHODS & CampaignUsers.objects.filter(user=request.user, campaign=obj.campaign, campaignusers__role="A") is not None:
+        #    return True
+        #return False
+    
         if hasattr(request, 'campaign'):
             campaign_req = request.campaign
         elif request.query_params.get('campaign') is not None:
             campaign_req = request.query_params.get('campaign')
+        elif view.kwargs.get('pk') != "":
+            if "campaigncore" in request.path:
+                campaign_req = obj.id
+            else:
+                campaign_req = obj.campaign.id
         else:
-            campaign_req = 0
-        if request.user.is_authenticated & request.method in permissions.SAFE_METHODS & CampaignUsers.objects.filter(user=request.user, campaign=campaign_req, campaignusers__role="A") is not None:
-            return True
-        return False
-    
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS & CampaignUsers.objects.filter(user=request.user, campaign=obj.campaign, campaignusers__role="A") is not None:
-            return True
-        return False
+            return False
+        try:
+            campaign_user = CampaignUsers.objects.get(user=request.user, campaign=campaign_req)
+            if campaign_user.role == 'A':
+                return True
+            return False
+        except CampaignUsers.DoesNotExist:
+            return False
     
 class IsCampaignUser(permissions.BasePermission):
     """
     Checked to see if a User is Authenticated, and if that have the Player Role in the Campaign User's Table.
     """
     def has_permission(self, request, view):
+        #if hasattr(request, 'campaign'):
+        #    campaign_req = request.campaign
+        #elif request.query_params.get('campaign') is not None:
+        #    campaign_req = request.query_params.get('campaign')
+        #else:
+        #    campaign_req = 0
+        #if request.user.is_authenticated & request.method in permissions.SAFE_METHODS & CampaignUsers.objects.filter(user=request.user, campaign=campaign_req, campaignusers__role="P") is not None:
+        #    return True
+        #return False
+    
+        return request.user.is_authenticated
+    
+    def has_object_permission(self, request, view, obj):
+        #if request.method in permissions.SAFE_METHODS & CampaignUsers.objects.filter(user=request.user, campaign=obj.campaign, campaignusers__role="P") is not None:
+        #    return True
+        #return False
+    
         if hasattr(request, 'campaign'):
             campaign_req = request.campaign
         elif request.query_params.get('campaign') is not None:
             campaign_req = request.query_params.get('campaign')
+        elif view.kwargs.get('pk') != "":
+            if "campaigncore" in request.path:
+                campaign_req = obj.id
+            else:
+                campaign_req = obj.campaign.id
         else:
-            campaign_req = 0
-        if request.user.is_authenticated & request.method in permissions.SAFE_METHODS & CampaignUsers.objects.filter(user=request.user, campaign=campaign_req, campaignusers__role="P") is not None:
-            return True
-        return False
-    
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS & CampaignUsers.objects.filter(user=request.user, campaign=obj.campaign, campaignusers__role="P") is not None:
-            return True
-        return False
+            return False
+        try:
+            campaign_user = CampaignUsers.objects.get(user=request.user, campaign=campaign_req)
+            if campaign_user.role == 'P':
+                return True
+            return False
+        except CampaignUsers.DoesNotExist:
+            return False
     
 class IsCampaignViewer(permissions.BasePermission):
     """
     Checked to see if a User is Authenticated, and if that have the Viewer Role in the Campaign User's Table.
     """
     def has_permission(self, request, view):
-        if hasattr(request, 'campaign'):
-            campaign_req = request.campaign
-        elif self.request.query_params.get('campaign') is not None:
-            campaign_req = request.query_params.get('campaign')
-        else:
-            campaign_req = 0
-        if request.user.is_authenticated & request.method in permissions.SAFE_METHODS & CampaignUsers.objects.filter(user=request.user, campaign=campaign_req, campaignusers__role="V") is not None:
-            return True
-        return False
+        #if hasattr(request, 'campaign'):
+        #    campaign_req = request.campaign
+        #elif self.request.query_params.get('campaign') is not None:
+        #    campaign_req = request.query_params.get('campaign')
+        #else:
+        #    campaign_req = 0
+        #if request.user.is_authenticated & request.method in permissions.SAFE_METHODS & CampaignUsers.objects.filter(user=request.user, campaign=campaign_req, campaignusers__role="V") is not None:
+        #    return True
+        #return False
+        
+        return request.user.is_authenticated
     
     def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS & CampaignUsers.objects.filter(user=request.user, campaign=obj.campaign, campaignusers__role="V") is not None:
-            return True
-        return False
+        #if request.method in permissions.SAFE_METHODS & CampaignUsers.objects.filter(user=request.user, campaign=obj.campaign, campaignusers__role="V") is not None:
+        #    return True
+        #return False
+    
+        if hasattr(request, 'campaign'):
+            campaign_req = request.campaign
+        elif request.query_params.get('campaign') is not None:
+            campaign_req = request.query_params.get('campaign')
+        elif view.kwargs.get('pk') != "":
+            if "campaigncore" in request.path:
+                campaign_req = obj.id
+            else:
+                campaign_req = obj.campaign.id
+        else:
+            return False
+        try:
+            campaign_user = CampaignUsers.objects.get(user=request.user, campaign=campaign_req)
+            if campaign_user.role == 'V':
+                return True
+            return False
+        except CampaignUsers.DoesNotExist:
+            return False
 
 class CampaignIsPublic(permissions.BasePermission):
     """

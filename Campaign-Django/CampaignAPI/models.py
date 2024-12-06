@@ -7,6 +7,7 @@ class CampaignCore(models.Model):
     public = models.BooleanField(default=False)
 
     class Meta:
+        #Set this for easy readability when the table is pluralized (Primarily for the Admin Center)
         verbose_name_plural = "Campaign Cores"
 
     def __str__(self):
@@ -26,7 +27,10 @@ class CampaignUsers(models.Model):
     role = models.CharField(max_length=1, choices=role_types)
 
     class Meta:
+        #Set this for easy readability when the table is pluralized (Primarily for the Admin Center)
         verbose_name_plural = "Campaign Users"
+        #Set so that you can only have a user in a campaign once
+        unique_together = ('campaign','user')
 
 class PartyMember(models.Model):
     character_name = models.CharField(max_length=255)
@@ -40,6 +44,7 @@ class PartyMember(models.Model):
     campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
+        #Set this for easy readability when the table is pluralized (Primarily for the Admin Center)
         verbose_name_plural = "Party Members"
 
     def __str__(self):
@@ -58,6 +63,7 @@ class Receivable(models.Model):
     campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
+        #Set this for easy readability when the table is pluralized (Primarily for the Admin Center)
         verbose_name_plural = "Receivables"
 
     def __str__(self):
@@ -77,6 +83,7 @@ class Payable(models.Model):
     campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
+        #Set this for easy readability when the table is pluralized (Primarily for the Admin Center)
         verbose_name_plural = "Payables"
 
     def __str__(self):
@@ -90,6 +97,7 @@ class Vehicles(models.Model):
     campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
+        #Set this for easy readability when the table is pluralized (Primarily for the Admin Center)
         verbose_name_plural = "Vehicles"
 
     def __str__(self):
@@ -104,6 +112,7 @@ class Hirelings(models.Model):
     campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
+        #Set this for easy readability when the table is pluralized (Primarily for the Admin Center)
         verbose_name_plural = "Hirelings"
 
     def __str__(self):
@@ -145,6 +154,7 @@ class MagicItems(models.Model):
     campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
+        #Set this for easy readability when the table is pluralized (Primarily for the Admin Center)
         verbose_name_plural = "Magic Items"
 
     def __str__(self):
@@ -165,6 +175,7 @@ class ConsumItems(models.Model):
     campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
+        #Set this for easy readability when the table is pluralized (Primarily for the Admin Center)
         verbose_name_plural = "Consumable Items"
     
     def __str__(self):
@@ -179,6 +190,7 @@ class CalendarCore(models.Model):
     campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
+        #Set this for easy readability when the table is pluralized (Primarily for the Admin Center)
         verbose_name_plural = "Calendar Cores"
 
     def __str__(self):
@@ -192,6 +204,7 @@ class CalMonth(models.Model):
     campaign = models.ForeignKey(CampaignCore, on_delete=models.CASCADE)
 
     class Meta:
+        #Set this for easy readability when the table is pluralized (Primarily for the Admin Center)
         verbose_name_plural = "Calendar Months"
 
     def __str__(self):
@@ -207,6 +220,7 @@ class CalEvent(models.Model):
     description = models.TextField(blank=True)
 
     class Meta:
+        #Set this for easy readability when the table is pluralized (Primarily for the Admin Center)
         verbose_name_plural = "Calendar Events"
 
     def __str__(self):
