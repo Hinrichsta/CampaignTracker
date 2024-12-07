@@ -5,6 +5,17 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+User_List = User_Views.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+
+User_Info = User_Views.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'delete': 'destroy'
+})
+
 CampaignCore_List = CampaignCore_Views.as_view({
     'get': 'list',
     'post': 'create'
@@ -140,6 +151,8 @@ CalEvent_Info = ConsumItems_Views.as_view({
 urlpatterns = [
     path('auth/', TokenObtainPairView.as_view(), name='token_get'),
     path('auth/renew', TokenRefreshView.as_view(), name='token_renew'),
+    path('users/', User_List, name="Users"),
+    path('users/<int:pk>', User_Info, name="UserInfo"),
     path('campaigncore/', CampaignCore_List, name="Campaigns"),
     path('campaigncore/<int:pk>', CampaignCore_Info, name="CampaignInfo"),
     path('campaignUsers/', CampaignUsers_List, name="CampaignUsers"),

@@ -29,6 +29,24 @@ def authenticate_user(request):
     # Authentication failed
     return None, (401, 'Unauthorized', {'WWW-Authenticate': 'Basic realm="CampaignTracker"'})
 
+class User_Views(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = User_Serial
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            if self.request.method in permissions.SAFE_METHODS:
+                if self.request.query_params.get('user') is not None:
+                    user = self.request.query_params.get('user')
+                    return User.objects.filter(user in user)
+                elif self.kwargs.get('pk') is not None:
+                    user = self.kwargs.get('pk')
+                    return User.objects.filter(user__id=user)
+            if self.request.user == User.objects.filter(user=self.request.user):
+                return User.objects.filter(user=self.request.user)
+        return CampaignCore.objects.none()
+
 
 class CampaignCore_Views(viewsets.ModelViewSet):
     """
@@ -36,16 +54,28 @@ class CampaignCore_Views(viewsets.ModelViewSet):
     """
     queryset = CampaignCore.objects.all()
     serializer_class = CampaignCore_Serial
-    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
 
 
     def get_queryset(self):
         """
         Filters the Campaigns based on what user is logged in, by checking against the permissions table.
         """
-        user = self.request.user
+        if self.request.user.is_authenticated:
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    return CampaignCore.objects.filter(public=public)
+            else:
+                user = self.request.user
+                return CampaignCore.objects.filter(campaignusers__user=user)
+        else:
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    return CampaignCore.objects.filter(public=public)
+            return CampaignCore.objects.none()
 
-        return CampaignCore.objects.filter(campaignusers__user=user)
 
 class CampaignUsers_Views(viewsets.ModelViewSet):
     """
@@ -55,24 +85,7 @@ class CampaignUsers_Views(viewsets.ModelViewSet):
     """
     queryset = CampaignUsers.objects.all()
     serializer_class = CampaignUsers_Serial
-    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
-
-#    def get_permissions(self):
-#        """
-#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-#        
-#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-#        """
-#        if self.action == 'list' or 'retrieve':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-#        if self.action == 'create' or 'update' or 'partial_update':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-#        if self.action == 'destroy':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#        else:
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#            
-#        return [permission() for permission in permission_classes]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
 
     def get_queryset(self):
         """
@@ -80,19 +93,33 @@ class CampaignUsers_Views(viewsets.ModelViewSet):
 
         If as user doesn't have access to a specific campaign it doesn't return anything.
         """
-        if 'campaign' in self.request.query_params:
-            user = self.request.user
-            campaign = self.request.query_params.get('campaign')
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
-            return CampaignUsers.objects.filter(campaign_id__in=access,campaign=campaign)
+        if self.request.user.is_authenticated:
+            if 'campaign' in self.request.query_params:
+                user = self.request.user
+                campaign = self.request.query_params.get('campaign')
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
+                return CampaignUsers.objects.filter(campaign_id__in=access,campaign=campaign)
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return CampaignUsers.objects.filter(campaign=public_campaigns)
+            else:
+                user = self.request.user
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list by finding what values in the list are in the access Object
+                return CampaignUsers.objects.filter(campaign_id__in=access)   
         else:
-            user = self.request.user
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list by finding what values in the list are in the access Object
-            return CampaignUsers.objects.filter(campaign_id__in=access)       
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return CampaignUsers.objects.filter(campaign=public_campaigns)
+            return CampaignUsers.objects.none()
+    
 
 class Party_Views(viewsets.ModelViewSet):
     """
@@ -102,26 +129,7 @@ class Party_Views(viewsets.ModelViewSet):
     """
     queryset = PartyMember.objects.all()
     serializer_class = Party_Serial
-    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
-
-#    def get_permissions(self):
-#        """
-#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-#        
-#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-#        """
-#        if self.action == 'list' or 'retrieve':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-#        elif self.action == 'create' or 'update' or 'partial_update':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-#        elif self.action == 'destroy':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#        else:
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#        
-#            
-#        return [permission() for permission in permission_classes]
-        
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
 
     def get_queryset(self):
         """
@@ -129,19 +137,32 @@ class Party_Views(viewsets.ModelViewSet):
 
         If as user doesn't have access to a specific campaign it doesn't return anything.
         """
-        if 'campaign' in self.request.query_params:
-            user = self.request.user
-            campaign = self.request.query_params.get('campaign')
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
-            return PartyMember.objects.filter(campaign_id__in=access,campaign=campaign)
+        if self.request.user.is_authenticated:
+            if 'campaign' in self.request.query_params:
+                user = self.request.user
+                campaign = self.request.query_params.get('campaign')
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
+                return PartyMember.objects.filter(campaign_id__in=access,campaign=campaign)
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return PartyMember.objects.filter(campaign=public_campaigns)
+            else:
+                user = self.request.user
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list by finding what values in the list are in the access Object
+                return PartyMember.objects.filter(campaign_id__in=access)  
         else:
-            user = self.request.user
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list by finding what values in the list are in the access Object
-            return PartyMember.objects.filter(campaign_id__in=access)  
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return PartyMember.objects.filter(campaign=public_campaigns)
+            return PartyMember.objects.none()
 
 class Receivable_Views(viewsets.ModelViewSet):
     """
@@ -151,23 +172,7 @@ class Receivable_Views(viewsets.ModelViewSet):
     """
     queryset = Receivable.objects.all()
     serializer_class = Receivable_Serial
-    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
-
-#    def get_permissions(self):
-#        """
-#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-#        
-#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-#        """
-#        if self.action == 'list' or 'retrieve':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-#        elif self.action == 'create' or 'update' or 'partial_update':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-#        elif self.action == 'destroy':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#        else:
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#        return [permission() for permission in permission_classes]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
 
     def get_queryset(self):
         """
@@ -175,19 +180,32 @@ class Receivable_Views(viewsets.ModelViewSet):
 
         If as user doesn't have access to a specific campaign it doesn't return anything.
         """
-        if 'campaign' in self.request.query_params:
-            user = self.request.user
-            campaign = self.request.query_params.get('campaign')
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
-            return Receivable.objects.filter(campaign_id__in=access,campaign=campaign)
+        if self.request.user.is_authenticated:
+            if 'campaign' in self.request.query_params:
+                user = self.request.user
+                campaign = self.request.query_params.get('campaign')
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
+                return Receivable.objects.filter(campaign_id__in=access,campaign=campaign)
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return Receivable.objects.filter(campaign=public_campaigns)
+            else:
+                user = self.request.user
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list by finding what values in the list are in the access Object
+                return Receivable.objects.filter(campaign_id__in=access)  
         else:
-            user = self.request.user
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list by finding what values in the list are in the access Object
-            return Receivable.objects.filter(campaign_id__in=access)  
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return Receivable.objects.filter(campaign=public_campaigns)
+            return Receivable.objects.none()
 
 class Payable_Views(viewsets.ModelViewSet):
     """
@@ -197,24 +215,7 @@ class Payable_Views(viewsets.ModelViewSet):
     """
     queryset = Payable.objects.all()
     serializer_class = Payable_Serial
-    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
-
-#    def get_permissions(self):
-#        """
-#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-#        
-#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-#        """
-#        if self.action == 'list' or 'retrieve':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-#        if self.action == 'create' or 'update' or 'partial_update':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-#        if self.action == 'destroy':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#        else:
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#
-#        return [permission() for permission in permission_classes]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
 
     def get_queryset(self):
         """
@@ -222,19 +223,32 @@ class Payable_Views(viewsets.ModelViewSet):
 
         If as user doesn't have access to a specific campaign it doesn't return anything.
         """
-        if 'campaign' in self.request.query_params:
-            user = self.request.user
-            campaign = self.request.query_params.get('campaign')
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
-            return Payable.objects.filter(campaign_id__in=access,campaign=campaign)
+        if self.request.user.is_authenticated:
+            if 'campaign' in self.request.query_params:
+                user = self.request.user
+                campaign = self.request.query_params.get('campaign')
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
+                return Payable.objects.filter(campaign_id__in=access,campaign=campaign)
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return Payable.objects.filter(campaign=public_campaigns)
+            else:
+                user = self.request.user
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list by finding what values in the list are in the access Object
+                return Payable.objects.filter(campaign_id__in=access)  
         else:
-            user = self.request.user
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list by finding what values in the list are in the access Object
-            return Payable.objects.filter(campaign_id__in=access)  
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return Payable.objects.filter(campaign=public_campaigns)
+            return Payable.objects.none()
 
 class Vehicles_Views(viewsets.ModelViewSet):
     """
@@ -244,24 +258,7 @@ class Vehicles_Views(viewsets.ModelViewSet):
     """
     queryset = Vehicles.objects.all()
     serializer_class = Vehicles_Serial
-    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
-
-#   def get_permissions(self):
-#       """
-#       Sets what permissions a user needs to perform an action based on the HTTP method they are using
-#       
-#       Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-#       """
-#       if self.action == 'list' or 'retrieve':
-#           permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-#       if self.action == 'create' or 'update' or 'partial_update':
-#           permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-#       if self.action == 'destroy':
-#           permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#       else:
-#           permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#           
-#       return [permission() for permission in permission_classes]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
 
     def get_queryset(self):
         """
@@ -269,19 +266,32 @@ class Vehicles_Views(viewsets.ModelViewSet):
 
         If as user doesn't have access to a specific campaign it doesn't return anything.
         """
-        if 'campaign' in self.request.query_params:
-            user = self.request.user
-            campaign = self.request.query_params.get('campaign')
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
-            return Vehicles.objects.filter(campaign_id__in=access,campaign=campaign)
+        if self.request.user.is_authenticated:
+            if 'campaign' in self.request.query_params:
+                user = self.request.user
+                campaign = self.request.query_params.get('campaign')
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
+                return Vehicles.objects.filter(campaign_id__in=access,campaign=campaign)
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return Vehicles.objects.filter(campaign=public_campaigns)
+            else:
+                user = self.request.user
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list by finding what values in the list are in the access Object
+                return Vehicles.objects.filter(campaign_id__in=access)  
         else:
-            user = self.request.user
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list by finding what values in the list are in the access Object
-            return Vehicles.objects.filter(campaign_id__in=access)  
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return Vehicles.objects.filter(campaign=public_campaigns)
+            return Vehicles.objects.none()
 
 class Hirelings_Views(viewsets.ModelViewSet):
     """
@@ -291,24 +301,7 @@ class Hirelings_Views(viewsets.ModelViewSet):
     """
     queryset = Hirelings.objects.all()
     serializer_class = Hirelings_Serial
-    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
-
-#    def get_permissions(self):
-#        """
-#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-#        
-#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-#        """
-#        if self.action == 'list' or 'retrieve':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-#        if self.action == 'create' or 'update' or 'partial_update':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-#        if self.action == 'destroy':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#        else:
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#            
-#        return [permission() for permission in permission_classes]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
 
     def get_queryset(self):
         """
@@ -316,19 +309,32 @@ class Hirelings_Views(viewsets.ModelViewSet):
 
         If as user doesn't have access to a specific campaign it doesn't return anything.
         """
-        if 'campaign' in self.request.query_params:
-            user = self.request.user
-            campaign = self.request.query_params.get('campaign')
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
-            return Hirelings.objects.filter(campaign_id__in=access,campaign=campaign)
+        if self.request.user.is_authenticated:
+            if 'campaign' in self.request.query_params:
+                user = self.request.user
+                campaign = self.request.query_params.get('campaign')
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
+                return Hirelings.objects.filter(campaign_id__in=access,campaign=campaign)
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return Hirelings.objects.filter(campaign=public_campaigns)
+            else:
+                user = self.request.user
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list by finding what values in the list are in the access Object
+                return Hirelings.objects.filter(campaign_id__in=access)  
         else:
-            user = self.request.user
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list by finding what values in the list are in the access Object
-            return Hirelings.objects.filter(campaign_id__in=access)  
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return Hirelings.objects.filter(campaign=public_campaigns)
+            return Hirelings.objects.none()
 
 class MagicItems_Views(viewsets.ModelViewSet):
     """
@@ -338,24 +344,7 @@ class MagicItems_Views(viewsets.ModelViewSet):
     """
     queryset = MagicItems.objects.all()
     serializer_class = MagicItems_Serial
-    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
-
-#    def get_permissions(self):
-#        """
-#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-#        
-#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-#        """
-#        if self.action == 'list' or 'retrieve':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-#        if self.action == 'create' or 'update' or 'partial_update':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-#        if self.action == 'destroy':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#        else:
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#            
-#        return [permission() for permission in permission_classes]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
 
     def get_queryset(self):
         """
@@ -363,19 +352,33 @@ class MagicItems_Views(viewsets.ModelViewSet):
 
         If as user doesn't have access to a specific campaign it doesn't return anything.
         """
-        if 'campaign' in self.request.query_params:
-            user = self.request.user
-            campaign = self.request.query_params.get('campaign')
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
-            return MagicItems.objects.filter(campaign_id__in=access,campaign=campaign)
+        if self.request.user.is_authenticated:
+            if 'campaign' in self.request.query_params:
+                user = self.request.user
+                campaign = self.request.query_params.get('campaign')
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
+                return MagicItems.objects.filter(campaign_id__in=access,campaign=campaign)
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return MagicItems.objects.filter(campaign=public_campaigns)
+            else:
+                user = self.request.user
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list by finding what values in the list are in the access Object
+                return MagicItems.objects.filter(campaign_id__in=access)  
         else:
-            user = self.request.user
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list by finding what values in the list are in the access Object
-            return MagicItems.objects.filter(campaign_id__in=access)  
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return MagicItems.objects.filter(campaign=public_campaigns)
+            else:
+                return MagicItems.objects.none()
 
 class ConsumItems_Views(viewsets.ModelViewSet):
     """
@@ -385,24 +388,7 @@ class ConsumItems_Views(viewsets.ModelViewSet):
     """
     queryset = ConsumItems.objects.all()
     serializer_class = ConsumItems_Serial
-    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
-
-#    def get_permissions(self):
-#        """
-#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-#        
-#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-#        """
-#        if self.action == 'list' or 'retrieve':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-#        if self.action == 'create' or 'update' or 'partial_update':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-#        if self.action == 'destroy':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#        else:
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#            
-#        return [permission() for permission in permission_classes]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
 
     def get_queryset(self):
         """
@@ -410,19 +396,32 @@ class ConsumItems_Views(viewsets.ModelViewSet):
 
         If as user doesn't have access to a specific campaign it doesn't return anything.
         """
-        if 'campaign' in self.request.query_params:
-            user = self.request.user
-            campaign = self.request.query_params.get('campaign')
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
-            return ConsumItems.objects.filter(campaign_id__in=access,campaign=campaign)
+        if self.request.user.is_authenticated:
+            if 'campaign' in self.request.query_params:
+                user = self.request.user
+                campaign = self.request.query_params.get('campaign')
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
+                return ConsumItems.objects.filter(campaign_id__in=access,campaign=campaign)
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return ConsumItems.objects.filter(campaign=public_campaigns)
+            else:
+                user = self.request.user
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list by finding what values in the list are in the access Object
+                return ConsumItems.objects.filter(campaign_id__in=access)  
         else:
-            user = self.request.user
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list by finding what values in the list are in the access Object
-            return ConsumItems.objects.filter(campaign_id__in=access)  
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return ConsumItems.objects.filter(campaign=public_campaigns)
+            return ConsumItems.objects.none()
 
 class CalendarCore_Views(viewsets.ModelViewSet):
     """
@@ -432,24 +431,7 @@ class CalendarCore_Views(viewsets.ModelViewSet):
     """
     queryset = CalendarCore.objects.all()
     serializer_class = CalendarCore_Serial
-    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
-
-#    def get_permissions(self):
-#        """
-#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-#        
-#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-#        """
-#        if self.action == 'list' or 'retrieve':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-#        if self.action == 'create' or 'update' or 'partial_update':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-#        if self.action == 'destroy':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#        else:
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#            
-#        return [permission() for permission in permission_classes]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
 
     def get_queryset(self):
         """
@@ -457,19 +439,32 @@ class CalendarCore_Views(viewsets.ModelViewSet):
 
         If as user doesn't have access to a specific campaign it doesn't return anything.
         """
-        if 'campaign' in self.request.query_params:
-            user = self.request.user
-            campaign = self.request.query_params.get('campaign')
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
-            return CalendarCore.objects.filter(campaign_id__in=access,campaign=campaign)
+        if self.request.user.is_authenticated:
+            if 'campaign' in self.request.query_params:
+                user = self.request.user
+                campaign = self.request.query_params.get('campaign')
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
+                return CalendarCore.objects.filter(campaign_id__in=access,campaign=campaign)
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return CalendarCore.objects.filter(campaign=public_campaigns)
+            else:
+                user = self.request.user
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list by finding what values in the list are in the access Object
+                return CalendarCore.objects.filter(campaign_id__in=access) 
         else:
-            user = self.request.user
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list by finding what values in the list are in the access Object
-            return CalendarCore.objects.filter(campaign_id__in=access)  
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return CalendarCore.objects.filter(campaign=public_campaigns)
+            return CalendarCore.objects.none()
 
 class CalMonth_Views(viewsets.ModelViewSet):
     """
@@ -479,24 +474,7 @@ class CalMonth_Views(viewsets.ModelViewSet):
     """
     queryset = CalMonth.objects.all()
     serializer_class = CalMonth_Serial
-    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
-
-#    def get_permissions(self):
-#        """
-#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-#        
-#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-#        """
-#        if self.action == 'list' or 'retrieve':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-#        if self.action == 'create' or 'update' or 'partial_update':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-#        if self.action == 'destroy':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#        else:
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#            
-#        return [permission() for permission in permission_classes]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
 
     def get_queryset(self):
         """
@@ -504,19 +482,32 @@ class CalMonth_Views(viewsets.ModelViewSet):
 
         If as user doesn't have access to a specific campaign it doesn't return anything.
         """
-        if 'campaign' in self.request.query_params:
-            user = self.request.user
-            campaign = self.request.query_params.get('campaign')
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
-            return CalMonth.objects.filter(campaign_id__in=access,campaign=campaign)
+        if self.request.user.is_authenticated:
+            if 'campaign' in self.request.query_params:
+                user = self.request.user
+                campaign = self.request.query_params.get('campaign')
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
+                return CalMonth.objects.filter(campaign_id__in=access,campaign=campaign)
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return CalMonth.objects.filter(campaign=public_campaigns)
+            else:
+                user = self.request.user
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list by finding what values in the list are in the access Object
+                return CalMonth.objects.filter(campaign_id__in=access)  
         else:
-            user = self.request.user
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list by finding what values in the list are in the access Object
-            return CalMonth.objects.filter(campaign_id__in=access)  
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return CalMonth.objects.filter(campaign=public_campaigns)
+            return CalMonth.objects.none()
 
 class CalEvent_Views(viewsets.ModelViewSet):
     """
@@ -526,24 +517,7 @@ class CalEvent_Views(viewsets.ModelViewSet):
     """
     queryset = CalEvent.objects.all()
     serializer_class = CalEvent_Serial
-    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignUser|IsCampaignViewer]
-
-#    def get_permissions(self):
-#        """
-#        Sets what permissions a user needs to perform an action based on the HTTP method they are using
-#        
-#        Being authenticated is a requirement off all the Custom permissions, and permissions are set per campaign
-#        """
-#        if self.action == 'list' or 'retrieve':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer]
-#        if self.action == 'create' or 'update' or 'partial_update':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser]
-#        if self.action == 'destroy':
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#        else:
-#            permission_classes = [permissions.IsAdminUser|IsCampaignOwner]
-#            
-#        return [permission() for permission in permission_classes]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
 
     def get_queryset(self):
         """
@@ -551,16 +525,29 @@ class CalEvent_Views(viewsets.ModelViewSet):
 
         If as user doesn't have access to a specific campaign it doesn't return anything.
         """
-        if 'campaign' in self.request.query_params:
-            user = self.request.user
-            campaign = self.request.query_params.get('campaign')
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
-            return CalEvent.objects.filter(campaign_id__in=access,campaign=campaign)
+        if self.request.user.is_authenticated:
+            if 'campaign' in self.request.query_params:
+                user = self.request.user
+                campaign = self.request.query_params.get('campaign')
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list based on the Campaign in the URL, and by finding what values in the list are in the access Object
+                return CalEvent.objects.filter(campaign_id__in=access,campaign=campaign)
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return CalEvent.objects.filter(campaign=public_campaigns)
+            else:
+                user = self.request.user
+                # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
+                access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
+                # Returns a filtered list by finding what values in the list are in the access Object
+                return CalEvent.objects.filter(campaign_id__in=access)  
         else:
-            user = self.request.user
-            # Filters the Campaign User based on the logged in User putting that in an object, and creates a list with all of the values.
-            access = CampaignUsers.objects.filter(user=user).values_list('campaign_id', flat=True)
-            # Returns a filtered list by finding what values in the list are in the access Object
-            return CalEvent.objects.filter(campaign_id__in=access)  
+            if 'public' in self.request.query_params:
+                public = self.request.query_params.get('public')
+                if public:
+                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    return CalEvent.objects.filter(campaign=public_campaigns)
+            return CalEvent.objects.none()

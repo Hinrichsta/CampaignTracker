@@ -3,6 +3,10 @@ from django.contrib.auth.models import User
 from CampaignAPI.models import CampaignCore,CampaignUsers,PartyMember,Receivable,Payable,Vehicles,Hirelings,MagicItems,ConsumItems,CalendarCore,CalMonth,CalEvent
 from django.core.exceptions import ValidationError
 
+class User_Serial(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id','username','email']
 
 
 class CampaignCore_Serial(serializers.ModelSerializer):
