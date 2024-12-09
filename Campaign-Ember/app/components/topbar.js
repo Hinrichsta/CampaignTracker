@@ -6,12 +6,38 @@ export default class topbarComponent extends Component {
   @tracked DropdownVisible = false;
   @tracked DarkMode = true;
 
-  @action toggleDropdown() {
+  @action toggleDropdown(event) {
+    event.stopPropagation();
     this.DropdownVisible = !this.DropdownVisible;
   }
 
   @action closeDropdown() {
     this.DropdownVisible = false;
+  }
+
+  @action preventcloseDropdown(event) {
+      event.stopPropagation(); // Prevent the click inside the menu from closing it
+  }
+
+  @action handleClickOutside(event) {
+    // Check if the click is outside of the menu and button
+    if (
+        !event.target.closest('.user-dropdown') &&
+        !event.target.closest('.user-icon')
+    ) {
+        this.closeDropdown();
+    }
+  }
+
+  constructor() {
+    super(...arguments);
+    document.addEventListener('click', this.handleClickOutside.bind(this));
+  }
+
+  // Remove event listener when the component is destroyed
+  willDestroy() {
+    super.willDestroy();
+    document.removeEventListener('click', this.handleClickOutside.bind(this));
   }
 
   @action toggleTheme() {
