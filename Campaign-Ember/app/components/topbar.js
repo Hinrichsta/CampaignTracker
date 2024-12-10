@@ -16,16 +16,16 @@ export default class topbarComponent extends Component {
   }
 
   @action preventcloseDropdown(event) {
-      event.stopPropagation(); // Prevent the click inside the menu from closing it
+    event.stopPropagation(); // Prevent the click inside the menu from closing it
   }
 
   @action handleClickOutside(event) {
     // Check if the click is outside of the menu and button
     if (
-        !event.target.closest('.user-dropdown') &&
-        !event.target.closest('.user-icon')
+      !event.target.closest('.user-dropdown') &&
+      !event.target.closest('.user-icon')
     ) {
-        this.closeDropdown();
+      this.closeDropdown();
     }
   }
 

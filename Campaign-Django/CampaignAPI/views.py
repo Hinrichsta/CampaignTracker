@@ -70,11 +70,8 @@ class CampaignCore_Views(viewsets.ModelViewSet):
                 user = self.request.user
                 return CampaignCore.objects.filter(campaignusers__user=user)
         else:
-            if 'public' in self.request.query_params:
-                public = self.request.query_params.get('public')
-                if public:
-                    return CampaignCore.objects.filter(public=public)
-            return CampaignCore.objects.none()
+            return CampaignCore.objects.filter(public=True)
+        return CampaignCore.objects.none()
 
 
 class CampaignUsers_Views(viewsets.ModelViewSet):

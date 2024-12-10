@@ -1,3 +1,29 @@
-<div class="">
-Hello World
+<div class="main">
+    <div class="dashboard-upper">
+        <h1>{{@model.name}}</h1>
+        {{#each @model.name as |campaign|}}
+        <div class="campaign-box">
+            <LinkTo @route="home">
+                <h1>{{campaign.name}}</h1>
+            </LinkTo>
+        </div>
+        {{/each}}
+        <div class="campaign-box">
+            <LinkTo @route="home">
+                <h1>Twinlands</h1>
+            </LinkTo>
+        </div>
+        <div class="campaign-box">
+            <LinkTo @route="home">
+                <h1>Eios</h1>
+            </LinkTo>
+        </div>
+    </div>
+    <div class="dashboard-lower">
+        <div class="campaign-box">
+            <LinkTo @route="home">
+                <h1>Faerun</h1>
+            </LinkTo>
+        </div>
+    </div>
 </div>

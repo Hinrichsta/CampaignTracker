@@ -70,7 +70,7 @@ class IsCampaignUser(permissions.BasePermission):
     Checked to see if a User is Authenticated, and if that have the Player Role in the Campaign User's Table.
     """
     def has_permission(self, request, view):
-        if request.user.is_authenticated & request.method in permissions.SAFE_METHODS:
+        if request.user.is_authenticated and request.method in permissions.SAFE_METHODS:
             return True
         return False
     
@@ -106,12 +106,12 @@ class IsCampaignViewer(permissions.BasePermission):
     Checked to see if a User is Authenticated, and if that have the Viewer Role in the Campaign User's Table.
     """
     def has_permission(self, request, view):
-        if request.user.is_authenticated & request.method in permissions.SAFE_METHODS:
+        if request.user.is_authenticated and request.method in permissions.SAFE_METHODS:
             return True
         return False
     
     def has_object_permission(self, request, view, obj):
-        if request.user.is_authenticated & request.method in permissions.SAFE_METHODS:
+        if request.user.is_authenticated and request.method in permissions.SAFE_METHODS:
             if hasattr(request, 'campaign'):
                 campaign_req = request.campaign
             elif request.query_params.get('campaign') is not None:
@@ -143,6 +143,6 @@ class CampaignIsPublic(permissions.BasePermission):
         return False
     
     def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS & CampaignCore.objects.filter(campaign=request.campaign, campaigncore__public=True):
+        if request.method in permissions.SAFE_METHODS and CampaignCore.objects.filter(campaign=request.campaign, campaigncore__public=True):
             return True
         return False
