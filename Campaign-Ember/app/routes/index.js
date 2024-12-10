@@ -1,12 +1,10 @@
 import Route from '@ember/routing/route';
 import { service } from '@ember/service';
-import { query } from '@ember-data/json-api/request';
 
 export default class IndexRoute extends Route {
-    @service store;
+  @service router;
 
-    async model() {
-        const { content } = await this.store.request(query('campaigncore'));
-        return content.data;
-    }
+  beforeModel(/* transition */) {
+    this.router.transitionTo('home'); // Implicitly aborts the on-going transition.
+  }
 }

@@ -1,4 +1,28 @@
-<div class="campaignhome">
-  <Flyout />
-  Hello Campaign!
+<div class="main">
+    <div class="dashboard-upper">
+        {{#each @model as |campaign|}}
+        <div class="campaign-box">
+            <LinkTo @route="home">
+                <h1>{{campaign.campaign_name}}</h1>
+            </LinkTo>
+        </div>
+        {{/each}}
+        <div class="campaign-box">
+            <LinkTo @route="home">
+                <h1>Twinlands</h1>
+            </LinkTo>
+        </div>
+        <div class="campaign-box">
+            <LinkTo @route="home">
+                <h1>Eios</h1>
+            </LinkTo>
+        </div>
+    </div>
+    <div class="dashboard-lower">
+        <div class="campaign-box">
+            <LinkTo @route="home">
+                <h1>Faerun</h1>
+            </LinkTo>
+        </div>
+    </div>
 </div>
