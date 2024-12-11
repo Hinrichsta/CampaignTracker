@@ -143,6 +143,18 @@ class CampaignIsPublic(permissions.BasePermission):
         return False
     
     def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS and CampaignCore.objects.filter(campaign=request.campaign, campaigncore__public=True):
-            return True
+        if request.method in permissions.SAFE_METHODS:
+            if hasattr(request, 'campaign'):
+                campaign_req = request.campaign
+            elif request.query_params.get('campaign') is not None:
+                campaign_req = request.query_params.get('campaign')
+            elif view.kwargs.get('pk') is not None:
+                if "campaigncore" in request.path:
+                    campaign_req = obj.id
+                else:
+                    campaign_req = obj.campaign.id
+            else:
+                return False
+            if CampaignCore.objects.filter(id=campaign_req, public=True):
+                return True
         return False

@@ -160,9 +160,9 @@ class Party_Views(viewsets.ModelViewSet):
             if 'public' in self.request.query_params:
                 public = self.request.query_params.get('public')
                 if public:
-                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    public_campaigns = CampaignCore.objects.get(public=public)
                     return PartyMember.objects.filter(campaign=public_campaigns)
-            return PartyMember.objects.none()
+        return PartyMember.objects.none()
 
 class Receivable_Views(viewsets.ModelViewSet):
     """
@@ -203,7 +203,7 @@ class Receivable_Views(viewsets.ModelViewSet):
             if 'public' in self.request.query_params:
                 public = self.request.query_params.get('public')
                 if public:
-                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    public_campaigns = CampaignCore.objects.get(public=public)
                     return Receivable.objects.filter(campaign=public_campaigns)
             return Receivable.objects.none()
 
@@ -246,7 +246,7 @@ class Payable_Views(viewsets.ModelViewSet):
             if 'public' in self.request.query_params:
                 public = self.request.query_params.get('public')
                 if public:
-                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    public_campaigns = CampaignCore.objects.get(public=public)
                     return Payable.objects.filter(campaign=public_campaigns)
             return Payable.objects.none()
 
@@ -289,7 +289,7 @@ class Vehicles_Views(viewsets.ModelViewSet):
             if 'public' in self.request.query_params:
                 public = self.request.query_params.get('public')
                 if public:
-                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    public_campaigns = CampaignCore.objects.get(public=public)
                     return Vehicles.objects.filter(campaign=public_campaigns)
             return Vehicles.objects.none()
 
@@ -332,7 +332,7 @@ class Hirelings_Views(viewsets.ModelViewSet):
             if 'public' in self.request.query_params:
                 public = self.request.query_params.get('public')
                 if public:
-                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    public_campaigns = CampaignCore.objects.get(public=public)
                     return Hirelings.objects.filter(campaign=public_campaigns)
             return Hirelings.objects.none()
 
@@ -375,7 +375,7 @@ class MagicItems_Views(viewsets.ModelViewSet):
             if 'public' in self.request.query_params:
                 public = self.request.query_params.get('public')
                 if public:
-                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    public_campaigns = CampaignCore.objects.get(public=public)
                     return MagicItems.objects.filter(campaign=public_campaigns)
             else:
                 return MagicItems.objects.none()
@@ -419,7 +419,7 @@ class ConsumItems_Views(viewsets.ModelViewSet):
             if 'public' in self.request.query_params:
                 public = self.request.query_params.get('public')
                 if public:
-                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    public_campaigns = CampaignCore.objects.get(public=public)
                     return ConsumItems.objects.filter(campaign=public_campaigns)
             return ConsumItems.objects.none()
 
@@ -462,7 +462,7 @@ class CalendarCore_Views(viewsets.ModelViewSet):
             if 'public' in self.request.query_params:
                 public = self.request.query_params.get('public')
                 if public:
-                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    public_campaigns = CampaignCore.objects.get(public=public)
                     return CalendarCore.objects.filter(campaign=public_campaigns)
             return CalendarCore.objects.none()
 
@@ -505,7 +505,7 @@ class CalMonth_Views(viewsets.ModelViewSet):
             if 'public' in self.request.query_params:
                 public = self.request.query_params.get('public')
                 if public:
-                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    public_campaigns = CampaignCore.objects.get(public=public)
                     return CalMonth.objects.filter(campaign=public_campaigns)
             return CalMonth.objects.none()
 
@@ -548,6 +548,6 @@ class CalEvent_Views(viewsets.ModelViewSet):
             if 'public' in self.request.query_params:
                 public = self.request.query_params.get('public')
                 if public:
-                    public_campaigns = CampaignCore.objects.filter(public=public)
+                    public_campaigns = CampaignCore.objects.get(public=public)
                     return CalEvent.objects.filter(campaign=public_campaigns)
             return CalEvent.objects.none()
