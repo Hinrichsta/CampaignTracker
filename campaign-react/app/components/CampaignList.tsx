@@ -11,7 +11,7 @@ export type CampaignCoreType = {
     public: boolean;
 }
 
-export default function CampaignList() {
+const CampaignList = () => {
 
     
     const [campaigns, setCampaigns] = useState<CampaignCoreType[]>([]);
@@ -36,3 +36,5 @@ export default function CampaignList() {
         </>
     );
 }
+
+export default CampaignList;
