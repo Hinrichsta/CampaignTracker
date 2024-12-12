@@ -3,20 +3,17 @@
 import { useEffect, useState } from "react";
 import CampaignListItem from "./CampaignListItem";
 import CampaignJournal from "@/services/django";
+import { CampaignCoreType } from "./CampaignList";
 
-export type CampaignCoreType = {
-    id: number;
-    name: string;
-    description: string;
-    public: boolean;
-}
-
-export default function CampaignList() {
+const PublicCampaignList = () => {
 
     
     const [campaigns, setCampaigns] = useState<CampaignCoreType[]>([]);
     const getCampaigns = async () => {
-        setCampaigns((await CampaignJournal.get('/campaigncore/?Public=True')).data);
+        const endpoint = '/campaigncore/?public=True';
+        const tmpCampaigns = await CampaignJournal.get(endpoint)
+
+        setCampaigns(tmpCampaigns);
     };
 
     useEffect(() => {
@@ -24,15 +21,17 @@ export default function CampaignList() {
     }, []);
 
     return (
-        <>
+        <div className="flex flex-row p-6">
             {campaigns.map((campaign) => {
                 return (
                     <CampaignListItem
                         key={campaign.id}
-                        campaign={campaign}    
+                        campaigns={campaign}    
                     />
                 );
             })}
-        </>
+        </div>
     );
 }
+
+export default PublicCampaignList;

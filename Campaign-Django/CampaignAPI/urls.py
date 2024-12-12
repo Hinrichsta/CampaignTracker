@@ -3,6 +3,7 @@ from .views import *
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
+    TokenVerifyView,
 )
 
 User_List = User_Views.as_view({
@@ -151,6 +152,7 @@ CalEvent_Info = ConsumItems_Views.as_view({
 urlpatterns = [
     path('auth/', TokenObtainPairView.as_view(), name='token_get'),
     path('auth/renew', TokenRefreshView.as_view(), name='token_renew'),
+    path('auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('users/', User_List, name="Users"),
     path('users/<int:pk>', User_Info, name="UserInfo"),
     path('campaigncore/', CampaignCore_List, name="Campaigns"),

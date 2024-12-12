@@ -6,7 +6,7 @@ import CampaignJournal from "@/services/django";
 
 export type CampaignCoreType = {
     id: number;
-    name: string;
+    campaign_name: string;
     description: string;
     public: boolean;
 }
@@ -29,7 +29,7 @@ const CampaignList = () => {
                 return (
                     <CampaignListItem
                         key={campaign.id}
-                        campaign={campaign}    
+                        campaigns={campaign}    
                     />
                 );
             })}

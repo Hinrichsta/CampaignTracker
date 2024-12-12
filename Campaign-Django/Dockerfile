@@ -7,4 +7,4 @@ WORKDIR /usr/src/app
 COPY . .
 
 # install dependencies
-RUN pip install --no-cache-dir -r Campaign-Django/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
