@@ -1,11 +1,13 @@
 export default function RootLayout({
     children,
-  }: Readonly<{
+}: Readonly<{
     children: React.ReactNode;
-  }>) {
+}>) {
     return (
         <div>
-            {children}
+            <div>
+                {children}
+            </div>
         </div>
     )
 }

@@ -5,8 +5,6 @@ const DJANGO = 'http://localhost:8000/api/v1'
 
 const CampaignJournal = {
     get: async function(url: string): Promise<any> {
-        console.log('get', DJANGO+url);
-
         return new Promise((resolve, reject) => {
             fetch(`${DJANGO}${url}`, {
                 method: 'GET',
@@ -16,8 +14,6 @@ const CampaignJournal = {
             })
             .then(response => response.json())
             .then((json) => {
-                console.log('Response:', json);
-
                 resolve(json);
             })
             .catch((error => {
@@ -27,8 +23,9 @@ const CampaignJournal = {
     },
 
     post: async function(url: string, data: any): Promise<any> {
-        
         return new Promise((resolve, reject) => {
+            console.log(`${DJANGO}${url}`)
+            console.log(data)
             fetch(`${DJANGO}${url}`, {
                 method: 'POST',
                 body: data,
@@ -39,8 +36,6 @@ const CampaignJournal = {
             })
             .then(response => response.json())
             .then((json) => {
-                console.log('Respons:', json);
-
                 resolve(json);
             })
             .catch((error => {

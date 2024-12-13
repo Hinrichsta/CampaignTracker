@@ -21,12 +21,12 @@ const PublicCampaignList = () => {
     }, []);
 
     return (
-        <div className="flex flex-row p-6">
+        <div className="flex flex-row flex-wrap p-6">
             {campaigns.map((campaign) => {
                 return (
                     <CampaignListItem
                         key={campaign.id}
-                        campaigns={campaign}    
+                        campaign={campaign}    
                     />
                 );
             })}

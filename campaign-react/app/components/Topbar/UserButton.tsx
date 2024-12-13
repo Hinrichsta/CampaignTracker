@@ -4,12 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { UserCircleIcon } from "@heroicons/react/24/outline"; 
 import MenuLinks from "./MenuLinks";
 import useAuthModal from "@/app/hooks/useAuthModal";
+import useJoinModal from "@/app/hooks/useJoinModal";
 
 const UserButton = () => {
     const [userDropdown, setUserDropdown] = useState(false)
     const dropdownRef = useRef<HTMLDivElement>(null);
     const userRef = useRef<HTMLButtonElement>(null);
     const authModal = useAuthModal();
+    const joinModal = useJoinModal();
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -36,17 +38,16 @@ const UserButton = () => {
             {userDropdown && (
                 <div ref={dropdownRef} className="w-40 top-20 absolute -right-4  border rounded-lg bg-slate-600 shadow-md flex flex-col cursor-pointer transition">
                     <MenuLinks 
-                        label='Profile'
-                        onClick={() => console.log('Clicked 1')}
-                    />
-                    <MenuLinks 
-                        label='Settings'
-                        onClick={() => console.log('Clicked 1')}
-                    />
-                    <MenuLinks 
                         label='Login'
                         onClick={() => {
                             authModal.open()
+                            setUserDropdown(false);
+                        }}
+                    />
+                    <MenuLinks 
+                        label='Join'
+                        onClick={() => {
+                            joinModal.open()
                             setUserDropdown(false);
                         }}
                     />

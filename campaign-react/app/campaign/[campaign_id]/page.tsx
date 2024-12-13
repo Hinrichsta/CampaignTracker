@@ -1,9 +1,18 @@
-import { useRouter } from "next/router"
 import { CampaignCoreType } from "@/app/components/CampaignList"
+import CampaignJournal from "@/services/django"
 
-export default function CampaignHomePage() {
-    const router = useRouter();
-    const campaign = router.query;
+export default async function CampaignHomePage({
+    params,
+}: {
+    params: Promise<{ campaign_id: string }>
+}) {
+    const cid = (await params).campaign_id
+
+    const campaign = await CampaignJournal.get(`/campaigncore/${cid}`);
+
+    
+    
+    
     return (
         <div>
             Hello {campaign.campaign_name}

@@ -4,11 +4,15 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
     TokenVerifyView,
+    
 )
 
 User_List = User_Views.as_view({
     'get': 'list',
-    'post': 'create'
+})
+
+User_Create = User_Views.as_view({
+    'post': 'create',
 })
 
 User_Info = User_Views.as_view({
@@ -153,30 +157,31 @@ urlpatterns = [
     path('auth/', TokenObtainPairView.as_view(), name='token_get'),
     path('auth/renew', TokenRefreshView.as_view(), name='token_renew'),
     path('auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    path('users/', User_List, name="Users"),
+    path('users/', User_List, name="UsersList"),
+    path('users/join', User_Create, name="UserCreate"),
     path('users/<int:pk>', User_Info, name="UserInfo"),
     path('campaigncore/', CampaignCore_List, name="Campaigns"),
     path('campaigncore/<int:pk>', CampaignCore_Info, name="CampaignInfo"),
-    path('campaignUsers/', CampaignUsers_List, name="CampaignUsers"),
-    path('campaignUsers/<int:pk>', CampaignUsers_Info, name="CampaignUsersInfo"),
-    path('party/',Party_List, name='PartyMembers'),
-    path('party/<int:pk>',Party_Member_Info, name='Member_Info'),
-    path('receivables/',Receivable_List, name='Receivables'),
-    path('receivables/<int:pk>',Receiv_Trans, name='Receivable_Transactions'),
-    path('payables/',Payable_List, name='Payables'),
-    path('payables/<int:pk>',Pay_Trans, name='Payable_Transactions'),
-    path('vehicles/',Vehicles_List, name='Vehicles'),
-    path('vehicles/<int:pk>',Vehicle_Info, name='Vehicle_Info'),
-    path('hirelings/',Hirelings_List, name='Hirelings'),
-    path('hirelings/<int:pk>',Hireling_Info, name='Hireling_Info'),
-    path('magic-items/',MagicItems_List, name='MagicItems'),
-    path('magic-items/<int:pk>',MagicItem_Info, name='MagicItem_Info'),
-    path('consummable-items/',ConsumItems_List, name='ConsumeItems'),
-    path('conssumable-items/<int:pk>',ConsumItem_Info, name='ConsumeItem_info'),
-    path('calendarcore/',CalendarCore_List, name='CalendarCore'),
-    path('calendarcore/<int:pk>',CalendarCore_Info, name='CalendarCore_info'),
-    path('calmonth/',CalMonth_List, name='CalMonth'),
-    path('calmonth/<int:pk>',CalMonth_Info, name='CalMonth_info'),
-    path('calevent/',CalEvent_List, name='CalEvent'),
-    path('calevent/<int:pk>',CalEvent_Info, name='CalEvent_info'),
+    path('campaigncore/<int:cid>/campaignusers/', CampaignUsers_List, name="CampaignUsers"),
+    path('campaigncore/<int:cid>/campaignusers/<int:pk>', CampaignUsers_Info, name="CampaignUsersInfo"),
+    path('campaigncore/<int:cid>/party/',Party_List, name='PartyMembers'),
+    path('campaigncore/<int:cid>/party/<int:pk>',Party_Member_Info, name='Member_Info'),
+    path('campaigncore/<int:cid>/receivables/',Receivable_List, name='Receivables'),
+    path('campaigncore/<int:cid>/receivables/<int:pk>',Receiv_Trans, name='Receivable_Transactions'),
+    path('campaigncore/<int:cid>/payables/',Payable_List, name='Payables'),
+    path('campaigncore/<int:cid>/payables/<int:pk>',Pay_Trans, name='Payable_Transactions'),
+    path('campaigncore/<int:cid>/vehicles/',Vehicles_List, name='Vehicles'),
+    path('campaigncore/<int:cid>/vehicles/<int:pk>',Vehicle_Info, name='Vehicle_Info'),
+    path('campaigncore/<int:cid>/hirelings/',Hirelings_List, name='Hirelings'),
+    path('campaigncore/<int:cid>/hirelings/<int:pk>',Hireling_Info, name='Hireling_Info'),
+    path('campaigncore/<int:cid>/magic-items/',MagicItems_List, name='MagicItems'),
+    path('campaigncore/<int:cid>/magic-items/<int:pk>',MagicItem_Info, name='MagicItem_Info'),
+    path('campaigncore/<int:cid>/consummable-items/',ConsumItems_List, name='ConsumeItems'),
+    path('campaigncore/<int:cid>/conssumable-items/<int:pk>',ConsumItem_Info, name='ConsumeItem_info'),
+    path('campaigncore/<int:cid>/calendarcore/',CalendarCore_List, name='CalendarCore'),
+    path('campaigncore/<int:cid>/calendarcore/<int:pk>',CalendarCore_Info, name='CalendarCore_info'),
+    path('campaigncore/<int:cid>/calmonth/',CalMonth_List, name='CalMonth'),
+    path('campaigncore/<int:cid>/calmonth/<int:pk>',CalMonth_Info, name='CalMonth_info'),
+    path('campaigncore/<int:cid>/calevent/',CalEvent_List, name='CalEvent'),
+    path('campaigncore/<int:cid>/calevent/<int:pk>',CalEvent_Info, name='CalEvent_info'),
 ]
