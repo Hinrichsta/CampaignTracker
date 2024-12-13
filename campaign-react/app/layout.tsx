@@ -26,7 +26,6 @@ export default function RootLayout({
                         </Link>
                     </div>
                     <UserButton />
-                    
                 </div>
                 <AuthModal />
                 {children}
