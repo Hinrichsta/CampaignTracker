@@ -29,7 +29,7 @@ const CampaignList = () => {
                 return (
                     <CampaignListItem
                         key={campaign.id}
-                        campaigns={campaign}    
+                        campaign={campaign}    
                     />
                 );
             })}

@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { UserCircleIcon } from "@heroicons/react/24/outline"; 
 import MenuLinks from "./MenuLinks";
-import useAuthModal from "@/app/hooks/useAuthModal";
-import useJoinModal from "@/app/hooks/useJoinModal";
+import useAuthModal from "@/app/hooks/Modals/useAuthModal";
+import useJoinModal from "@/app/hooks/Modals/useJoinModal";
 
 const UserButton = () => {
     const [userDropdown, setUserDropdown] = useState(false)

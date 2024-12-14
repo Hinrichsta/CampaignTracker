@@ -24,8 +24,6 @@ const CampaignJournal = {
 
     post: async function(url: string, data: any): Promise<any> {
         return new Promise((resolve, reject) => {
-            console.log(`${DJANGO}${url}`)
-            console.log(data)
             fetch(`${DJANGO}${url}`, {
                 method: 'POST',
                 body: data,
