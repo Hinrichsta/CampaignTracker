@@ -1,11 +1,12 @@
-import { rejects } from "assert";
-import { resolve } from "path";
+import { rejects } from "assert"
+import { resolve } from "path"
 
 const DJANGO = 'http://localhost:8000/api/v1'
 
 const CampaignJournal = {
     get: async function(url: string): Promise<any> {
         return new Promise((resolve, reject) => {
+            console.log(`${DJANGO}${url}`)
             fetch(`${DJANGO}${url}`, {
                 method: 'GET',
                 headers: {

@@ -18,10 +18,12 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body>
-                <Topbar />
-                {children}
-                <AuthModal />
-                <JoinModal />
+                <div className="flex min-h-screen flex-col grow-0 p-3">
+                    <Topbar />
+                    <AuthModal />
+                    <JoinModal />
+                    {children}
+                </div>
             </body>
         </html>
     );
