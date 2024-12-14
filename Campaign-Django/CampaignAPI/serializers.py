@@ -2,8 +2,10 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from CampaignAPI.models import CampaignCore,CampaignUsers,PartyMember,Receivable,Payable,Vehicles,Hirelings,MagicItems,ConsumItems,CalendarCore,CalMonth,CalEvent
 from django.core.exceptions import ValidationError
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.password_validation import validate_password
 
-class User_Serial(serializers.ModelSerializer):
+class UserJoin_Serial(serializers.ModelSerializer):
     pass2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
     class Meta:
@@ -15,17 +17,35 @@ class User_Serial(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs['password'] != attrs['pass2']:
             raise serializers.ValidationError({"password": "The passwords do not match"})
-
+        try:
+            validate_password(attrs['password'])
+        except ValidationError as error:
+            raise serializers.ValidationError(str(error))
         return attrs
     
     def create(self, validated_data):
         user = User.objects.create(
             username=validated_data['username'],
-            email=validated_data['email'],
-            password=validated_data['password']
+            email=validated_data['email']
         )
 
-        return user
+        user.set_password(validated_data['password']) # Needed or else you get the following error and users cannot login. error: Invalid password format or unknown hashing algorithm.
+        user.save()
+
+        token = RefreshToken.for_user(user)
+        user = User_Serial(user)
+        
+        return {
+            'user': user.data,
+            'refresh_token': str(token),
+            'access_token': str(token.access_token),
+        }
+    
+class User_Serial(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id','username','email']
+        read_only_fields = ('id',)
 
 
 class CampaignCore_Serial(serializers.ModelSerializer):

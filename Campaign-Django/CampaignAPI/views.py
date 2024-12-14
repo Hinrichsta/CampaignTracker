@@ -31,9 +31,9 @@ def authenticate_user(request):
     # Authentication failed
     return None, (401, 'Unauthorized', {'WWW-Authenticate': 'Basic realm="CampaignTracker"'})
 
-class User_Views(viewsets.ModelViewSet):
+class UserJoin_Views(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = User_Serial
+    serializer_class = UserJoin_Serial
 
     def get_permissions(self):
         if self.request.method == 'POST':
@@ -43,20 +43,19 @@ class User_Views(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
     
     def create(self, request, *args, **kwargs):
-        serializer = User_Serial(data=request.data)
+        serializer = UserJoin_Serial(data=request.data)
 
         if  serializer.is_valid():
             user = serializer.save()
-            return Response({
-                "message": "User created successfully",
-                "user": {
-                    "username": user.username,
-                    "email": user.email,
-                }
-            }, status=status.HTTP_201_CREATED)
+            response_data = serializer.save()
+            return Response(response_data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+class User_Views(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = User_Serial
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
