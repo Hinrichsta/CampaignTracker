@@ -7,6 +7,7 @@ from CampaignAPI.serializers import *
 from .permissions import *
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 def authenticate_user(request):
     """
@@ -30,6 +31,11 @@ def authenticate_user(request):
 
     # Authentication failed
     return None, (401, 'Unauthorized', {'WWW-Authenticate': 'Basic realm="CampaignTracker"'})
+
+
+
+class TokenObtainPair_Views(TokenObtainPairView):
+    serializer_class = TokenObtainPair_Serial
 
 class UserJoin_Views(viewsets.ModelViewSet):
     queryset = User.objects.all()

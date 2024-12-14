@@ -20,6 +20,7 @@ const AuthModal = () => {
             password: password
         }
 
+        console.log(authData)
         const response = await CampaignJournal.post(
             '/auth/login',
             JSON.stringify(authData)
@@ -27,7 +28,7 @@ const AuthModal = () => {
 
         console.log(response)
         if (response.access_token) {
-            handleLogin(response.user.id,response.access_token,response.refresh_token)
+            handleLogin(response.id as string,response.access_token,response.refresh_token)
             authModal.close();
 
             const SuccessModal = () => {

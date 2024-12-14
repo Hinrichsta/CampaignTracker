@@ -4,6 +4,7 @@ from CampaignAPI.models import CampaignCore,CampaignUsers,PartyMember,Receivable
 from django.core.exceptions import ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.password_validation import validate_password
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class UserJoin_Serial(serializers.ModelSerializer):
     pass2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
@@ -36,10 +37,19 @@ class UserJoin_Serial(serializers.ModelSerializer):
         user = User_Serial(user)
         
         return {
-            'user': user.data,
+            'user': user,
             'refresh_token': str(token),
             'access_token': str(token.access_token),
         }
+    
+class TokenObtainPair_Serial(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        data['id'] = self.user.id
+        data['access_token'] = data.pop('access')
+        data['refresh_token'] = data.pop('refresh')
+        return data
     
 class User_Serial(serializers.ModelSerializer):
     class Meta:

@@ -6,7 +6,6 @@ const DJANGO = 'http://localhost:8000/api/v1'
 const CampaignJournal = {
     get: async function(url: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            console.log(`${DJANGO}${url}`)
             fetch(`${DJANGO}${url}`, {
                 method: 'GET',
                 headers: {
@@ -25,6 +24,8 @@ const CampaignJournal = {
 
     post: async function(url: string, data: any): Promise<any> {
         return new Promise((resolve, reject) => {
+            console.log(`${DJANGO}${url}`)
+            console.log(data)
             fetch(`${DJANGO}${url}`, {
                 method: 'POST',
                 body: data,

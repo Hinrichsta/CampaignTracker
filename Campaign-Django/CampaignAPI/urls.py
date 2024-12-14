@@ -154,7 +154,7 @@ CalEvent_Info = ConsumItems_Views.as_view({
 })
 
 urlpatterns = [
-    path('auth/login', TokenObtainPairView.as_view(), name='token_get'),
+    path('auth/login', TokenObtainPair_Views.as_view(), name='token_get'),
     path('auth/renew', TokenRefreshView.as_view(), name='token_renew'),
     path('auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('users/', User_List, name="UsersList"),

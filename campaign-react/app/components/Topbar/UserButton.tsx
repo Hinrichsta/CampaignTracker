@@ -5,8 +5,15 @@ import { UserCircleIcon } from "@heroicons/react/24/outline";
 import MenuLinks from "./MenuLinks";
 import useAuthModal from "@/app/hooks/Modals/useAuthModal";
 import useJoinModal from "@/app/hooks/Modals/useJoinModal";
+import Logout from "./Logout";
 
-const UserButton = () => {
+interface UserButtonProps {
+    userAuth?: string | null;
+}
+
+const UserButton: React.FC<UserButtonProps> = ({
+    userAuth
+}) => {
     const [userDropdown, setUserDropdown] = useState(false)
     const dropdownRef = useRef<HTMLDivElement>(null);
     const userRef = useRef<HTMLButtonElement>(null);
@@ -37,20 +44,27 @@ const UserButton = () => {
             
             {userDropdown && (
                 <div ref={dropdownRef} className="w-40 top-20 absolute -right-4  border rounded-lg bg-slate-600 shadow-md flex flex-col cursor-pointer transition">
-                    <MenuLinks 
-                        label='Login'
-                        onClick={() => {
-                            authModal.open()
-                            setUserDropdown(false);
-                        }}
-                    />
-                    <MenuLinks 
-                        label='Join'
-                        onClick={() => {
-                            joinModal.open()
-                            setUserDropdown(false);
-                        }}
-                    />
+                    {userAuth ? (
+                        <Logout />
+                    ) : (
+                        <>
+                            <MenuLinks 
+                                label='Login'
+                                onClick={() => {
+                                    authModal.open()
+                                    setUserDropdown(false);
+                                }}
+                            />
+                            <MenuLinks 
+                                label='Join'
+                                onClick={() => {
+                                    joinModal.open()
+                                    setUserDropdown(false);
+                                }}
+                            />
+                        </>
+                    )}
+
                 </div>
             )}
         </div>  

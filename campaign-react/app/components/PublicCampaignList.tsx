@@ -12,7 +12,6 @@ const PublicCampaignList = () => {
     const getCampaigns = async () => {
         const endpoint = '/campaigncore/?public=True';
         const tmpCampaigns = await CampaignJournal.get(endpoint)
-        console.log(tmpCampaigns)
 
         setCampaigns(tmpCampaigns);
     };
