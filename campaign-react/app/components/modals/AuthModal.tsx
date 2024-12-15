@@ -21,12 +21,12 @@ const AuthModal = () => {
             username: username,
             password: password
         }
-
+        console.log(authData)
         const response = await CampaignJournal.post(
             '/auth/login/',
             JSON.stringify(authData)
         );
-
+        console.log(response)
         if (response.access) {
             handleLogin(response.id as string,response.access,response.refresh)
             

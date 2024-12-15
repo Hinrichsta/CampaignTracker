@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 
 const Sidebar: React.FC = () => {
@@ -24,22 +24,35 @@ const Sidebar: React.FC = () => {
 
     return(
         <div className="pt-5">
-            <button 
-                ref={buttonRef}
-                onClick={() => setsidebarOpen(!sidebarOpen)} 
-                className="absolute left-5 bg-slate-400 text-black border-black border-2 rounded-full cursor-pointer shadow-xl" 
-                >
-                <ChevronRightIcon className="size-8 justify-center items-center text-center"/>
-            </button>
-            {sidebarOpen && (
-                <div ref={sidebarRef} className="absolute left-0 border rounded-sm bg-slate-600 shadow-md flex flex-col cursor-pointer transition">
-                    <ul>
-                        <li><a href="#">Item 1</a></li>
-                        <li><a href="#">Item 2</a></li>
-                        <li><a href="#">Item 3</a></li>
+            <div className={`fixed left-3 border rounded-sm bg-slate-600 shadow-md flex flex-col cursor-pointer h-full w-38 md:w-40 lg:w-64 transform transition-all duration-300 ease-in-out ${
+                        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+                        }`}>
+                <div className="absolute pt-6">
+                    <button 
+                        ref={buttonRef}
+                        onClick={() => setsidebarOpen(!sidebarOpen)} 
+                        className={`absolute bg-slate-400 text-black border-black border-2 rounded-full cursor-pointer shadow-xl z-20 ${
+                            sidebarOpen ? "translate-x-60" : "translate-x-60"}`} 
+                        >
+                            {sidebarOpen ? ( 
+                                <ChevronLeftIcon className="size-8 justify-center items-center text-center"/>
+                            ) : (
+                                <ChevronRightIcon className="size-8 justify-center items-center text-center"/>
+                            )}
+                    </button>
+                </div> 
+                {sidebarOpen && (
+                <div 
+                    ref={sidebarRef} 
+                    >
+                    <ul className="px-6 text-2xl text-left">
+                        <li className="py-4"><a href="#">Item 1</a></li>
+                        <li className="py-4"><a href="#">Item 2</a></li>
+                        <li className="py-4"><a href="#">Item 3</a></li>
                     </ul>
                 </div>
             )}
+            </div>
         </div>
     )
 };

@@ -35,7 +35,6 @@ export async function clearAuth() {
 
 export async function updateToken() {
     const refreshToken = await getRefreshToken();
-    (await cookies()).delete('session_access');
     const refreshData = {
         refresh: refreshToken
     }
