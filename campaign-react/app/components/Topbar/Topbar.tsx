@@ -1,8 +1,7 @@
 import Link from "next/link";
 import UserButton from "./UserButton";
-import AuthModal from "../modals/AuthModal";
-import JoinModal from "../modals/JoinModal";
 import { getAuth } from "@/app/hooks/actions";
+import CreateCampaignButton from "./CreateCampaign";
 
 const Topbar = async() => {
     const userAuth = await getAuth();
@@ -14,6 +13,11 @@ const Topbar = async() => {
                     <h1 className="text-5xl object-left">Campaign Tracker</h1>
                 </Link>
             </div>
+            {userAuth ? ( 
+                <CreateCampaignButton />
+            ) : (
+                <></>
+            )}
             <UserButton
                 userAuth = {userAuth}
              />

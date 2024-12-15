@@ -28,13 +28,19 @@ export async function handleLogin(user:string, accessToken:string, refreshToken:
 }
 
 export async function clearAuth() {
-    (await cookies()).set('session_user', '');
-    (await cookies()).set('session_access', '');
-    (await cookies()).set('session_refresh', '')
+    (await cookies()).delete('session_user');
+    (await cookies()).delete('session_access');
+    (await cookies()).delete('session_refresh')
 }
 
 export async function getAuth() {
-    const user = (await cookies()).get('session_user')?.value //question mark makes this optional, and will return undefined if it doesn't exist
+    const user = (await cookies()).get('session_user')?.value; //question mark makes this optional, and will return undefined if it doesn't exist
 
-    return user ? user : null
+    return user ? user : null;
+}
+
+export async function getAuthToken() {
+    let accessToken = (await cookies()).get('session_access')?.value;
+
+    return accessToken;
 }

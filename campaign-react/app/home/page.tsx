@@ -1,11 +1,19 @@
 import CampaignList from "../components/CampaignList"
 import PublicCampaignList from "../components/PublicCampaignList"
+import { getAuth } from "@/app/hooks/actions";
+import NoAuthButtons from "./NoAuth";
 
-export default function HomePage() {
+
+export default async function HomePage() {
+    const userAuth = await getAuth();
     return (
         <div className="flex flex-col flex-wrap">
             <div className="flex flex-col min-h-96 w-full border-black border-b-8 justify-start items-center">
-                Private Campaigns
+                {userAuth ? (
+                    <CampaignList />
+                    ) : ( 
+                        <NoAuthButtons />
+                    )}
             </div>
             <div className="flex flex-col min-h-96 w-full border-black rounded-lg justify-start items-center">
                 <PublicCampaignList />

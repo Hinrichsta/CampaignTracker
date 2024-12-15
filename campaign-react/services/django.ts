@@ -1,16 +1,23 @@
-import { rejects } from "assert"
-import { resolve } from "path"
+import { getAuthToken } from "@/app/hooks/actions";
+import { get } from "http";
 
 const DJANGO = 'http://localhost:8000/api/v1'
 
 const CampaignJournal = {
     get: async function(url: string): Promise<any> {
+        const token = await getAuthToken();
+
+        let headers: { [key: string]: string } = {
+            'Content-type': 'application/json',
+        };
+        if (token !== undefined){
+            headers['Authorization'] = `Bearer  ${token}`;
+        }
+
         return new Promise((resolve, reject) => {
             fetch(`${DJANGO}${url}`, {
                 method: 'GET',
-                headers: {
-                    'Content-type': 'application/json'
-                }
+                headers: headers
             })
             .then(response => response.json())
             .then((json) => {
@@ -23,15 +30,22 @@ const CampaignJournal = {
     },
 
     post: async function(url: string, data: any): Promise<any> {
+        const token = await getAuthToken();
+        let headers: { [key: string]: string } = {
+            'Accept': 'application/json',
+            'Content-type': 'application/json',
+        };
+        if (token !== undefined){
+            headers['Authorization'] = `Bearer  ${token}`;
+        }
         return new Promise((resolve, reject) => {
-            console.log(`${DJANGO}${url}`)
-            console.log(data)
             fetch(`${DJANGO}${url}`, {
                 method: 'POST',
                 body: data,
                 headers: {
                     'Accept': 'application/json',
-                    'Content-type': 'application/json'
+                    'Content-type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 }
             })
             .then(response => response.json())

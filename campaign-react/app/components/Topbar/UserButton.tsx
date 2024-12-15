@@ -34,7 +34,7 @@ const UserButton: React.FC<UserButtonProps> = ({
     }, []);
 
     return(
-        <div className="flex grow order-last justify-end object-right relative">
+        <div className="flex order-last justify-end object-right relative">
             <button
                 ref={userRef}
                 onClick={() => setUserDropdown(!userDropdown)}
@@ -56,7 +56,7 @@ const UserButton: React.FC<UserButtonProps> = ({
                                 }}
                             />
                             <MenuLinks 
-                                label='Join'
+                                label='Sign Up'
                                 onClick={() => {
                                     joinModal.open()
                                     setUserDropdown(false);

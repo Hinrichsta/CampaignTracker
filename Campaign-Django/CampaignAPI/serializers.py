@@ -47,8 +47,6 @@ class TokenObtainPair_Serial(TokenObtainPairSerializer):
         data = super().validate(attrs)
 
         data['id'] = self.user.id
-        data['access_token'] = data.pop('access')
-        data['refresh_token'] = data.pop('refresh')
         return data
     
 class User_Serial(serializers.ModelSerializer):

@@ -6,8 +6,6 @@ import CampaignJournal from "@/services/django";
 import { CampaignCoreType } from "./CampaignList";
 
 const PublicCampaignList = () => {
-
-    
     const [campaigns, setCampaigns] = useState<CampaignCoreType[]>([]);
     const getCampaigns = async () => {
         const endpoint = '/campaigncore/?public=True';
@@ -22,14 +20,13 @@ const PublicCampaignList = () => {
 
     return (
         <div className="flex flex-row flex-wrap p-6">
-            {campaigns.map((campaign) => {
-                return (
-                    <CampaignListItem
-                        key={campaign.id}
-                        campaign={campaign}    
-                    />
-                );
-            })}
+            {campaigns.length > 0 ? (
+                campaigns.map((campaign) => (
+                    <CampaignListItem key={campaign.id} campaign={campaign} />
+                ))
+            ) : (
+                <p>Unfortunately </p>
+            )}
         </div>
     );
 }
