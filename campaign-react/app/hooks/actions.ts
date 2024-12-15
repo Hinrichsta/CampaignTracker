@@ -1,14 +1,14 @@
 'use server';
 
-import exp from "constants";
 import { cookies } from "next/headers";
-import CampaignJournal from "@/services/django";
 
 export async function handleLogin(user:string, accessToken:string, refreshToken:string) {
+    
     (await cookies()).set('session_user', user, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         maxAge: 86400, //One day in seconds
+        sameSite: 'strict',
         path: '/'
     });
 
@@ -23,6 +23,7 @@ export async function handleLogin(user:string, accessToken:string, refreshToken:
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         maxAge: 86400, //One day in seconds
+        sameSite: 'strict',
         path: '/'
     });
 }
@@ -34,25 +35,36 @@ export async function clearAuth() {
 }
 
 export async function updateToken() {
-    const refreshToken = await getRefreshToken();
-    const refreshData = {
-        refresh: refreshToken
-    }
-
-    const response = await CampaignJournal.post(
-        '/auth/renew/',
-        JSON.stringify(refreshData)
-    );
-
-    if (response.access) {
-        (await cookies()).set('session_access', response.access, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 3600, //60 minutes in seconds
-            path: '/'
+    try {
+        const refreshToken = await getRefreshToken();
+    
+        const accessToken = await fetch('http://localhost:8000/api/v1/auth/renew/', {
+            method: 'POST',
+            body: JSON.stringify({
+                refresh: refreshToken
+            }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json',
+            }
         });
-    } else {
-        console.log('error:', response)
+    
+        const json = await accessToken.json()
+    
+        if (json.access) {
+            const cookieStore = await cookies();
+            cookieStore.set('session_access', json.access, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                maxAge: 3600, // 60 minutes in seconds
+                sameSite: 'strict',
+                path: '/'
+            });
+        } else {
+            clearAuth();
+        }
+    } catch (error) {
+        console.log('error:', error)
         clearAuth();
     }
 }
