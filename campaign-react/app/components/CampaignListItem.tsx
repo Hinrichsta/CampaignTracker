@@ -5,7 +5,6 @@ interface CampaignProps {
     campaign: CampaignCoreType
 }
 
-
 const CampaignListItem: React.FC<CampaignProps> = ({
     campaign,
 }) => {

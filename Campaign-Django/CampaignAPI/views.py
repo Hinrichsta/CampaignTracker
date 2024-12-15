@@ -8,6 +8,7 @@ from .permissions import *
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.views import TokenObtainPairView
+from django.db.models import Q
 
 def authenticate_user(request):
     """
@@ -75,17 +76,6 @@ class User_Views(viewsets.ModelViewSet):
             if self.request.user == User.objects.filter(user=self.request.user):
                 return User.objects.filter(user=self.request.user)
         return CampaignCore.objects.none()
-    
-
-    
-    #@action(methods=['post'], detail=False)
-    #def register(self, request, *args, **kwargs):
-    #    # This logic was taken from the `create` on `ModelViewSet`. Alter as needed.
-    #    serializer = self.get_serializer(data=request.data)
-    #    serializer.is_valid(raise_exception=True)
-    #    self.perform_create(serializer)
-    #    headers = self.get_success_headers(serializer.data)
-    #    return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class CampaignCore_Views(viewsets.ModelViewSet):
@@ -108,7 +98,7 @@ class CampaignCore_Views(viewsets.ModelViewSet):
                     return CampaignCore.objects.filter(public=public)
             else:
                 user = self.request.user
-                return CampaignCore.objects.filter(campaignusers__user=user)
+                return CampaignCore.objects.filter(Q(campaignusers__user=user) | Q(public=True))
         else:
             return CampaignCore.objects.filter(public=True)
             

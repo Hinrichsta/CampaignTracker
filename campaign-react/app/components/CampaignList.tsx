@@ -29,7 +29,7 @@ const CampaignList = () => {
         <>
             <div className="flex flex-row flex-wrap p-6">
                 {campaigns.length > 0 ? (
-                    campaigns.map((campaign) => (
+                    campaigns.filter((campaign) => !campaign.public).map((campaign) => (
                         <CampaignListItem key={campaign.id} campaign={campaign} />
                     ))
                 ) : (

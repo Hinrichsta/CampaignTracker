@@ -2,15 +2,17 @@ import { getAuthToken } from "@/app/hooks/actions";
 import { get } from "http";
 
 const DJANGO = 'http://localhost:8000/api/v1'
+const NEXTJS = 'http://localhost:3000'
 
 const CampaignJournal = {
     get: async function(url: string): Promise<any> {
-        const token = await getAuthToken();
+        const token = await getAuthToken(NEXTJS);
 
         let headers: { [key: string]: string } = {
             'Content-Type': 'application/json',
         };
-        if (token !== undefined){
+        
+        if (token !== null){
             headers['Authorization'] = `Bearer  ${token}`;
         }
 
@@ -30,7 +32,7 @@ const CampaignJournal = {
     },
 
     post: async function(url: string, data: any): Promise<any> {
-        const token = await getAuthToken();
+        const token = await getAuthToken(NEXTJS);
         let headers: { [key: string]: string } = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',

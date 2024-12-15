@@ -6,7 +6,7 @@ export default function CampaignRootLayout({
     children: React.ReactNode
   }) {
     return (
-        <div className="flex">
+        <div>
             <Sidebar />
             {children}
         </div>

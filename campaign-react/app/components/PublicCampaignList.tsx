@@ -25,7 +25,10 @@ const PublicCampaignList = () => {
                     <CampaignListItem key={campaign.id} campaign={campaign} />
                 ))
             ) : (
-                <p>Unfortunately </p>
+                <div className="flex-col items-center justify-center text-center text-xl">
+                    <p>Unfortunately There doesn't appear to be any Public Campaigns available...</p>
+                    <p>Why don't you join us and share your campaign for everyone to view!</p>
+                </div>
             )}
         </div>
     );
