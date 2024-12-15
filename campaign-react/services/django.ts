@@ -8,7 +8,7 @@ const CampaignJournal = {
         const token = await getAuthToken();
 
         let headers: { [key: string]: string } = {
-            'Content-type': 'application/json',
+            'Content-Type': 'application/json',
         };
         if (token !== undefined){
             headers['Authorization'] = `Bearer  ${token}`;
@@ -33,7 +33,7 @@ const CampaignJournal = {
         const token = await getAuthToken();
         let headers: { [key: string]: string } = {
             'Accept': 'application/json',
-            'Content-type': 'application/json',
+            'Content-Type': 'application/json',
         };
         if (token !== undefined){
             headers['Authorization'] = `Bearer  ${token}`;

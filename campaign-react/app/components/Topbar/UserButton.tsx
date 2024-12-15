@@ -43,7 +43,7 @@ const UserButton: React.FC<UserButtonProps> = ({
             </button>
             
             {userDropdown && (
-                <div ref={dropdownRef} className="w-40 top-20 absolute -right-4  border rounded-lg bg-slate-600 shadow-md flex flex-col cursor-pointer transition">
+                <div ref={dropdownRef} className="w-40 top-20 absolute -right-4 border rounded-lg bg-slate-600 shadow-md flex flex-col cursor-pointer transition">
                     {userAuth ? (
                         <Logout />
                     ) : (

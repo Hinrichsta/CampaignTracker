@@ -1,13 +1,14 @@
-export default function RootLayout({
+import Sidebar from "@/app/components/Sidebar/Sidebar"
+
+export default function CampaignRootLayout({
     children,
-}: Readonly<{
-    children: React.ReactNode;
-}>) {
+  }: {
+    children: React.ReactNode
+  }) {
     return (
         <div>
-            <div>
-                {children}
-            </div>
+            <Sidebar />
+            {children}
         </div>
     )
-}
+  }
