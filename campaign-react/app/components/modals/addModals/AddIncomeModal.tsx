@@ -17,7 +17,7 @@ const AddIncomeModal = (campaign_id:any) => {
     const [gold, setGold] = useState("");
     const [silver, setSilver] = useState("");
     const [copper, setCopper] = useState("");
-    const [partyTrans, setPartyTrans] = useState("");
+    const [partyTrans, setPartyTrans] = useState(true);
     const [indivPayee, setindivPayee] = useState("");
     const [error, setError] = useState<string[]>([]);
     const [successMessage, setSuccessMessage] = useState<string | null>(null); //Success Modal
@@ -53,7 +53,7 @@ const AddIncomeModal = (campaign_id:any) => {
             setGold("")
             setSilver("")
             setCopper("")
-            setPartyTrans("")
+            setPartyTrans(true)
             setindivPayee("")
             setError([])
 
@@ -74,28 +74,68 @@ const AddIncomeModal = (campaign_id:any) => {
         }
     }
 
+    const PartyMembers = () => {
+        
+    }
+
+    const partyMembers = CampaignJournal.get(
+        `campaigncore/${campaign_id}/party/`
+    )
+
     const content = (
-        <div>
+        <div className="flex">
             {showForm ? (
-                <form className="space-y-3" action={submitIncome}>
-                    <label htmlFor="date">Date</label>
-                    <input onChange={(e) => setRealDate(e.target.value)} id="date" value={realDate} placeholder="Actual Date" type="date" className="px-4 w-full h-12 text-black rounded-lg" required/>
-                    <label htmlFor="gameDate">In-Game Date</label>
-                    <input onChange={(e) => setworldDate(e.target.value)} id="gameDate" value={worldDate} placeholder="In-Game World Date" type="text" className="px-4 w-full h-12 text-black rounded-lg"/>
-                    <label htmlFor="desc">Transaction Description</label>
-                    <input onChange={(e) => setDescription(e.target.value)} id="desc" value={realDate} placeholder="Description" type="text" className="px-4 w-full h-12 text-black rounded-lg" required/>
-                    <label htmlFor="pp">Platinum</label>
-                    <input onChange={(e) => setPlatinum(e.target.value)} id="pp" value={worldDate} placeholder="Platinum" type="text" className="px-4 w-full h-12 text-black rounded-lg"/>
-                    <label htmlFor="gp">Gold</label>
-                    <input onChange={(e) => setGold(e.target.value)} id="gp" value={realDate} placeholder="Gold" type="text" className="px-4 w-full h-12 text-black rounded-lg" required/>
-                    <label htmlFor="sp">Silver</label>
-                    <input onChange={(e) => setSilver(e.target.value)} id="sp" value={worldDate} placeholder="Silver" type="text" className="px-4 w-full h-12 text-black rounded-lg"/>
-                    <label htmlFor="cp">Copper</label>
-                    <input onChange={(e) => setCopper(e.target.value)} id="cp" value={realDate} placeholder="Copper" type="text" className="px-4 w-full h-12 text-black rounded-lg" required/>
-                    <label htmlFor="partyTrans">Full Party Payment</label>
-                    <input onChange={(e) => setPartyTrans(e.target.value)} id="partyTrans" value="true" type="radio" className="px-4 w-full h-12 text-black rounded-lg"/>
-                    <label htmlFor="indivPay">Payment to Individual</label>
-                    <input onChange={(e) => setindivPayee(e.target.value)} id="indivPay" value={realDate} placeholder="" type="text" className="px-4 w-full h-12 text-black rounded-lg" required/>
+                <form className="" action={submitIncome}>
+                    <div className="pt-3">
+                        <label className="px-2" htmlFor="date">Date</label>
+                        <input onChange={(e) => setRealDate(e.target.value)} id="date" value={realDate} placeholder="Actual Date" type="date" className="px-4 h-12 w-full text-black rounded-lg" required/>
+                    </div>
+                    <div className="pt-3">
+                        <label className="px-2" htmlFor="gameDate">In-Game Date</label>
+                        <input onChange={(e) => setworldDate(e.target.value)} id="gameDate" value={worldDate} placeholder="In-Game World Date" type="text" className="px-4 h-12 w-full text-black rounded-lg"/>
+                    </div>
+                    <div className="pt-3">
+                        <label className="px-2" htmlFor="desc">Transaction Description</label>
+                        <input onChange={(e) => setDescription(e.target.value)} id="desc" value={description} placeholder="Description" type="text" className="px-4 h-12 w-full text-black rounded-lg" required/>
+                    </div>
+                    <div className="pt-3">
+                        <label className="px-2" htmlFor="pp">Platinum</label>
+                        <input onChange={(e) => setPlatinum(e.target.value)} id="pp" value={platinum} placeholder="Platinum" type="text" className="px-4 h-12 w-full text-black rounded-lg"/>
+                    </div>
+                    <div className="pt-3">
+                        <label className="px-2" htmlFor="gp">Gold</label>
+                        <input onChange={(e) => setGold(e.target.value)} id="gp" value={gold} placeholder="Gold" type="text" className="px-4 h-12 w-full text-black rounded-lg" required/>
+                    </div>
+                    <div className="pt-3">
+                        <label className="px-2" htmlFor="sp">Silver</label>
+                        <input onChange={(e) => setSilver(e.target.value)} id="sp" value={silver} placeholder="Silver" type="text" className="px-4 h-12 w-full text-black rounded-lg"/>
+                    </div>
+                    <div className="pt-3">
+                        <label className="px-2" htmlFor="cp">Copper</label>
+                        <input onChange={(e) => setCopper(e.target.value)} id="cp" value={copper} placeholder="Copper" type="text" className="px-4 h-12 w-full text-black rounded-lg" required/>
+                    </div>
+                    <div className="pt-6 text-xl flex-row">
+                        <label className="px-2" htmlFor="partyTrans">Full Party Payment</label>
+                        <input onChange={() => setPartyTrans(!partyTrans)} id="partyTrans" checked={partyTrans} type="checkbox" className="px-4 h-4 w-4 text-black rounded-lg"/>
+                        <div>
+                            <label className="px-2 text-sm" htmlFor="partyTrans">*leave checked to remove from general fund</label>
+                        </div>
+                    </div>
+                    { partyTrans ? (
+                        <></>
+                    ) : (
+                        <div className="pt-3">
+                            <label className="px-2" htmlFor="indivPay">Payment to Individual</label>
+                            <select onChange={(e) => setindivPayee(e.target.value)} id="indivPay" value={indivPayee} className="px-4 h-12 w-full text-black rounded-lg" required/>
+                            {partyMembers.length > 0 ? ( 
+                                partyMembers.map((member) => (
+                                    <option>{member.character_name}</option>
+                                ))
+                            ) : ( 
+                                <option></option>
+                            ) }
+                        </div>
+                    )}
                     {error.map((error, index) => {
                         return (
                             <div key={`error_${index}`} className="text-red-600 text-lg">
@@ -103,9 +143,12 @@ const AddIncomeModal = (campaign_id:any) => {
                             </div>
                         )
                     })}
-                    <button className="w-full rounded-lg bg-blue-700 h-12">
-                        Submit
-                    </button>
+                    <div className="pt-6">
+                        <button className="w-full rounded-lg bg-blue-700 h-12">
+                            Submit
+                        </button>
+                    </div>
+
                 </form>
             ) : (
                 //Success Modal

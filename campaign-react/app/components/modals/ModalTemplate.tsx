@@ -49,9 +49,9 @@ const ModalTemplate: React.FC<ModalProps> = ({
 
     return (
         <div className="flex items-center justify-center fixed inset-0 z-100 translate bg-black/40">
-            <div className="relative w-6/12 md:w-6/12 lg:w-3/12 my-6">
+            <div className="relative w-6/12 md:w-6/12 lg:w-4/12 my-6">
                 <div className={`translate h-full ${modal ? 'opacity-100' : 'opacity-0'}`}>
-                    <div className="w-full h-auto rounded-lg relative flex flex-col bg-slate-400">
+                    <div className="w-full h-auto rounded-lg relative flex flex-col bg-slate-500">
                         <header className="flex items-center p-4 rounded-t-md justify-center border-b relative">
                             <div onClick={handleModalClose} className="p-3 absolute right-2 hover:bg-slate-500 rounded-full cursor-pointer">
                                 <XMarkIcon className="size-8 justify-center"/>

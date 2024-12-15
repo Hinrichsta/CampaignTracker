@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import CampaignListItem from "./CampaignListItem";
 import CampaignJournal from "@/services/django";
-import { CampaignCoreType } from "./CampaignList";
+import { CampaignCoreType } from "../hooks/DjangoTypes";
 
 const PublicCampaignList = () => {
     const [campaigns, setCampaigns] = useState<CampaignCoreType[]>([]);

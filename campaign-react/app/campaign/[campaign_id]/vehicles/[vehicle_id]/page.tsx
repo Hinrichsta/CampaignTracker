@@ -1,4 +1,3 @@
-import { CampaignCoreType } from "@/app/components/CampaignList"
 import CampaignJournal from "@/services/django"
 
 export default async function VehicleDetailsPage({

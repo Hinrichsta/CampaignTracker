@@ -1,6 +1,7 @@
-import { CampaignCoreType } from "@/app/components/CampaignList"
+import { CampaignCoreType } from "@/app/hooks/DjangoTypes";
 import AddIncomeModal from "@/app/components/modals/addModals/AddIncomeModal";
 import CampaignJournal from "@/services/django"
+import QuickAdd from "@/app/components/campaignHome/QuickAdd";
 
 export default async function CampaignHomePage({
     params,
@@ -29,7 +30,8 @@ export default async function CampaignHomePage({
             </div>
             <div className="flex-row w-full mx-10">
                 <div className="h-96 my-24 bg-slate-500 text-white border-black border-4 rounded-xl shadow-xl text-center">
-                    <h3 className="text-2xl">Quick Add</h3>
+                    <h3 className="text-2xl pb-8">Quick Add</h3>
+                    <QuickAdd />
                 </div>
                 <div className="h-1/2 my-24 bg-slate-500 text-white border-black border-4 rounded-xl shadow-xl text-center">
                     <h3 className="text-2xl">Calendar</h3>

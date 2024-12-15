@@ -1,4 +1,4 @@
-import { CampaignCoreType } from "@/app/components/CampaignList"
+import { CampaignCoreType } from "@/app/hooks/DjangoTypes";
 import CampaignJournal from "@/services/django"
 
 export default async function CalendarMainPage({

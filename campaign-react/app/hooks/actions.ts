@@ -50,7 +50,6 @@ export async function clearAuth(response:string) {
 
 export async function updateToken(response:string) {
     try {
-        
         const refreshToken = await getRefreshToken();
     
         const accessToken = await fetch('http://localhost:8000/api/v1/auth/renew/', {
@@ -105,7 +104,6 @@ export async function getAuthToken(response:string) {
             accessToken = update.cookies.get('session_access')?.value;
         }
     }
-    
     return accessToken ? accessToken : null;
 }
 
