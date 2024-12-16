@@ -71,7 +71,7 @@ export async function calcIndivFunds(incomeData:ReceivablesType[],paymentData:Pa
                 indivFunds[memberID].totalIncome += (coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0)
             }
         } else {
-            const tmp = parseFloat(((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0)/memberCount).toFixed(2));
+            const tmp = parseFloat((((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0))/memberCount).toFixed(2));
 
             Object.values(indivFunds).forEach(indiv => {
                 indiv.totalIncome += tmp
@@ -87,7 +87,7 @@ export async function calcIndivFunds(incomeData:ReceivablesType[],paymentData:Pa
                 indivFunds[memberID].totalPayments += (coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0)
             }
         } else {
-            const tmp = parseFloat(((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0)/memberCount).toFixed(2));
+            const tmp = parseFloat((((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0))/memberCount).toFixed(2));
 
             Object.values(indivFunds).forEach(indiv => {
                 indiv.totalPayments += tmp
