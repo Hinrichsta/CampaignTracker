@@ -4,7 +4,6 @@ import ModalTemplate from "../ModalTemplate";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import useAddPaymentsModal from "@/app/hooks/Modals/AddModals/useAddPaymentsModal";
-import { handleLogin } from "../../../hooks/actions";
 import CampaignJournal from "@/services/django";
 import { PartyMemberType } from "@/app/hooks/DjangoTypes";
 
@@ -14,16 +13,24 @@ const AddPaymentModal = ({ campaign_id }: { campaign_id: string }) => {
     const [realDate, setRealDate] = useState("");
     const [worldDate, setworldDate] = useState("");
     const [description, setDescription] = useState("");
-    const [platinum, setPlatinum] = useState("");
-    const [gold, setGold] = useState("");
-    const [silver, setSilver] = useState("");
-    const [copper, setCopper] = useState("");
+    const [platinum, setPlatinum] = useState(0);
+    const [gold, setGold] = useState(0);
+    const [silver, setSilver] = useState(0);
+    const [copper, setCopper] = useState(0);
     const [payee, setPayee] = useState("");
     const [partyTrans, setPartyTrans] = useState(true);
     const [indivPayer, setindivPayer] = useState("");
     const [error, setError] = useState<string[]>([]);
     const [successMessage, setSuccessMessage] = useState<string | null>(null); //Success Modal
     const [showForm, setShowForm] = useState(true); //Success Modal
+    const [partyMembers, setPartyMembers] = useState<PartyMemberType[]>([]);
+    const getPartyMembers = async() => {
+        setPartyMembers(await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`));
+    }
+
+    useEffect(() => {
+        getPartyMembers();
+    }, []);
 
     const submitPayment = async () =>{
         const PaymentData = {
@@ -40,20 +47,18 @@ const AddPaymentModal = ({ campaign_id }: { campaign_id: string }) => {
             campaign: campaign_id
         }
         const response = await CampaignJournal.post(
-            '/auth/login/',
+            `/campaigncore/${campaign_id}/payables/`,
             JSON.stringify(PaymentData)
         );
-        if (response.access) {
-            handleLogin(response.id as string,response.access,response.refresh)
-            
+        if (response.id) {
 
             setRealDate("")
             setworldDate("")
             setDescription("")
-            setPlatinum("")
-            setGold("")
-            setSilver("")
-            setCopper("")
+            setPlatinum(0)
+            setGold(0)
+            setSilver(0)
+            setCopper(0)
             setPayee("")
             setPartyTrans(true)
             setindivPayer("")
@@ -64,7 +69,7 @@ const AddPaymentModal = ({ campaign_id }: { campaign_id: string }) => {
 
             setTimeout(() => { //Success Modal
                 paymentModal.close();
-                router.push('/home');
+                router.push(`/campaign/${campaign_id}`);
                 setShowForm(true);
             }, 1000);
             
@@ -76,18 +81,11 @@ const AddPaymentModal = ({ campaign_id }: { campaign_id: string }) => {
         }
     }
 
-    const [partyMembers, setPartyMembers] = useState<PartyMemberType[]>([]);
-    const getPartyMembers = async() => {
-        setPartyMembers(await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`));
-    }
 
-    useEffect(() => {
-        getPartyMembers();
-    }, []);
 
 
     const content = (
-        <div className="flex pr-10 pl-4 py-4">
+        <div className="pr-10 pl-4 py-4">
             {showForm ? (
                 <form className="" action={submitPayment}>
                     <div className="flex">
@@ -107,28 +105,28 @@ const AddPaymentModal = ({ campaign_id }: { campaign_id: string }) => {
                     <div className="flex">
                         <div className="pt-3 flex-row w-1/4">
                             <label className="px-2" htmlFor="pp">Platinum</label>
-                            <input onChange={(e) => setPlatinum(e.target.value)} id="pp" value={platinum} placeholder="Platinum" type="text" className="px-4 h-12 w-28 text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
+                            <input onChange={(e) => setPlatinum(Number(e.target.value))} id="pp" placeholder="Platinum" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                         </div>
                         <div className="pt-3 flex-row w-1/4">
                             <label className="px-2" htmlFor="gp">Gold</label>
-                            <input onChange={(e) => setGold(e.target.value)} id="gp" value={gold} placeholder="Gold" type="text" className="px-4 h-12 w-28 text-black border-neutral-800 border-2 shadow-lg rounded-lg" required/>
+                            <input onChange={(e) => setGold(Number(e.target.value))} id="gp" placeholder="Gold" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                         </div>
                         <div className="pt-3 flex-row w-1/4">
                             <label className="px-2" htmlFor="sp">Silver</label>
-                            <input onChange={(e) => setSilver(e.target.value)} id="sp" value={silver} placeholder="Silver" type="text" className="px-4 h-12 w-28 text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
+                            <input onChange={(e) => setSilver(Number(e.target.value))} id="sp" placeholder="Silver" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                         </div>
                         <div className="pt-3 flex-row w-1/4">
                             <label className="px-2" htmlFor="cp">Copper</label>
-                            <input onChange={(e) => setCopper(e.target.value)} id="cp" value={copper} placeholder="Copper" type="text" className="px-4 h-12 w-28 text-black border-neutral-800 border-2 shadow-lg rounded-lg" required/>
+                            <input onChange={(e) => setCopper(Number(e.target.value))} id="cp" placeholder="Copper" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                         </div>
                     </div>
                     <div className="pt-3 px-2">
                         <label className="px-2" htmlFor="payee">Who is getting payed</label>
-                        <input onChange={(e) => setPayee(e.target.value)} id="payee" value={copper} placeholder="Payee" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg" required/>
+                        <input onChange={(e) => setPayee(e.target.value)} id="payee" value={payee} placeholder="Payee" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                     </div>
                     <div className="pt-6 text-xl flex-row">
                         <label className="px-2" htmlFor="partyTrans">Full Party Payment</label>
-                        <input onChange={() => setPartyTrans(!partyTrans)} id="partyTrans" checked={partyTrans} type="checkbox" className="px-4 h-4 w-4 text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
+                        <input onChange={() => setPartyTrans(!partyTrans)} id="partyTrans" checked={partyTrans} type="checkbox" className="px-4 h-4 w-4 text-black border-neutral-800 border-2 shadow-lg"/>
                         <div>
                             <label className="px-2 text-sm" htmlFor="partyTrans">*leave checked to remove from general fund</label>
                         </div>
@@ -142,7 +140,7 @@ const AddPaymentModal = ({ campaign_id }: { campaign_id: string }) => {
                                 <option value=""/>
                                 {partyMembers.length > 0 ? ( 
                                     partyMembers.map((member) => (
-                                        <option key={member.id}>{member.character_name}</option>
+                                        <option key={member.id} value={member.id}>{member.character_name}</option>
                                     ))
                                 ) : ( 
                                     <option></option>

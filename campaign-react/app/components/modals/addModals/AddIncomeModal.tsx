@@ -4,7 +4,6 @@ import ModalTemplate from "../ModalTemplate";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import useAddIncomeModal from "@/app/hooks/Modals/AddModals/useAddIncomeModal";
-import { handleLogin } from "../../../hooks/actions";
 import CampaignJournal from "@/services/django";
 import { PartyMemberType } from "@/app/hooks/DjangoTypes";
 
@@ -38,12 +37,11 @@ const AddIncomeModal = ({ campaign_id }: { campaign_id: string }) => {
             campaign: campaign_id
         }
         const response = await CampaignJournal.post(
-            '/auth/login/',
+            `/campaigncore/${campaign_id}/receivables/`,
             JSON.stringify(incomeData)
         );
-        if (response.access) {
-            handleLogin(response.id as string,response.access,response.refresh)
-            
+        console.log(response)
+        if (response.id) {         
 
             setRealDate("")
             setworldDate("")
@@ -61,7 +59,7 @@ const AddIncomeModal = ({ campaign_id }: { campaign_id: string }) => {
 
             setTimeout(() => { //Success Modal
                 incomeModal.close();
-                router.push('/home');
+                router.push(`/campaign/${campaign_id}`);
                 setShowForm(true);
             }, 1000);
             
@@ -84,7 +82,7 @@ const AddIncomeModal = ({ campaign_id }: { campaign_id: string }) => {
 
 
     const content = (
-        <div className="flex pr-10 pl-4 py-4">
+        <div className="pr-10 pl-4 py-4">
             {showForm ? (
                 <form className="" action={submitIncome}>
                     <div className="flex">
@@ -104,25 +102,25 @@ const AddIncomeModal = ({ campaign_id }: { campaign_id: string }) => {
                     <div className="flex">
                         <div className="pt-3 flex-row w-1/4">
                             <label className="px-2" htmlFor="pp">Platinum</label>
-                            <input onChange={(e) => setPlatinum(e.target.value)} id="pp" value={platinum} placeholder="Platinum" type="text" className="px-4 h-12 w-28 text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
+                            <input onChange={(e) => setPlatinum(e.target.value)} id="pp" value={platinum} placeholder="Platinum" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                         </div>
                         <div className="pt-3 flex-row w-1/4">
                             <label className="px-2" htmlFor="gp">Gold</label>
-                            <input onChange={(e) => setGold(e.target.value)} id="gp" value={gold} placeholder="Gold" type="text" className="px-4 h-12 w-28 text-black border-neutral-800 border-2 shadow-lg rounded-lg" required/>
+                            <input onChange={(e) => setGold(e.target.value)} id="gp" value={gold} placeholder="Gold" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                         </div>
                         <div className="pt-3 flex-row w-1/4">
                             <label className="px-2" htmlFor="sp">Silver</label>
-                            <input onChange={(e) => setSilver(e.target.value)} id="sp" value={silver} placeholder="Silver" type="text" className="px-4 h-12 w-28 text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
+                            <input onChange={(e) => setSilver(e.target.value)} id="sp" value={silver} placeholder="Silver" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                         </div>
                         <div className="pt-3 flex-row w-1/4">
                             <label className="px-2" htmlFor="cp">Copper</label>
-                            <input onChange={(e) => setCopper(e.target.value)} id="cp" value={copper} placeholder="Copper" type="text" className="px-4 h-12 w-28 text-black border-neutral-800 border-2 shadow-lg rounded-lg" required/>
+                            <input onChange={(e) => setCopper(e.target.value)} id="cp" value={copper} placeholder="Copper" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                         </div>
                     </div>
 
                     <div className="pt-6 text-xl flex-row">
                         <label className="px-2" htmlFor="partyTrans">Full Party Income</label>
-                        <input onChange={() => setPartyTrans(!partyTrans)} id="partyTrans" checked={partyTrans} type="checkbox" className="px-4 h-4 w-4 text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
+                        <input onChange={() => setPartyTrans(!partyTrans)} id="partyTrans" checked={partyTrans} type="checkbox" className="px-4 h-4 w-4 text-black border-neutral-800 border-2 shadow-lg" required/>
                         <div>
                             <label className="px-2 text-sm" htmlFor="partyTrans">*leave checked to remove from general fund</label>
                         </div>

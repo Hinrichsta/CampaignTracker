@@ -48,7 +48,7 @@ const ModalTemplate: React.FC<ModalProps> = ({
     }
 
     return (
-        <div className="flex items-center justify-center fixed inset-0 z-100 translate bg-black/40">
+        <div className="flex items-center justify-center fixed inset-0 z-50 translate bg-black/40">
             <div className="relative w-6/12 md:w-6/12 lg:w-4/12 my-6">
                 <div className={`translate h-full ${modal ? 'opacity-100' : 'opacity-0'}`}>
                     <div className="w-full h-auto rounded-lg relative flex flex-col bg-slate-500">
