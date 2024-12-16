@@ -15,7 +15,6 @@ const CampaignJournal = {
         if (token !== null){
             headers['Authorization'] = `Bearer  ${token}`;
         }
-
         return new Promise((resolve, reject) => {
             fetch(`${DJANGO}${url}`, {
                 method: 'GET',

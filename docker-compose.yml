@@ -28,15 +28,18 @@ services:
       - path: ".env"
         required: false
   
-#  ember:
-#    build: ./Campaign-Ember
-#    ports: 
-#      - 443:80
-#    depends_on:
-#      postgres:
-#        condition: "service_started"
-#      django:
-#        condition: "service_started"
+  #react:
+  #  build: ./campaign-react
+  #  ports: 
+  #    - 3000:3000
+  #  command: npm run dev
+  #  depends_on:
+  #    - django
+  #  env_file:
+  #    - path: ".env"
+  #  environment:
+  #    - NODE_ENV=development
+  #    - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
     
 
 volumes:
