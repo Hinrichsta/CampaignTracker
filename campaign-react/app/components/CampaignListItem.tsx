@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CampaignCoreType } from "./CampaignList";
+import { CampaignCoreType } from "../hooks/DjangoTypes";
 
 interface CampaignProps {
     campaign: CampaignCoreType

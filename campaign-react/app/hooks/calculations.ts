@@ -59,10 +59,10 @@ export async function calcIndivFunds(incomeData:ReceivablesType[],paymentData:Pa
             const memberID = coin.payer;
 
             if (indivFunds[memberID]){
-                indivFunds[memberID].totalIncome += (coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/10) : 0)
+                indivFunds[memberID].totalIncome += (coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0)
             }
         } else {
-            const tmp = ((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/10) : 0)/memberCount)
+            const tmp = parseFloat(((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0)/memberCount).toFixed(2));
 
             Object.values(indivFunds).forEach(indiv => {
                 indiv.totalIncome += tmp
@@ -75,10 +75,10 @@ export async function calcIndivFunds(incomeData:ReceivablesType[],paymentData:Pa
             const memberID = coin.payer;
 
             if (indivFunds[memberID]){
-                indivFunds[memberID].totalPayments += (coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/10) : 0)
+                indivFunds[memberID].totalPayments += (coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0)
             }
         } else {
-            const tmp = ((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/10) : 0)/memberCount)
+            const tmp = parseFloat(((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0)/memberCount).toFixed(2));
 
             Object.values(indivFunds).forEach(indiv => {
                 indiv.totalPayments += tmp
@@ -94,7 +94,9 @@ export async function calcIndivFunds(incomeData:ReceivablesType[],paymentData:Pa
         return {
             id: memberId,
             name: funds.name,
-            totalFunds,
+            totalFunds: totalFunds,
+            totalIncome: funds.totalIncome,
+            totalPayments:funds.totalPayments
         };
     });
 
