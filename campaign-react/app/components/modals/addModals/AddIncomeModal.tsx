@@ -20,10 +20,10 @@ const AddIncomeModal = ({ campaign_id }: { campaign_id: string }) => {
     const [realDate, setRealDate] = useState("");
     const [worldDate, setworldDate] = useState("");
     const [description, setDescription] = useState("");
-    const [platinum, setPlatinum] = useState("");
-    const [gold, setGold] = useState("");
-    const [silver, setSilver] = useState("");
-    const [copper, setCopper] = useState("");
+    const [platinum, setPlatinum] = useState(0);
+    const [gold, setGold] = useState(0);
+    const [silver, setSilver] = useState(0);
+    const [copper, setCopper] = useState(0);
     const [partyTrans, setPartyTrans] = useState(true);
     const [indivPayee, setindivPayee] = useState("");
     const [error, setError] = useState<string[]>([]);
@@ -62,10 +62,10 @@ const AddIncomeModal = ({ campaign_id }: { campaign_id: string }) => {
             setRealDate("")
             setworldDate("")
             setDescription("")
-            setPlatinum("")
-            setGold("")
-            setSilver("")
-            setCopper("")
+            setPlatinum(0)
+            setGold(0)
+            setSilver(0)
+            setCopper(0)
             setPartyTrans(true)
             setindivPayee("")
             setError([])
@@ -108,25 +108,25 @@ const AddIncomeModal = ({ campaign_id }: { campaign_id: string }) => {
                     <div className="flex">
                         <div className="pt-3 flex-row w-1/4">
                             <label className="px-2" htmlFor="pp">Platinum</label>
-                            <input onChange={(e) => setPlatinum(e.target.value)} id="pp" value={platinum} placeholder="Platinum" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
+                            <input onChange={(e) => setPlatinum(Number(e.target.value))} id="pp" value={platinum} placeholder="Platinum" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                         </div>
                         <div className="pt-3 flex-row w-1/4">
                             <label className="px-2" htmlFor="gp">Gold</label>
-                            <input onChange={(e) => setGold(e.target.value)} id="gp" value={gold} placeholder="Gold" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
+                            <input onChange={(e) => setGold(Number(e.target.value))} id="gp" value={gold} placeholder="Gold" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                         </div>
                         <div className="pt-3 flex-row w-1/4">
                             <label className="px-2" htmlFor="sp">Silver</label>
-                            <input onChange={(e) => setSilver(e.target.value)} id="sp" value={silver} placeholder="Silver" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
+                            <input onChange={(e) => setSilver(Number(e.target.value))} id="sp" value={silver} placeholder="Silver" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                         </div>
                         <div className="pt-3 flex-row w-1/4">
                             <label className="px-2" htmlFor="cp">Copper</label>
-                            <input onChange={(e) => setCopper(e.target.value)} id="cp" value={copper} placeholder="Copper" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
+                            <input onChange={(e) => setCopper(Number(e.target.value))} id="cp" value={copper} placeholder="Copper" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                         </div>
                     </div>
 
                     <div className="pt-6 text-xl flex-row">
                         <label className="px-2" htmlFor="partyTrans">Full Party Income</label>
-                        <input onChange={() => setPartyTrans(!partyTrans)} id="partyTrans" checked={partyTrans} type="checkbox" className="px-4 h-4 w-4 text-black border-neutral-800 border-2 shadow-lg" required/>
+                        <input onChange={() => setPartyTrans(!partyTrans)} id="partyTrans" checked={partyTrans} type="checkbox" className="px-4 h-4 w-4 text-black border-neutral-800 border-2 shadow-lg"/>
                         <div>
                             <label className="px-2 text-sm" htmlFor="partyTrans">*leave checked to remove from general fund</label>
                         </div>
@@ -136,7 +136,7 @@ const AddIncomeModal = ({ campaign_id }: { campaign_id: string }) => {
                     ) : (
                         <div className="pt-3">
                             <label className="px-2" htmlFor="indivPay">Payment to Individual</label>
-                            <select onChange={(e) => setindivPayee(e.target.value)} id="indivPay" value={indivPayee} className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg" required>
+                            <select onChange={(e) => setindivPayee(e.target.value)} id="indivPay" value={indivPayee} className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg">
                                 <option value=""/>
                                 {partyMembers.length > 0 ? ( 
                                     partyMembers.map((member) => (

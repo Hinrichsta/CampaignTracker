@@ -142,7 +142,7 @@ const AddPaymentModal = ({ campaign_id }: { campaign_id: string }) => {
                     ) : (
                         <div className="pt-3">
                             <label className="px-2" htmlFor="indivPay">Payment for Individual</label>
-                            <select onChange={(e) => setindivPayer(e.target.value)} id="indivPay" value={indivPayer} className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg" required>
+                            <select onChange={(e) => setindivPayer(e.target.value)} id="indivPay" value={indivPayer} className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg">
                                 <option value=""/>
                                 {partyMembers.length > 0 ? ( 
                                     partyMembers.map((member) => (
