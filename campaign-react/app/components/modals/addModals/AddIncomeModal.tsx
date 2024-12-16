@@ -22,6 +22,15 @@ const AddIncomeModal = ({ campaign_id }: { campaign_id: string }) => {
     const [error, setError] = useState<string[]>([]);
     const [successMessage, setSuccessMessage] = useState<string | null>(null); //Success Modal
     const [showForm, setShowForm] = useState(true); //Success Modal
+    const [partyMembers, setPartyMembers] = useState<PartyMemberType[]>([]);
+    const getPartyMembers = async() => {
+        setPartyMembers(await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`));
+        
+    }
+
+    useEffect(() => {
+        getPartyMembers();
+    }, []);
 
     const submitIncome = async () =>{
         const incomeData = {
@@ -70,16 +79,6 @@ const AddIncomeModal = ({ campaign_id }: { campaign_id: string }) => {
             setError(errors);
         }
     }
-
-    const [partyMembers, setPartyMembers] = useState<PartyMemberType[]>([]);
-    const getPartyMembers = async() => {
-        setPartyMembers(await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`));
-    }
-
-    useEffect(() => {
-        getPartyMembers();
-    }, []);
-
 
     const content = (
         <div className="pr-10 pl-4 py-4">

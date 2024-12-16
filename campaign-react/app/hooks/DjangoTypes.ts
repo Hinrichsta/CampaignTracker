@@ -1,12 +1,12 @@
 export type CampaignCoreType = {
     id: number;
     campaign_name: string;
-    description: string;
+    description: string | null;
     public: boolean;
 }
 
 export type UserRolesType = {
-    campaign: number;
+    campaign: number | null;
     user: number;
     role: string;
 }
@@ -14,40 +14,40 @@ export type UserRolesType = {
 export type PartyMemberType = {
     id: number;
     character_name: string;
-    player: number;
+    player: number | null;
     class_name: string;
     species: string;
     notes: string;
     active: boolean;
     join_date: Date;
-    leave_date: Date;
+    leave_date: Date | null;
     campaign: number;
 }
 
 export type ReceivablesType = {
     irl_date: Date;
     ig_date: string;
-    description: string;
+    description: string | null;
     pp: number;
     gp: number;
     sp: number;
     cp: number;
     party_trans: boolean;
-    payer: number;
+    payer: number | null;
     campaign: number;
 }
 
 export type PayablesType = {
     irl_date: Date;
     ig_date: string;
-    description: string;
+    description: string | null;
     pp: number;
     gp: number;
     sp: number;
     cp: number;
     party_trans: boolean;
     payee: string;
-    payer: number;
+    payer: number | null;
     campaign: number;
 }
 
@@ -63,8 +63,8 @@ export type HirelingsType = {
     name: string;
     race: string;
     stats: string;
-    vehicle: number;
-    equipment: string;
+    vehicle: number | null;
+    equipment: string | null;
     campaign: number;
 }
 
@@ -77,9 +77,9 @@ export type MagicItemsType = {
     status: string;
     creator: string;
     link: string;
-    powner: number;
-    vowner: number;
-    howner: number;
+    powner: number | null;
+    vowner: number | null;
+    howner: number | null;
     campaign: number;
 }
 
@@ -113,7 +113,7 @@ export type CalendarEventType = {
     name: string;
     calendar: string;
     campaign: number;
-    month: number;
+    month: number | null;
     day: number;
     year: number;
     description: string;

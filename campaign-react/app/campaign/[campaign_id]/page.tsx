@@ -25,7 +25,9 @@ export default async function CampaignHomePage({
             <div className="flex-row w-full mx-14">
                 <div className="h-64 my-24 bg-slate-500 text-white border-black border-4 rounded-xl shadow-xl text-center">
                     <h3 className="text-2xl">Funds</h3>
-                    <FundsQuickView />
+                    <FundsQuickView 
+                        campaign_id={cid}
+                    />
                 </div>
                 <div className="h-4/6 my-24 bg-slate-500 text-white border-black border-4 rounded-xl shadow-xl text-center">
                     <h3 className="text-2xl">Items</h3>

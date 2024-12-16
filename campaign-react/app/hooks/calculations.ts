@@ -1,7 +1,19 @@
 import { PartyMemberType, PayablesType, ReceivablesType } from "./DjangoTypes";
 
+interface IndividualFunds {
+    name: string;
+    totalIncome: number;
+    totalPayments: number;
+}
 
-export function calcTotalFunds(incomeData:ReceivablesType[],paymentData:PayablesType[]){
+interface IndivFundsObject {
+    [key: string]: IndividualFunds;
+}
+
+export async function calcTotalFunds(incomeData:ReceivablesType[],paymentData:PayablesType[]){
+
+    console.log('Calculations Total Receivables:', incomeData)
+    console.log('Calculations Total Payables:', paymentData)
     
     const incomePlatinum = parseFloat(incomeData.reduce((currentCoin:number, coin) => currentCoin + (coin.pp * 10), 0).toFixed(2));
     const incomeGold = parseFloat(incomeData.reduce((currentCoin:number, coin) => currentCoin + coin.gp, 0).toFixed(2));
@@ -27,18 +39,11 @@ export function calcTotalFunds(incomeData:ReceivablesType[],paymentData:Payables
     return result
 }
 
-export function calcIndivFunds(incomeData:ReceivablesType[],paymentData:PayablesType[],partyList:PartyMemberType[]){
+export async function calcIndivFunds(incomeData:ReceivablesType[],paymentData:PayablesType[],partyList:PartyMemberType[]){
 
-    interface IndividualFunds {
-        name: string;
-        totalIncome: number;
-        totalPayments: number;
-    }
-
-    interface IndivFundsObject {
-        [key: string]: IndividualFunds;
-    }
-
+    console.log('Calculations Indiv Party:', partyList)
+    console.log('Calculations Indiv Receivables:', incomeData)
+    console.log('Calculations Indiv Payables:', paymentData)
     const indivFunds:IndivFundsObject = partyList.reduce((out, Member) => {
         out[Member.id]= {
             name: Member.character_name,
@@ -50,7 +55,7 @@ export function calcIndivFunds(incomeData:ReceivablesType[],paymentData:Payables
     const memberCount = Object.keys(indivFunds).length;
 
     incomeData.forEach((coin) => {
-        if (!coin.party_trans) {
+        if (!coin.party_trans && coin.payer !== null) {
             const memberID = coin.payer;
 
             if (indivFunds[memberID]){
@@ -66,7 +71,7 @@ export function calcIndivFunds(incomeData:ReceivablesType[],paymentData:Payables
     });
 
     paymentData.forEach((coin) => {
-        if (!coin.party_trans) {
+        if (!coin.party_trans && coin.payer !== null) {
             const memberID = coin.payer;
 
             if (indivFunds[memberID]){
