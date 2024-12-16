@@ -1,3 +1,9 @@
+/*
+* Create Campaign Button
+* 
+* Opens the Modal to create the Campaigns.
+*/
+
 'use client';
 
 import useCreateCampaignModal from "@/app/hooks/Modals/useCreateCampaignModal";

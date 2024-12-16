@@ -40,7 +40,7 @@ class IsCampaignOwner(permissions.BasePermission):
     
 class IsCampaignAdmin(permissions.BasePermission):
     """
-    Checked to see if a User is Authenticated, and if that have the Admin Role in the Campaign User's Table.
+    Checks to see if a User is Authenticated, and if that have the Admin Role in the Campaign User's Table.
     """
     def has_permission(self, request, view):
         return request.user.is_authenticated
@@ -67,7 +67,7 @@ class IsCampaignAdmin(permissions.BasePermission):
     
 class IsCampaignUser(permissions.BasePermission):
     """
-    Checked to see if a User is Authenticated, and if that have the Player Role in the Campaign User's Table.
+    Checks to see if a User is Authenticated, and if that have the Player Role in the Campaign User's Table.
     """
     def has_permission(self, request, view):
         if request.user.is_authenticated and request.method in permissions.SAFE_METHODS:
@@ -103,7 +103,7 @@ class IsCampaignUser(permissions.BasePermission):
     
 class IsCampaignViewer(permissions.BasePermission):
     """
-    Checked to see if a User is Authenticated, and if that have the Viewer Role in the Campaign User's Table.
+    Checks to see if a User is Authenticated, and if that have the Viewer Role in the Campaign User's Table.
     """
     def has_permission(self, request, view):
         if request.user.is_authenticated and request.method in permissions.SAFE_METHODS:
@@ -135,7 +135,7 @@ class IsCampaignViewer(permissions.BasePermission):
 
 class CampaignIsPublic(permissions.BasePermission):
     """
-    Checks to see if a campaign has been set to public.  Users can only view public campaigns, the cannot edit them in anyway.
+    Checks to see if a campaign has been set to public.  Users can only view public campaigns, they cannot edit them in anyway.
     """
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:

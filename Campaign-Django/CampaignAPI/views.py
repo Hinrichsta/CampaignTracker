@@ -39,6 +39,9 @@ class TokenObtainPair_Views(TokenObtainPairView):
     serializer_class = TokenObtainPair_Serial
 
 class UserJoin_Views(viewsets.ModelViewSet):
+    '''
+    Allows anybody to sign up for the service.
+    '''
     queryset = User.objects.all()
     serializer_class = UserJoin_Serial
 
@@ -60,6 +63,9 @@ class UserJoin_Views(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class User_Views(viewsets.ModelViewSet):
+    '''
+    Returns users, for searching to add people to the campaign.
+    '''
     queryset = User.objects.all()
     serializer_class = User_Serial
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
@@ -144,8 +150,6 @@ class CampaignUsers_Views(viewsets.ModelViewSet):
 class Party_Views(viewsets.ModelViewSet):
     """
     Returns all of the characters in a campaign or all of the characters in all of the user's campaigns
-
-    Can be filtered with ?campaign=#
     """
     queryset = PartyMember.objects.all()
     serializer_class = Party_Serial
@@ -179,8 +183,6 @@ class Party_Views(viewsets.ModelViewSet):
 class Receivable_Views(viewsets.ModelViewSet):
     """
     Returns all of the income transactions in a campaign or all of the income transactions in all of the user's campaigns
-
-    Can be filtered with ?campaign=#
     """
     queryset = Receivable.objects.all()
     serializer_class = Receivable_Serial
@@ -214,8 +216,6 @@ class Receivable_Views(viewsets.ModelViewSet):
 class Payable_Views(viewsets.ModelViewSet):
     """
     Returns all of the expense transactions in a campaign or all of the expense transactions in all of the user's campaigns
-
-    Can be filtered with ?campaign=#
     """
     queryset = Payable.objects.all()
     serializer_class = Payable_Serial
@@ -248,8 +248,6 @@ class Payable_Views(viewsets.ModelViewSet):
 class Vehicles_Views(viewsets.ModelViewSet):
     """
     Returns all of the vehicles in a campaign or all of the vehicles in all of the user's campaigns
-
-    Can be filtered with ?campaign=#
     """
     queryset = Vehicles.objects.all()
     serializer_class = Vehicles_Serial
@@ -283,8 +281,6 @@ class Vehicles_Views(viewsets.ModelViewSet):
 class Hirelings_Views(viewsets.ModelViewSet):
     """
     Returns all of the hirelings in a campaign or all of the hirelings in all of the user's campaigns
-
-    Can be filtered with ?campaign=#
     """
     queryset = Hirelings.objects.all()
     serializer_class = Hirelings_Serial
@@ -318,8 +314,6 @@ class Hirelings_Views(viewsets.ModelViewSet):
 class MagicItems_Views(viewsets.ModelViewSet):
     """
     Returns all of the Magical Items in a campaign or all of the Magical Items in all of the user's campaigns
-
-    Can be filtered with ?campaign=#
     """
     queryset = MagicItems.objects.all()
     serializer_class = MagicItems_Serial
@@ -353,8 +347,6 @@ class MagicItems_Views(viewsets.ModelViewSet):
 class ConsumItems_Views(viewsets.ModelViewSet):
     """
     Returns all of the Consumable Items in a campaign or all of the Consumable Items in all of the user's campaigns
-
-    Can be filtered with ?campaign=#
     """
     queryset = ConsumItems.objects.all()
     serializer_class = ConsumItems_Serial
@@ -388,8 +380,6 @@ class ConsumItems_Views(viewsets.ModelViewSet):
 class CalendarCore_Views(viewsets.ModelViewSet):
     """
     Returns all of the Calendars in a campaign or all of the Calendars in all of the user's campaigns
-
-    Can be filtered with ?campaign=#
     """
     queryset = CalendarCore.objects.all()
     serializer_class = CalendarCore_Serial
@@ -423,8 +413,6 @@ class CalendarCore_Views(viewsets.ModelViewSet):
 class CalMonth_Views(viewsets.ModelViewSet):
     """
     Returns all of the Calendar Months in a campaign or all of the Calendar Months in all of the user's campaigns
-
-    Can be filtered with ?campaign=#
     """
     queryset = CalMonth.objects.all()
     serializer_class = CalMonth_Serial
@@ -458,8 +446,6 @@ class CalMonth_Views(viewsets.ModelViewSet):
 class CalEvent_Views(viewsets.ModelViewSet):
     """
     Returns all of the Calendar Events in a campaign or all of the Calendar Events in all of the user's campaigns
-
-    Can be filtered with ?campaign=#
     """
     queryset = CalEvent.objects.all()
     serializer_class = CalEvent_Serial

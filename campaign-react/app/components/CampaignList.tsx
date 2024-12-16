@@ -1,3 +1,11 @@
+/*
+* Campaign List
+* 
+* List all of the campaigns a user is a part of, except for the public campaigns
+* 
+* Currently there is not a way in the webpage to add a user to the campaign.
+*/
+
 'use client'
 
 import { useEffect, useState } from "react";

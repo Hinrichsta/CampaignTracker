@@ -1,3 +1,9 @@
+/*
+* User Dropdown Menu Links
+* 
+* Used for quick creation of the dropdown menu links
+*/
+
 'use client';
 
 interface MenuProps {

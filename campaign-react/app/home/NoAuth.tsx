@@ -1,3 +1,9 @@
+/*
+* No Authentication Options
+* 
+* Will present options to the user if they are not signed in to sign up or log in.
+*/
+
 'use client';
 
 import useAuthModal from "@/app/hooks/Modals/useAuthModal";

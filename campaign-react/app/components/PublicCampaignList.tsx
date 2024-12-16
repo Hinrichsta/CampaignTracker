@@ -1,3 +1,11 @@
+/*
+* Public Campaign List
+* 
+* List all of the publically viewable campaigns in the system
+* 
+* The intent of this is to show campaigns but not allow them to be edited in anyway.  So that people can see what the application is like.
+*/
+
 'use client'
 
 import { useEffect, useState } from "react";

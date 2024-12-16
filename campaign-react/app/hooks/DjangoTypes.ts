@@ -1,3 +1,9 @@
+/*
+* API response Types
+* 
+* The types for all of the different Tables.  Allows them to be quickly called from anywhere rather than being in disparate different files
+*/
+
 export type CampaignCoreType = {
     id: number;
     campaign_name: string;

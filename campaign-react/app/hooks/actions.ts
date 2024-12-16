@@ -1,3 +1,9 @@
+/*
+* Cookie Actions
+* 
+* Stores, Gets, and Clears cookies.
+*/
+
 'use server';
 
 import { request } from "http";
@@ -31,6 +37,7 @@ export async function handleLogin(user:string, accessToken:string, refreshToken:
     });
 }
 
+// Needed to be run in the Client Components
 export async function logOut() {
     const cookieStore = await cookies();
     cookieStore.delete('session_user');
@@ -38,6 +45,7 @@ export async function logOut() {
     cookieStore.delete('session_refresh');
 }
 
+//Can be called from Server Components when a token expires
 export async function clearAuth(response:string) {
     const url = new URL('/', response)
     const redirect = NextResponse.redirect(url);
@@ -80,7 +88,6 @@ export async function updateToken(response:string) {
             return clearAuth(response);
         }
     } catch (error) {
-        console.log(error)
         return clearAuth(response);
     }
 }

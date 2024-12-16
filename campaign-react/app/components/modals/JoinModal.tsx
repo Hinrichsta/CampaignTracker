@@ -1,3 +1,10 @@
+/*
+* Sign Up Modal
+* 
+* Allows a user to sign up for the service.
+*/
+
+
 'use client';
 
 import ModalTemplate from "./ModalTemplate";

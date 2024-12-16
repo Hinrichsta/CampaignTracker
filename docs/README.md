@@ -19,6 +19,15 @@ As a **player**, I want to **know what equipment we have**, so I can **use or bu
 - See who currently has equipment, and take it if unowned
 - Can give equipment to other players
 
+## User Story 3
+As a **player**, I want to **know know what day it is in game**, so I can **better track the events in game**.
+
+
+### Acceptance
+- A simple custom calendar that would allow for the creation of months
+- Tracks the current day, month, year, and age
+- Allows for the creation of events to be marked on the calendar.
+
 # Mis-User Stories
 
 ## Mis-User Story 1

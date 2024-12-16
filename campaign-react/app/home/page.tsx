@@ -1,3 +1,9 @@
+/*
+* Home Page
+* 
+* The home page of the whole system.  Will Display the current Campaign lists
+*/
+
 import CampaignList from "../components/CampaignList"
 import PublicCampaignList from "../components/PublicCampaignList"
 import { getAuth } from "@/app/hooks/actions";

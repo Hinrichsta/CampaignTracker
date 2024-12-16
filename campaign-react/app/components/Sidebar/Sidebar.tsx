@@ -1,3 +1,9 @@
+/*
+* Campaign Navigation Sidebar
+* 
+* Creates a sidebar for everything under the Campaign page allowing for navigation
+*/
+
 'use client'
 
 import { useEffect, useRef, useState } from "react";

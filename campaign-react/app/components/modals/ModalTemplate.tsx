@@ -1,3 +1,9 @@
+/*
+* Modal Template
+* 
+* Used as a general template for all modals to allow quicker and more uniform generation.
+*/
+
 'use client';
 
 import { XMarkIcon } from "@heroicons/react/24/outline"; 

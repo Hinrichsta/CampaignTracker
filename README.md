@@ -2,25 +2,36 @@
 A simple website that allows for the tracking of player information for a campaign.  Allows for individual campaigns to track party members, payments/income, magic items/consumable items, vehicles, and hirelings with.
 
 ## Installation
-Build the Django Application
+CD into the root directory
+
+### Build the Django Application
 ```bash
-docker build . -f .\Campaign-Django\Dockerfile
 docker-compose run django bash
 python Campaign-Django/manage.py migrate
 python Campaign-Django/manage.py createsuperuser
 exit
 ```
-Build the Ember Application
-```
-docker build . -f .\Campaign-Ember\Dockerfile
+### Build the Next.JS Application
+```bash
+cd .\campaign-react\
+npm install
 ```
 For Better Security you will need to create the environmental Variables.  Copy the .env.example, rename it to .env, and edit the default values to your liking.  Then run the commands above.
 
 ## Getting Started
-To Start the site run
+To Start the site open 2 admin terminal windows and cd into the root directory of the project
+
+#### Starting Django
 ```bash
 docker-compose up
 ```
+#### Starting Next.JS
+```bash
+cd .\campaign-react\
+npm run dev
+```
+
+
 Campaign Specific Settings can be configured within the site's settings page.
 
 

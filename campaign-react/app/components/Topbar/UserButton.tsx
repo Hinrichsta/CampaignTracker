@@ -1,3 +1,9 @@
+/*
+* User Dropdown Button
+* 
+* Allows users to sign up, Sign In, or Log Out
+*/
+
 'use client';
 
 import { useEffect, useRef, useState } from "react";

@@ -6,7 +6,15 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+
 class UserJoin_Serial(serializers.ModelSerializer):
+    '''
+    Used for creation of users in the system.
+
+    Validates that the passwords are correct when submitted during signup and then runs through the Django Password checks
+
+    It then creates the user and returns an access code for them to be logged in automatically.
+    '''
     pass2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
     class Meta:
@@ -43,6 +51,10 @@ class UserJoin_Serial(serializers.ModelSerializer):
         }
     
 class TokenObtainPair_Serial(TokenObtainPairSerializer):
+    '''
+    This is used for modifying what is returned, as the logged in user ID is needed.
+    '''
+
     def validate(self, attrs):
         data = super().validate(attrs)
 
@@ -63,6 +75,11 @@ class CampaignCore_Serial(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 class CampaignUsers_Serial(serializers.ModelSerializer):
+    '''
+    This is for individual roles within campaigns themselves.
+
+    It validates that the person changing the role is in the same campaign and users of the same role cannot move someone down or a user cannot assign themselves a higher role.
+    '''
     class Meta:
         model = CampaignUsers
         fields = ['campaign','user','role']

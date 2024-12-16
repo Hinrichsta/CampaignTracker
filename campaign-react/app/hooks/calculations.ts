@@ -1,3 +1,12 @@
+/*
+* Money Calculations
+* 
+* Calculates the total income for the campaign in terms of gold.
+* Will Return the Total Party Gold or the gold for the individual party members.
+* 
+* Platinum = 10 gold, Gold = 1 gold, Silver = .1 Gold, Copper = .01 Gold
+*/
+
 import { PartyMemberType, PayablesType, ReceivablesType } from "./DjangoTypes";
 
 interface IndividualFunds {

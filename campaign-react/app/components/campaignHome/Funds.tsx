@@ -1,3 +1,8 @@
+/*
+* This is the funds quick view componenet for the front page.
+* It calls the funds calculations components and returns total funds and the individual funds for the logged in user
+*/
+
 'use client'
 
 import { useState, useEffect } from "react";

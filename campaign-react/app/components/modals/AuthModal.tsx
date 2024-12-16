@@ -1,3 +1,9 @@
+/*
+* Login Modal
+* 
+* This will authenticate the user with the system, and then will store the cookie for request use
+*/
+
 'use client';
 
 import ModalTemplate from "./ModalTemplate";

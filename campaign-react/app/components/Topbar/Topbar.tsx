@@ -1,3 +1,9 @@
+/*
+* Top bar for the whole system
+* 
+* Redirects to the home page, houses teh Campaign Create Button, and the Login, Loggout, and signup options.
+*/
+
 import Link from "next/link";
 import UserButton from "./UserButton";
 import { getAuth } from "@/app/hooks/actions";

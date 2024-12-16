@@ -1,3 +1,10 @@
+/*
+* This is the quick add component for the front page
+* This produces modals for users to add infromation into the campaign.
+* 
+* Currently only the Income and Payments button works.
+*/
+
 'use client'
 
 import useAddIncomeModal from "@/app/hooks/Modals/AddModals/useAddIncomeModal";

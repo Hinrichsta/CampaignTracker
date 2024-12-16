@@ -1,3 +1,9 @@
+/*
+* Payments Modal
+* 
+* It will take the information from the form and pass it to the backend to be added to the database
+*/
+
 'use client';
 
 import ModalTemplate from "../ModalTemplate";

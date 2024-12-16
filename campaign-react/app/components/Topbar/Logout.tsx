@@ -1,3 +1,9 @@
+/*
+* Loggout button
+* 
+* Sends the logout command to clear the cookies.
+*/
+
 'use client';
 
 import { useRouter } from "next/navigation";

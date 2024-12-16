@@ -1,9 +1,15 @@
+/*
+* This is the home page for individual campaigns that will allow users to view quick information or add new information into the campaign
+* 
+*/
+
 import { CampaignCoreType } from "@/app/hooks/DjangoTypes";
 import AddIncomeModal from "@/app/components/modals/addModals/AddIncomeModal";
 import AddPaymentModal from "@/app/components/modals/addModals/AddPaymentsModal";
 import CampaignJournal from "@/services/django"
 import QuickAdd from "@/app/components/campaignHome/QuickAdd";
 import FundsQuickView from "@/app/components/campaignHome/Funds";
+
 
 export default async function CampaignHomePage({
     params,

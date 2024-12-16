@@ -1,3 +1,9 @@
+/*
+* Campaign List Items
+* 
+* Template for each item in the campaign lists.
+*/
+
 import Link from "next/link";
 import { CampaignCoreType } from "../hooks/DjangoTypes";
 

@@ -1,3 +1,12 @@
+/*
+* Consumable Item Modal
+* 
+* It will take the information from the form and pass it to the backend to be added to the database
+* 
+* CURRENTLY IN PROGRESS
+*/
+
+
 'use client';
 
 import ModalTemplate from "../ModalTemplate";
