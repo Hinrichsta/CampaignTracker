@@ -6,8 +6,8 @@ Build the Django Application
 ```bash
 docker build . -f .\Campaign-Django\Dockerfile
 docker-compose run django bash
-python Campaign-Django/manage.py migrate
-python Campaign-Django/manage.py createsuperuser
+python manage.py migrate
+python manage.py createsuperuser
 exit
 ```
 Build the Ember Application

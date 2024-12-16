@@ -36,6 +36,9 @@ export async function calcTotalFunds(incomeData:ReceivablesType[],paymentData:Pa
         totalPayments: totalPayments
     }
 
+    console.log('Calculations Total Funds:', result)
+    
+
     return result
 }
 
@@ -56,14 +59,11 @@ export async function calcIndivFunds(incomeData:ReceivablesType[],paymentData:Pa
 
     incomeData.forEach((coin) => {
         if (!coin.party_trans && coin.payer !== null) {
-            const memberID = coin.payer;
-
-            if (indivFunds[memberID]){
-                indivFunds[memberID].totalIncome += (coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/10) : 0)
+            if (indivFunds[coin.payer]){
+                indivFunds[coin.payer].totalIncome += parseFloat((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0).toFixed(2));
             }
         } else {
-            const tmp = ((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/10) : 0)/memberCount)
-
+            const tmp = parseFloat((((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0))/memberCount).toFixed(2));
             Object.values(indivFunds).forEach(indiv => {
                 indiv.totalIncome += tmp
             });
@@ -72,13 +72,11 @@ export async function calcIndivFunds(incomeData:ReceivablesType[],paymentData:Pa
 
     paymentData.forEach((coin) => {
         if (!coin.party_trans && coin.payer !== null) {
-            const memberID = coin.payer;
-
-            if (indivFunds[memberID]){
-                indivFunds[memberID].totalPayments += (coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/10) : 0)
+            if (indivFunds[coin.payer]){
+                indivFunds[coin.payer].totalPayments += parseFloat((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0).toFixed(2));
             }
         } else {
-            const tmp = ((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/10) : 0)/memberCount)
+            const tmp = parseFloat((((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0))/memberCount).toFixed(2));
 
             Object.values(indivFunds).forEach(indiv => {
                 indiv.totalPayments += tmp
@@ -94,9 +92,12 @@ export async function calcIndivFunds(incomeData:ReceivablesType[],paymentData:Pa
         return {
             id: memberId,
             name: funds.name,
-            totalFunds,
+            totalFunds: totalFunds,
+            totalIncome: funds.totalIncome,
+            totalPayments:funds.totalPayments
         };
     });
+    console.log('Calculations Indiv Funds:', result)
 
     return result;
 }

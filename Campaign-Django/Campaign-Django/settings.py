@@ -152,7 +152,15 @@ REST_FRAMEWORK = {
     ),
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
+#CORS_ALLOWED_ORIGINS = [
+#    "http://localhost:3000",
+#    "https://localhost:3000",
+#    "http://react:3000",
+#    "https://react:3000",
+#    "http://localhost",
+#    "https://localhost",
+#    "http://django:8000",
+#    "https://django:8000",
+#]
 
+CORS_ALLOW_ALL_ORIGINS = True

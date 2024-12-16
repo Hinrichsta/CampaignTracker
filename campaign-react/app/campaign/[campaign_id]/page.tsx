@@ -5,14 +5,16 @@ import CampaignJournal from "@/services/django"
 import QuickAdd from "@/app/components/campaignHome/QuickAdd";
 import FundsQuickView from "@/app/components/campaignHome/Funds";
 
+
 export default async function CampaignHomePage({
     params,
 }: {
     params: Promise<{ campaign_id: string }>
 }) {
+
     const cid:string = (await params).campaign_id
 
-    const campaign = await CampaignJournal.get(`/campaigncore/${cid}`);
+    const campaign: CampaignCoreType = await CampaignJournal.get(`/campaigncore/${cid}`);
 
     return (
         <div className="flex h-full m-10">

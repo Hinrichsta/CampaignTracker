@@ -12,7 +12,7 @@ const FundsQuickView = ({ campaign_id }: { campaign_id: string }) => {
     const [payables, setPayables] = useState<PayablesType[]>([]);
     const [totalFunds, setTotalFunds] = useState<Funds | undefined>(undefined);
     const [indivFunds, setIndivFunds] = useState<IndivFund[]>([]);
-    const [user, setUser] = useState(Number())
+    const [user, setUser] = useState<string | null>()
 
     interface Funds {
         TotalGold: number;
@@ -26,80 +26,60 @@ const FundsQuickView = ({ campaign_id }: { campaign_id: string }) => {
         totalFunds: number;
     }
 
-    const getPartyMembers = async() => {
-        const tmp = await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`)
-        setPartyMembers(tmp);
-        console.log('Party', partyMembers)
-    }
-
-    const getReceivables = async() => {
-        const tmp = await CampaignJournal.get(`/campaigncore/${campaign_id}/receivables/`);
-        setReceivables(tmp);
-        console.log('Receivables', receivables)
-    }
-
-    const getPayables = async() => {
-        const tmp = await CampaignJournal.get(`/campaigncore/${campaign_id}/payables/`);
-        setPayables(tmp);
-        console.log('Payables', payables)
-    }
-    
-
-    const getUser = async() => {
-        const tmp = await getAuth()
-        console.log('User ID:', tmp)
-        setUser(Number(tmp));
+    const fundsData = async () => {
+        const party = await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`)
+        setPartyMembers(party);
+        const user = await getAuth()
+        setUser(user);
+        const income = await CampaignJournal.get(`/campaigncore/${campaign_id}/receivables/`);
+        setReceivables(income);
+        const payments = await CampaignJournal.get(`/campaigncore/${campaign_id}/payables/`);
+        setPayables(payments);
     }
 
     useEffect(() => {
-        getPartyMembers();
-        getReceivables();
-        getPayables();
-        getUser();
+        fundsData();
     }, []);
     
-
-    const getTotalFunds = async() => {
-        const tmp = await calcTotalFunds(receivables,payables);
-        console.log('Total Funds:',tmp)
-        setTotalFunds(tmp);
-    }
-
-    const getIndivFunds = async() => {
-        const tmp = await calcIndivFunds(receivables,payables,partyMembers);
-        console.log('Indiv Funds:',tmp)
-        setIndivFunds(tmp);
-    }
-
     useEffect(() => {
-        getIndivFunds();
-        getTotalFunds();
-        console.log('Party', partyMembers)
-        console.log('Receivables', receivables)
-        console.log('Payables', payables)
-    }, []);
+        if(receivables.length > 0 && payables.length > 0 && partyMembers.length > 0) {
+            const getFunds = async () => {
+                const total = await calcTotalFunds(receivables,payables);
+                setTotalFunds(total);
+                const indiv = await calcIndivFunds(receivables,payables,partyMembers);
+                setIndivFunds(indiv);
+            }
+            getFunds();
+        }
+    }, [partyMembers, receivables, payables])
+
+    const userIndivFund = user !== null ? indivFunds.find(fund => fund.id === user) : undefined;
 
     return ( 
         <div className="flex pb-8 h-full w-full">
             <div className="flex-col h-full w-full">
                 <div className="pb-7 h-1/2 w-full bg-blue-700 border-neutral-800 rounded-lg border-2 shadow-lg items-center justify-center text-center">
-                    <h4 className="text-xl">Total Group Funds</h4>
+                    <h4 className="text-2xl">Total Group Funds</h4>
                     {totalFunds !== undefined ? (
                         <div className="p-5 h-full w-full border-neutral-800 border-t-2 items-center justify-center">
                             <p className="align-middle text-xl">{totalFunds.TotalGold} GP</p>
                         </div>
                     ) : (
-                        <p>Loading...</p>
+                        <div className="p-5 h-full w-full border-neutral-800 border-t-2 items-center justify-center">
+                            <p>Loading...</p>
+                        </div>
                     )}
                 </div>
                 <div className="pb-7 h-1/2 w-full bg-blue-700 border-neutral-800 rounded-lg border-2 shadow-lg items-center justify-center text-center">
-                    <h4 className="text-xl">Your Personal Funds</h4>
-                    {user !== null && indivFunds.length > 0 ? (
+                    <h4 className="text-2xl">Your Personal Funds</h4>
+                    {userIndivFund ? (
                         <div className="p-5 h-full w-full border-neutral-800 border-t-2 items-center justify-center">
-                            <p className="align-middle text-xl">{indivFunds[user].totalFunds} GP</p>
+                            <p className="align-middle text-xl">{userIndivFund.totalFunds} GP</p>
                         </div>
                     ) : (
-                        <p>Loading...</p>
+                        <div className="p-5 h-full w-full border-neutral-800 border-t-2 items-center justify-center">
+                            <p>Loading...</p>
+                        </div>
                     )}
                 </div>
             </div>
