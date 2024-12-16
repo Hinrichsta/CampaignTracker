@@ -11,7 +11,7 @@ export type UserRolesType = {
     role: string;
 }
 
-export type PartyMemberTyoe = {
+export type PartyMemberType = {
     id: number;
     character_name: string;
     player: number;
@@ -83,7 +83,7 @@ export type MagicItemsType = {
     campaign: number;
 }
 
-export type ConsummableItemsType = {
+export type ConsumableItemsType = {
     name: string;
     notes: string;
     type: string;

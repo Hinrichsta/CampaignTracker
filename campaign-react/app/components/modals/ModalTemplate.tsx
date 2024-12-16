@@ -58,7 +58,7 @@ const ModalTemplate: React.FC<ModalProps> = ({
                             </div>
                             <h2 className="text-4xl font-bold text-white"> {title} </h2>
                         </header>
-                        <section className="p-6 text-slate-100">
+                        <section className="text-slate-100">
                            {content}
                         </section>
                     </div>

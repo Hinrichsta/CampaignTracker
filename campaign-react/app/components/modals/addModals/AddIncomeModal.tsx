@@ -6,8 +6,9 @@ import { useRouter } from "next/navigation";
 import useAddIncomeModal from "@/app/hooks/Modals/AddModals/useAddIncomeModal";
 import { handleLogin } from "../../../hooks/actions";
 import CampaignJournal from "@/services/django";
+import { PartyMemberType } from "@/app/hooks/DjangoTypes";
 
-const AddIncomeModal = (campaign_id:any) => {
+const AddIncomeModal = ({ campaign_id }: { campaign_id: string }) => {
     const router = useRouter();
     const incomeModal = useAddIncomeModal()
     const [realDate, setRealDate] = useState("");
@@ -36,12 +37,10 @@ const AddIncomeModal = (campaign_id:any) => {
             payer: indivPayee,
             campaign: campaign_id
         }
-        console.log(incomeData)
         const response = await CampaignJournal.post(
             '/auth/login/',
             JSON.stringify(incomeData)
         );
-        console.log(response)
         if (response.access) {
             handleLogin(response.id as string,response.access,response.refresh)
             
@@ -74,49 +73,56 @@ const AddIncomeModal = (campaign_id:any) => {
         }
     }
 
-    const PartyMembers = () => {
-        
+    const [partyMembers, setPartyMembers] = useState<PartyMemberType[]>([]);
+    const getPartyMembers = async() => {
+        setPartyMembers(await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`));
     }
 
-    const partyMembers = CampaignJournal.get(
-        `campaigncore/${campaign_id}/party/`
-    )
+    useEffect(() => {
+        getPartyMembers();
+    }, []);
+
 
     const content = (
-        <div className="flex">
+        <div className="flex pr-10 pl-4 py-4">
             {showForm ? (
                 <form className="" action={submitIncome}>
-                    <div className="pt-3">
-                        <label className="px-2" htmlFor="date">Date</label>
-                        <input onChange={(e) => setRealDate(e.target.value)} id="date" value={realDate} placeholder="Actual Date" type="date" className="px-4 h-12 w-full text-black rounded-lg" required/>
+                    <div className="flex">
+                        <div className="pt-3 px-2 flex-row w-1/2">
+                            <label className="px-2" htmlFor="date">Date</label>
+                            <input onChange={(e) => setRealDate(e.target.value)} id="date" value={realDate} placeholder="Actual Date" type="date" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg" required/>
+                        </div>
+                        <div className="pt-3 flex-row w-1/2">
+                            <label className="px-2" htmlFor="gameDate">In-Game Date</label>
+                            <input onChange={(e) => setworldDate(e.target.value)} id="gameDate" value={worldDate} placeholder="In-Game World Date" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
+                        </div>
                     </div>
-                    <div className="pt-3">
-                        <label className="px-2" htmlFor="gameDate">In-Game Date</label>
-                        <input onChange={(e) => setworldDate(e.target.value)} id="gameDate" value={worldDate} placeholder="In-Game World Date" type="text" className="px-4 h-12 w-full text-black rounded-lg"/>
-                    </div>
-                    <div className="pt-3">
+                    <div className="pt-3 px-2">
                         <label className="px-2" htmlFor="desc">Transaction Description</label>
-                        <input onChange={(e) => setDescription(e.target.value)} id="desc" value={description} placeholder="Description" type="text" className="px-4 h-12 w-full text-black rounded-lg" required/>
+                        <textarea onChange={(e) => setDescription(e.target.value)} id="desc" value={description} placeholder="Description" className="px-4 py-[10px] h-12 min-h-12 max-h-96 w-full text-black text-balance resize-y border-neutral-800 border-2 shadow-lg rounded-lg" required/>
                     </div>
-                    <div className="pt-3">
-                        <label className="px-2" htmlFor="pp">Platinum</label>
-                        <input onChange={(e) => setPlatinum(e.target.value)} id="pp" value={platinum} placeholder="Platinum" type="text" className="px-4 h-12 w-full text-black rounded-lg"/>
+                    <div className="flex">
+                        <div className="pt-3 flex-row w-1/4">
+                            <label className="px-2" htmlFor="pp">Platinum</label>
+                            <input onChange={(e) => setPlatinum(e.target.value)} id="pp" value={platinum} placeholder="Platinum" type="text" className="px-4 h-12 w-28 text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
+                        </div>
+                        <div className="pt-3 flex-row w-1/4">
+                            <label className="px-2" htmlFor="gp">Gold</label>
+                            <input onChange={(e) => setGold(e.target.value)} id="gp" value={gold} placeholder="Gold" type="text" className="px-4 h-12 w-28 text-black border-neutral-800 border-2 shadow-lg rounded-lg" required/>
+                        </div>
+                        <div className="pt-3 flex-row w-1/4">
+                            <label className="px-2" htmlFor="sp">Silver</label>
+                            <input onChange={(e) => setSilver(e.target.value)} id="sp" value={silver} placeholder="Silver" type="text" className="px-4 h-12 w-28 text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
+                        </div>
+                        <div className="pt-3 flex-row w-1/4">
+                            <label className="px-2" htmlFor="cp">Copper</label>
+                            <input onChange={(e) => setCopper(e.target.value)} id="cp" value={copper} placeholder="Copper" type="text" className="px-4 h-12 w-28 text-black border-neutral-800 border-2 shadow-lg rounded-lg" required/>
+                        </div>
                     </div>
-                    <div className="pt-3">
-                        <label className="px-2" htmlFor="gp">Gold</label>
-                        <input onChange={(e) => setGold(e.target.value)} id="gp" value={gold} placeholder="Gold" type="text" className="px-4 h-12 w-full text-black rounded-lg" required/>
-                    </div>
-                    <div className="pt-3">
-                        <label className="px-2" htmlFor="sp">Silver</label>
-                        <input onChange={(e) => setSilver(e.target.value)} id="sp" value={silver} placeholder="Silver" type="text" className="px-4 h-12 w-full text-black rounded-lg"/>
-                    </div>
-                    <div className="pt-3">
-                        <label className="px-2" htmlFor="cp">Copper</label>
-                        <input onChange={(e) => setCopper(e.target.value)} id="cp" value={copper} placeholder="Copper" type="text" className="px-4 h-12 w-full text-black rounded-lg" required/>
-                    </div>
+
                     <div className="pt-6 text-xl flex-row">
-                        <label className="px-2" htmlFor="partyTrans">Full Party Payment</label>
-                        <input onChange={() => setPartyTrans(!partyTrans)} id="partyTrans" checked={partyTrans} type="checkbox" className="px-4 h-4 w-4 text-black rounded-lg"/>
+                        <label className="px-2" htmlFor="partyTrans">Full Party Income</label>
+                        <input onChange={() => setPartyTrans(!partyTrans)} id="partyTrans" checked={partyTrans} type="checkbox" className="px-4 h-4 w-4 text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                         <div>
                             <label className="px-2 text-sm" htmlFor="partyTrans">*leave checked to remove from general fund</label>
                         </div>
@@ -126,14 +132,16 @@ const AddIncomeModal = (campaign_id:any) => {
                     ) : (
                         <div className="pt-3">
                             <label className="px-2" htmlFor="indivPay">Payment to Individual</label>
-                            <select onChange={(e) => setindivPayee(e.target.value)} id="indivPay" value={indivPayee} className="px-4 h-12 w-full text-black rounded-lg" required/>
-                            {partyMembers.length > 0 ? ( 
-                                partyMembers.map((member) => (
-                                    <option>{member.character_name}</option>
-                                ))
-                            ) : ( 
-                                <option></option>
-                            ) }
+                            <select onChange={(e) => setindivPayee(e.target.value)} id="indivPay" value={indivPayee} className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg" required>
+                                <option value=""/>
+                                {partyMembers.length > 0 ? ( 
+                                    partyMembers.map((member) => (
+                                        <option key={member.id}>{member.character_name}</option>
+                                    ))
+                                ) : ( 
+                                    <option></option>
+                                ) }
+                            </select>
                         </div>
                     )}
                     {error.map((error, index) => {
@@ -144,7 +152,7 @@ const AddIncomeModal = (campaign_id:any) => {
                         )
                     })}
                     <div className="pt-6">
-                        <button className="w-full rounded-lg bg-blue-700 h-12">
+                        <button className="hover:scale-105 w-full h-16 rounded-lg bg-blue-700 border-neutral-800 border-2 shadow-lg items-center justify-center text-center">
                             Submit
                         </button>
                     </div>
@@ -162,7 +170,7 @@ const AddIncomeModal = (campaign_id:any) => {
 
     return (
         <ModalTemplate 
-            title="Receive Payment"
+            title="Receive Income"
             content={content}
             modalOpen={incomeModal.modalOpen}
             modalClose={incomeModal.close}

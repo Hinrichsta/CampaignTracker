@@ -52,7 +52,7 @@ const Sidebar: React.FC = () => {
                             <Link href={`/campaign/${campaign_id}/items`}><div className="flex items-center space-x-2" onClick={() => setSidebarOpen(!sidebarOpen)}><ChevronDownIcon className="h-4 w-4 justify-center items-center text-center"/><span>Items</span></div></Link>
                                 <ul className="dropdown hidden pl-8">
                                     <Link href={`/campaign/${campaign_id}/items/magic-items`}><li className="py-1" onClick={() => setSidebarOpen(!sidebarOpen)}>Magic Items</li></Link>
-                                    <Link href={`/campaign/${campaign_id}/items/consummable-items`}><li className="py-1" onClick={() => setSidebarOpen(!sidebarOpen)}>Consumable Items</li></Link>
+                                    <Link href={`/campaign/${campaign_id}/items/consumable-items`}><li className="py-1" onClick={() => setSidebarOpen(!sidebarOpen)}>Consumable Items</li></Link>
                                 </ul>
                             </li>
                         <Link href={`/campaign/${campaign_id}/vehicles`}><li className="py-1" onClick={() => setSidebarOpen(!sidebarOpen)}>Vehicles</li></Link>

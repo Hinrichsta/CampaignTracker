@@ -352,7 +352,7 @@ class MagicItems_Views(viewsets.ModelViewSet):
 
 class ConsumItems_Views(viewsets.ModelViewSet):
     """
-    Returns all of the Consummable Items in a campaign or all of the Consummable Items in all of the user's campaigns
+    Returns all of the Consumable Items in a campaign or all of the Consumable Items in all of the user's campaigns
 
     Can be filtered with ?campaign=#
     """

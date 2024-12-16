@@ -1,5 +1,6 @@
 import { CampaignCoreType } from "@/app/hooks/DjangoTypes";
 import AddIncomeModal from "@/app/components/modals/addModals/AddIncomeModal";
+import AddPaymentModal from "@/app/components/modals/addModals/AddPaymentsModal";
 import CampaignJournal from "@/services/django"
 import QuickAdd from "@/app/components/campaignHome/QuickAdd";
 
@@ -8,17 +9,17 @@ export default async function CampaignHomePage({
 }: {
     params: Promise<{ campaign_id: string }>
 }) {
-    const cid = (await params).campaign_id
+    const cid:string = (await params).campaign_id
 
     const campaign = await CampaignJournal.get(`/campaigncore/${cid}`);
 
-    
-    
-    
     return (
         <div className="flex h-full m-10">
             <AddIncomeModal 
-                campaign_id={campaign.id}
+                campaign_id={cid}
+            />
+            <AddPaymentModal 
+                campaign_id={cid}
             />
             <div className="flex-row w-full mx-14">
                 <div className="h-64 my-24 bg-slate-500 text-white border-black border-4 rounded-xl shadow-xl text-center">

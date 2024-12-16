@@ -4,6 +4,7 @@ import "./ui/globals.css";
 import Topbar from "./components/Topbar/Topbar";
 import AuthModal from "./components/modals/AuthModal";
 import JoinModal from "./components/modals/JoinModal";
+import CreateCampaignModal from "./components/modals/CreateCampaignModal";
 
 export const metadata: Metadata = {
     title: "Campaign Tracker",
@@ -22,6 +23,7 @@ export default function RootLayout({
                     <Topbar />
                     <AuthModal />
                     <JoinModal />
+                    <CreateCampaignModal />
                     {children}
                 </div>
             </body>

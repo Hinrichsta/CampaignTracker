@@ -80,7 +80,7 @@ export async function updateToken(response:string) {
             return clearAuth(response);
         }
     } catch (error) {
-        console.log('error:', error)
+        console.log(error)
         return clearAuth(response);
     }
 }

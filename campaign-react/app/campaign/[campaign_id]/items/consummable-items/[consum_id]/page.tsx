@@ -1,7 +1,7 @@
 import { CampaignCoreType } from "@/app/components/CampaignList"
 import CampaignJournal from "@/services/django"
 
-export default async function ConsummableItemsDetailPage({
+export default async function ConsumableItemsDetailPage({
     params,
 }: {
     params: Promise<{ campaign_id: string }>
@@ -12,7 +12,7 @@ export default async function ConsummableItemsDetailPage({
 
     return (
         <div>
-            Hello {campaign.campaign_name} Consummable Items Detail
+            Hello {campaign.campaign_name} Consumable Items Detail
         </div>
     )
 }

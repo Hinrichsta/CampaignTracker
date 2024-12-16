@@ -21,12 +21,10 @@ const AuthModal = () => {
             username: username,
             password: password
         }
-        console.log(authData)
         const response = await CampaignJournal.post(
             '/auth/login/',
             JSON.stringify(authData)
         );
-        console.log(response)
         if (response.access) {
             handleLogin(response.id as string,response.access,response.refresh)
             
@@ -53,7 +51,7 @@ const AuthModal = () => {
     }
 
     const content = (
-        <div>
+        <div className="p-6">
             {showForm ? (
                 <form className="space-y-3" action={submitAuth}>
                     <input onChange={(e) => setUsername(e.target.value)} value={username} placeholder="Username" type="username" className="px-4 w-full h-12 text-black rounded-lg" required/>
@@ -65,7 +63,7 @@ const AuthModal = () => {
                             </div>
                         )
                     })}
-                    <button className="w-full rounded-lg bg-blue-700 h-12">
+                    <button className="w-full h-16 rounded-lg bg-blue-700 border-neutral-800 border-2 shadow-lg items-center justify-center text-center">
                         Submit
                     </button>
                 </form>

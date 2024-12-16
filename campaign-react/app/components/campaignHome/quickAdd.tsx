@@ -17,33 +17,45 @@ const QuickAdd = () => {
     const hireModal = useAddHireModal();
 
     return (
-        <div className="grid grid-cols-2 gap-10 px-10 text-xl">
-            <button className="w-48 h-16 rounded-lg bg-emerald-700 border-neutral-800 border-2 shadow-lg" onClick={() => {incomeModal.open();}}>
-                Add Income
-            </button>
-
-            <button className="w-48 h-16 rounded-lg bg-red-800 border-neutral-800 border-2 shadow-lg" onClick={() => {paymentsModal.open();}}>
-                Make Payment
-            </button>
-
-            <button className="w-48 h-16 rounded-lg bg-blue-700 border-neutral-800 border-2 shadow-lg" onClick={() => {magicItemModal.open();}}>
-                Add Magic Item
-            </button>
-
-            <button className="w-48 h-16 rounded-lg bg-orange-600 border-neutral-800 border-2 shadow-lg" onClick={() => {consItemModal.open();}}>
-                Add Consummable Item
-            </button>
-
-            <button className="w-48 h-16 rounded-lg bg-violet-800 border-neutral-800 border-2 shadow-lg" onClick={() => {vehicleModal.open();}}>
-                Buy Vehicle
-            </button>
-
-            <button className="w-48 h-16 rounded-lg bg-violet-800 border-neutral-800 border-2 shadow-lg" onClick={() => {hireModal.open();}}>
-                Hire Someone
-            </button>
-
-
+        <div className="px-6 ">
+            <div className="flex flex-row pb-4">
+                <div className="w-1/2 px-10 lg:text-xl md:text-xs">
+                    <button className="hover:scale-105 w-full h-16 rounded-lg bg-blue-700 border-neutral-800 border-2 shadow-lg items-center justify-center text-center" onClick={() => {incomeModal.open();}}>
+                        Add Income
+                    </button>
+                </div>
+                <div className="w-1/2 px-10 lg:text-xl md:text-xs">
+                    <button className="hover:scale-105 w-full h-16 rounded-lg bg-blue-700 border-neutral-800 border-2 shadow-lg items-center justify-center text-center"  onClick={() => {paymentsModal.open();}}>
+                        Make Payment
+                    </button>
+                </div>
+            </div>
+            <div className="flex flex-row pt-4 pb-4">
+                <div className="w-1/2 px-10 lg:text-xl md:text-xs">
+                    <button disabled={true} className="opacity-60 hover:scale-105 w-full h-16 rounded-lg bg-blue-700 border-neutral-800 border-2 shadow-lg items-center justify-center text-center" onClick={() => {magicItemModal.open();}}>
+                        Add Magic Item
+                    </button>
+                </div>
+                <div className="w-1/2 px-10 lg:text-xl md:text-xs">
+                    <button disabled={true} className="opacity-60 hover:scale-105 w-full h-16 rounded-lg bg-blue-700 border-neutral-800 border-2 shadow-lg items-center justify-center text-center" onClick={() => {consItemModal.open();}}>
+                        Add Consumable Item
+                    </button>
+                </div>
+            </div>
+            <div className="flex flex-row pt-4">
+                <div className="w-1/2 px-10 lg:text-xl md:text-xs">
+                    <button disabled={true} className="opacity-60 hover:scale-105 w-full h-16 rounded-lg bg-blue-700 border-neutral-800 border-2 shadow-lg items-center justify-center text-center" onClick={() => {vehicleModal.open();}}>
+                        Buy Vehicle
+                    </button>
+                </div>
+                <div className="w-1/2 px-10 lg:text-xl md:text-xs">
+                    <button disabled={true} className="opacity-60 hover:scale-105 w-full h-16 rounded-lg bg-blue-700 border-neutral-800 border-2 shadow-lg items-center justify-center text-center" onClick={() => {hireModal.open();}}>
+                        Hire Someone
+                    </button>
+                </div>
+            </div>
         </div>
+
     )
 }
 

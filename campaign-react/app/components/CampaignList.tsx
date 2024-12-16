@@ -5,13 +5,6 @@ import CampaignListItem from "./CampaignListItem";
 import CampaignJournal from "@/services/django";
 import { CampaignCoreType } from "../hooks/DjangoTypes";
 
-//export type CampaignCoreType = {
-//    id: number;
-//    campaign_name: string;
-//    description: string;
-//    public: boolean;
-//}
-
 
 const CampaignList = () => {
     const [campaigns, setCampaigns] = useState<CampaignCoreType[]>([]);

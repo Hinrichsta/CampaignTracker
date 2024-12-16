@@ -1,5 +1,5 @@
 # TTRPG Campaign Tracker Site
-A simple website that allows for the tracking of player information for a campaign.  Allows for individual campaigns to track party members, payments/income, magic items/consummable items, vehicles, and hirelings with.
+A simple website that allows for the tracking of player information for a campaign.  Allows for individual campaigns to track party members, payments/income, magic items/consumable items, vehicles, and hirelings with.
 
 ## Installation
 Build the Django Application
