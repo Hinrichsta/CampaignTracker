@@ -3,37 +3,21 @@
 * 
 */
 
-import { CampaignCoreType } from "@/app/hooks/DjangoTypes";
 import AddIncomeModal from "@/app/components/modals/addModals/AddIncomeModal";
 import AddPaymentModal from "@/app/components/modals/addModals/AddPaymentsModal";
-import CampaignJournal from "@/services/django"
 import QuickAdd from "@/app/components/campaignHome/QuickAdd";
 import FundsQuickView from "@/app/components/campaignHome/Funds";
 
 
-export default async function CampaignHomePage({
-    params,
-}: {
-    params: Promise<{ campaign_id: string }>
-}) {
-    const cid:string = (await params).campaign_id
-
-    const campaign = await CampaignJournal.get(`/campaigncore/${cid}`);
-
+export default function CampaignHomePage () {
     return (
         <div className="flex h-full m-10">
-            <AddIncomeModal 
-                campaign_id={cid}
-            />
-            <AddPaymentModal 
-                campaign_id={cid}
-            />
+            <AddIncomeModal />
+            <AddPaymentModal />
             <div className="flex-row w-full mx-14">
                 <div className="h-64 my-24 bg-slate-500 text-white border-black border-4 rounded-xl shadow-xl text-center">
                     <h3 className="text-2xl">Funds</h3>
-                    <FundsQuickView 
-                        campaign_id={cid}
-                    />
+                    <FundsQuickView />
                 </div>
                 <div className="h-4/6 my-24 bg-slate-500 text-white border-black border-4 rounded-xl shadow-xl text-center">
                     <h3 className="text-2xl">Items</h3>
@@ -48,7 +32,6 @@ export default async function CampaignHomePage({
                     <h3 className="text-2xl">Calendar</h3>
                 </div>
             </div>
-
         </div>
     )
 }

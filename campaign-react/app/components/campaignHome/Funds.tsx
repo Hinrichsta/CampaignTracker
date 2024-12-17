@@ -10,8 +10,12 @@ import { PartyMemberType, ReceivablesType, PayablesType } from "@/app/hooks/Djan
 import CampaignJournal from "@/services/django";
 import { calcIndivFunds, calcTotalFunds } from "@/app/hooks/calculations";
 import { getAuth } from "@/app/hooks/actions";
+import { useParams  } from "next/navigation";
 
-const FundsQuickView = ({ campaign_id }: { campaign_id: string }) => {  
+
+const FundsQuickView = () => {  
+    const params = useParams();
+    const { campaign_id } = params;
     const [partyMembers, setPartyMembers] = useState<PartyMemberType[]>([]);
     const [receivables, setReceivables] = useState<ReceivablesType[]>([]);
     const [payables, setPayables] = useState<PayablesType[]>([]);

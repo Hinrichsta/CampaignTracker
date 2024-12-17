@@ -1,34 +1,30 @@
 # TTRPG Campaign Tracker Site
 A simple website that allows for the tracking of player information for a campaign.  Allows for individual campaigns to track party members, payments/income, magic items/consumable items, vehicles, and hirelings with.
 
+## Current Status
+Currently the main functionalities are creating accounts, campaigns, and transactions in campaigns.  Party members must be edited in the Django admin panel (localhost:8000/django/admin) under the party members table.  The Total gold and Indivdual Gold function requires there to be at least 1 Income transaction and 1 Payment transaction before it will calculate anything.
+
+All other functionalities are not ready, but the tables are there and are able to be called from the admin page and api.  The Front end also has the pages, but they do not have anything
+
 ## Installation
 CD into the root directory
 
-### Build the Django Application
+### Build The Application
 ```bash
 docker-compose run django bash
 python Campaign-Django/manage.py migrate
 python Campaign-Django/manage.py createsuperuser
 exit
 ```
-### Build the Next.JS Application
-```bash
-cd .\campaign-react\
-npm install
-```
+
 For Better Security you will need to create the environmental Variables.  Copy the .env.example, rename it to .env, and edit the default values to your liking.  Then run the commands above.
 
 ## Getting Started
 To Start the site open 2 admin terminal windows and cd into the root directory of the project
 
-#### Starting Django
+#### Starting the Application
 ```bash
 docker-compose up
-```
-#### Starting Next.JS
-```bash
-cd .\campaign-react\
-npm run dev
 ```
 
 

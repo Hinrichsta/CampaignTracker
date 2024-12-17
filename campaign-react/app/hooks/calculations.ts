@@ -20,9 +20,6 @@ interface IndivFundsObject {
 }
 
 export async function calcTotalFunds(incomeData:ReceivablesType[],paymentData:PayablesType[]){
-
-    console.log('Calculations Total Receivables:', incomeData)
-    console.log('Calculations Total Payables:', paymentData)
     
     const incomePlatinum = parseFloat(incomeData.reduce((currentCoin:number, coin) => currentCoin + (coin.pp * 10), 0).toFixed(2));
     const incomeGold = parseFloat(incomeData.reduce((currentCoin:number, coin) => currentCoin + coin.gp, 0).toFixed(2));
@@ -50,9 +47,6 @@ export async function calcTotalFunds(incomeData:ReceivablesType[],paymentData:Pa
 
 export async function calcIndivFunds(incomeData:ReceivablesType[],paymentData:PayablesType[],partyList:PartyMemberType[]){
 
-    console.log('Calculations Indiv Party:', partyList)
-    console.log('Calculations Indiv Receivables:', incomeData)
-    console.log('Calculations Indiv Payables:', paymentData)
     const indivFunds:IndivFundsObject = partyList.reduce((out, Member) => {
         out[Member.id]= {
             name: Member.character_name,

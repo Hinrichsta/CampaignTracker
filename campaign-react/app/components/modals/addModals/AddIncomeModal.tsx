@@ -9,13 +9,16 @@
 
 import ModalTemplate from "../ModalTemplate";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter,useParams  } from "next/navigation";
 import useAddIncomeModal from "@/app/hooks/Modals/AddModals/useAddIncomeModal";
 import CampaignJournal from "@/services/django";
 import { PartyMemberType } from "@/app/hooks/DjangoTypes";
 
-const AddIncomeModal = ({ campaign_id }: { campaign_id: string }) => {
+
+const AddIncomeModal = () => {
     const router = useRouter();
+    const params = useParams();
+    const { campaign_id } = params;
     const incomeModal = useAddIncomeModal()
     const [realDate, setRealDate] = useState("");
     const [worldDate, setworldDate] = useState("");
@@ -56,7 +59,7 @@ const AddIncomeModal = ({ campaign_id }: { campaign_id: string }) => {
             `/campaigncore/${campaign_id}/receivables/`,
             JSON.stringify(incomeData)
         );
-        console.log(response)
+        
         if (response.id) {         
 
             setRealDate("")

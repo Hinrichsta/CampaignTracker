@@ -8,13 +8,15 @@
 
 import ModalTemplate from "../ModalTemplate";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter,useParams  } from "next/navigation";
 import useAddPaymentsModal from "@/app/hooks/Modals/AddModals/useAddPaymentsModal";
 import CampaignJournal from "@/services/django";
 import { PartyMemberType } from "@/app/hooks/DjangoTypes";
 
-const AddPaymentModal = ({ campaign_id }: { campaign_id: string }) => {
+const AddPaymentModal = () => {
     const router = useRouter();
+    const params = useParams();
+    const { campaign_id } = params;
     const paymentModal = useAddPaymentsModal()
     const [realDate, setRealDate] = useState("");
     const [worldDate, setworldDate] = useState("");

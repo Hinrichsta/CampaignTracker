@@ -70,7 +70,7 @@ const CreateCampaignModal = () => {
                     </div>
                     <div className="pt-6 text-xl flex-row">
                         <label className="px-2" htmlFor="partyTrans">Would you like to make this campaign Public?</label>
-                        <input onChange={() => setPublicCampaign(!publicCampaign)} id="partyTrans" checked={publicCampaign} type="checkbox" className="px-4 h-5 w-5 text-black border-neutral-800 border-2 shadow-lg" required/>
+                        <input onChange={() => setPublicCampaign(!publicCampaign)} id="partyTrans" checked={publicCampaign} type="checkbox" className="px-4 h-5 w-5 text-black border-neutral-800 border-2 shadow-lg"/>
                     </div>
                     {error.map((error, index) => {
                         return (
