@@ -50,16 +50,15 @@ const FundsQuickView = () => {
         fundsData();
     }, []);
     
+
     useEffect(() => {
-        if(receivables.length > 0 && payables.length > 0 && partyMembers.length > 0) {
-            const getFunds = async () => {
-                const total = await calcTotalFunds(receivables,payables);
-                setTotalFunds(total);
-                const indiv = await calcIndivFunds(receivables,payables,partyMembers);
-                setIndivFunds(indiv);
-            }
-            getFunds();
+        const getFunds = async () => {
+            const total = await calcTotalFunds(receivables,payables);
+            setTotalFunds(total);
+            const indiv = await calcIndivFunds(receivables,payables,partyMembers);
+            setIndivFunds(indiv);
         }
+        getFunds();
     }, [partyMembers, receivables, payables])
 
     const userIndivFund = user !== null ? indivFunds.find(fund => fund.id === user) : undefined;

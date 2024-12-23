@@ -11,10 +11,10 @@ import FundsQuickView from "@/app/components/campaignHome/Funds";
 
 export default function CampaignHomePage () {
     return (
-        <div className="flex h-full m-10">
+        <div className="flex h-full mx-10">
             <AddIncomeModal />
             <AddPaymentModal />
-            <div className="flex-row w-full mx-14">
+            <div className="flex-row w-full">
                 <div className="h-64 my-24 bg-slate-500 text-white border-black border-4 rounded-xl shadow-xl text-center">
                     <h3 className="text-2xl">Funds</h3>
                     <FundsQuickView />

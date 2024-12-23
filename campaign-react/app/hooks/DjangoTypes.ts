@@ -31,6 +31,7 @@ export type PartyMemberType = {
 }
 
 export type ReceivablesType = {
+    id: number;
     irl_date: Date;
     ig_date: string;
     description: string | null;
@@ -44,6 +45,7 @@ export type ReceivablesType = {
 }
 
 export type PayablesType = {
+    id: number;
     irl_date: Date;
     ig_date: string;
     description: string | null;
@@ -58,6 +60,7 @@ export type PayablesType = {
 }
 
 export type VehiclesType = {
+    id: number;
     name: string;
     type: string;
     size: string;
@@ -66,6 +69,7 @@ export type VehiclesType = {
 }
 
 export type HirelingsType = {
+    id: number;
     name: string;
     race: string;
     stats: string;
@@ -75,6 +79,7 @@ export type HirelingsType = {
 }
 
 export type MagicItemsType = {
+    id: number;
     irl_date: Date;
     ig_date: string;
     name: string;
@@ -90,6 +95,7 @@ export type MagicItemsType = {
 }
 
 export type ConsumableItemsType = {
+    id: number;
     name: string;
     notes: string;
     type: string;
@@ -99,6 +105,7 @@ export type ConsumableItemsType = {
 }
 
 export type CalendarCoresType = {
+    id: number;
     name: string;
     current_day: number;
     current_month: number;
@@ -108,6 +115,7 @@ export type CalendarCoresType = {
 }
 
 export type CalendarMonthType = {
+    id: number;
     name: string;
     order_num: number;
     day_count: number;
@@ -116,6 +124,7 @@ export type CalendarMonthType = {
 }
 
 export type CalendarEventType = {
+    id: number;
     name: string;
     calendar: string;
     campaign: number;
