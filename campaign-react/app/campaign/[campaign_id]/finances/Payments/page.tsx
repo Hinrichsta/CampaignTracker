@@ -1,8 +1,9 @@
-export default function PaymentsOverviewPage() {
+import PaymentsList from "@/app/components/finances/PaymentsList"
 
+export default function PaymentsOverviewPage() {
     return (
         <div>
-            Payments Overview
+            <PaymentsList />
         </div>
     )
 }

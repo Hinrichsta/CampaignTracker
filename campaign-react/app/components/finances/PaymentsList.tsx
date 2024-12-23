@@ -7,26 +7,26 @@ import { calcSingleTransaction } from "@/app/hooks/calculations";
 import { useParams  } from "next/navigation";
 
 
-const IncomeList = () => {
+const PaymentsList = () => {
     const params = useParams();
     const { campaign_id } = params;
-    const [incomeData, setIncomeData] = useState<ReceivablesType[]>([]);
+    const [PaymentsData, setPaymentsData] = useState<ReceivablesType[]>([]);
     const [partyMembers, setPartyMembers] = useState<PartyMemberType[]>([]);
 
-    const getIncome = async () => {
+    const getPayments = async () => {
         const party = await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`)
         setPartyMembers(party);
-        const income = await CampaignJournal.get(`/campaigncore/${campaign_id}/receivables/`);
-        setIncomeData(income);
+        const payments = await CampaignJournal.get(`/campaigncore/${campaign_id}/payables/`);
+        setPaymentsData(payments);
     }
 
     useEffect(() => {
-        getIncome();
+        getPayments();
     }, []);
 
     return (
         <div className="mx-5">
-        {incomeData.length > 0 ? (
+        {PaymentsData.length > 0 ? (
             <table className="w-full text-center table-fixed border-black">
                 <thead className="bg-blue-700 text-white border-b-4 border-black">
                     <tr className="border-black">
@@ -42,7 +42,7 @@ const IncomeList = () => {
                     </tr>
                 </thead>
                 <tbody className="text-white ">
-                    {incomeData.map((entry) => (
+                    {PaymentsData.map((entry) => (
                         <tr key={entry.id} className="border-2 border-separate border-black even:bg-slate-500 odd:bg-transparent">
                             <td className="border-2 border-separate border-black">{String(entry.irl_date)}</td>
                             <td className="border-2 border-separate border-black">{entry.ig_date}</td>
@@ -72,4 +72,4 @@ const IncomeList = () => {
     )
 }
 
-export default IncomeList;
+export default PaymentsList;

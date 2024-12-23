@@ -19,6 +19,16 @@ interface IndivFundsObject {
     [key: string]: IndividualFunds;
 }
 
+export function calcSingleTransaction(incomeData?:ReceivablesType,paymentData?:PayablesType){
+    if (incomeData) {
+        return parseFloat(((incomeData.pp * 10) + incomeData.gp + (incomeData.sp/10) + (incomeData.cp/100)).toFixed(2));
+    } else if (paymentData){
+        return parseFloat(((paymentData.pp * 10) + paymentData.gp + (paymentData.sp/10) + (paymentData.cp/100)).toFixed(2));
+    } else {
+        return 0
+    }
+}
+
 export async function calcTotalFunds(incomeData:ReceivablesType[],paymentData:PayablesType[]){
     
     const incomePlatinum = parseFloat(incomeData.reduce((currentCoin:number, coin) => currentCoin + (coin.pp * 10), 0).toFixed(2));

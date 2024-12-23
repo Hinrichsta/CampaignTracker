@@ -143,7 +143,7 @@ const AddIncomeModal = () => {
                                 <option value=""/>
                                 {partyMembers.length > 0 ? ( 
                                     partyMembers.map((member) => (
-                                        <option key={member.id}>{member.character_name}</option>
+                                        <option key={member.id} value={member.id}>{member.character_name}</option>
                                     ))
                                 ) : ( 
                                     <option></option>
