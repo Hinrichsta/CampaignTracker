@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets, permissions, response, status
+from rest_framework import viewsets, permissions, response, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from CampaignAPI.models import *
@@ -69,19 +69,21 @@ class User_Views(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = User_Serial
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['username', 'email']
 
-    def get_queryset(self):
-        if self.request.user.is_authenticated:
-            if self.request.method in permissions.SAFE_METHODS:
-                if self.request.query_params.get('user') is not None:
-                    user = self.request.query_params.get('user')
-                    return User.objects.filter(user in user)
-                elif self.kwargs.get('pk') is not None:
-                    user = self.kwargs.get('pk')
-                    return User.objects.filter(user__id=user)
-            if self.request.user == User.objects.filter(user=self.request.user):
-                return User.objects.filter(user=self.request.user)
-        return CampaignCore.objects.none()
+    #def get_queryset(self):
+    #    if self.request.user.is_authenticated:
+    #        if self.request.method in permissions.SAFE_METHODS:
+    #            if self.request.query_params.get('username') is not None:
+    #                user = self.request.query_params.get('username')
+    #                return User.objects.filter(user in user)
+    #            elif self.kwargs.get('pk') is not None:
+    #                user = self.kwargs.get('pk')
+    #                return User.objects.filter(user__id=user)
+    #        if self.request.user == User.objects.filter(user=self.request.user):
+    #            return User.objects.filter(user=self.request.user)
+    #    return CampaignCore.objects.none()
 
 
 class CampaignCore_Views(viewsets.ModelViewSet):
@@ -91,7 +93,8 @@ class CampaignCore_Views(viewsets.ModelViewSet):
     queryset = CampaignCore.objects.all()
     serializer_class = CampaignCore_Serial
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
-
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['campaign_name']
 
     def get_queryset(self):
         """
@@ -120,6 +123,8 @@ class CampaignUsers_Views(viewsets.ModelViewSet):
     queryset = CampaignUsers.objects.all()
     serializer_class = CampaignUsers_Serial
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['user__username', 'role']
 
     def get_queryset(self):
         """
@@ -154,6 +159,8 @@ class Party_Views(viewsets.ModelViewSet):
     queryset = PartyMember.objects.all()
     serializer_class = Party_Serial
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['character_name', 'user__username']
 
     def get_queryset(self):
         """
@@ -187,6 +194,8 @@ class Receivable_Views(viewsets.ModelViewSet):
     queryset = Receivable.objects.all()
     serializer_class = Receivable_Serial
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['description', 'payer__username']
 
     def get_queryset(self):
         """
@@ -220,6 +229,8 @@ class Payable_Views(viewsets.ModelViewSet):
     queryset = Payable.objects.all()
     serializer_class = Payable_Serial
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['description', 'user__username', 'payee']
 
     def get_queryset(self):
         """
@@ -252,6 +263,8 @@ class Vehicles_Views(viewsets.ModelViewSet):
     queryset = Vehicles.objects.all()
     serializer_class = Vehicles_Serial
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'type']
 
     def get_queryset(self):
         """
@@ -285,6 +298,8 @@ class Hirelings_Views(viewsets.ModelViewSet):
     queryset = Hirelings.objects.all()
     serializer_class = Hirelings_Serial
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'vehicle']
 
     def get_queryset(self):
         """
@@ -318,6 +333,8 @@ class MagicItems_Views(viewsets.ModelViewSet):
     queryset = MagicItems.objects.all()
     serializer_class = MagicItems_Serial
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'rarity']
 
     def get_queryset(self):
         """
@@ -351,6 +368,8 @@ class ConsumItems_Views(viewsets.ModelViewSet):
     queryset = ConsumItems.objects.all()
     serializer_class = ConsumItems_Serial
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'type']
 
     def get_queryset(self):
         """
@@ -384,6 +403,8 @@ class CalendarCore_Views(viewsets.ModelViewSet):
     queryset = CalendarCore.objects.all()
     serializer_class = CalendarCore_Serial
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
 
     def get_queryset(self):
         """
@@ -417,6 +438,8 @@ class CalMonth_Views(viewsets.ModelViewSet):
     queryset = CalMonth.objects.all()
     serializer_class = CalMonth_Serial
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
 
     def get_queryset(self):
         """
@@ -450,6 +473,8 @@ class CalEvent_Views(viewsets.ModelViewSet):
     queryset = CalEvent.objects.all()
     serializer_class = CalEvent_Serial
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'description']
 
     def get_queryset(self):
         """
