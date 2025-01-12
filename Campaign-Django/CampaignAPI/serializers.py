@@ -111,35 +111,41 @@ class CampaignUsers_Serial(serializers.ModelSerializer):
         model = CampaignUsers
         fields = ['campaign','user','role']
         read_only_fields = ('campaign','user','id',)
+
+    def validate_roles(self, data):
+        """
+        Custom Role Validation Logic
+        """
+
     
-    def validate_role(self, data):
-        if not CampaignUsers.objects.get(user=self.context['request'].user, role='S'):
-            campaign_req = data['campaign']
-            role_req = data['role']
-            user_req = data['user']
-            requesting_user = CampaignUsers.objects.get(user=self.context['request'].user, campaign=campaign_req)
-            edit_user = CampaignUsers.objects.get(user=user_req, campaign=campaign_req)
-            roles = {
-                'V': 1,
-                'P': 2,
-                'A': 3,
-                'O': 4,
-                'S': 5
-            }
-        
-            if campaign_req != requesting_user.campaign:
-                raise ValidationError("You must be in the same campaign to modify roles.")
-            
-            if role_req == 'O' & CampaignUsers.objects.filter(campaign=campaign_req, role='O').exists():
-                raise ValidationError("There can only be one Owner per campaign.")
-            
-            if roles[role_req] <= roles[requesting_user.role]:
-                raise ValidationError("You cannot assign a higher role than your own role.")
-            
-            if roles[requesting_user.role] < roles[edit_user.role]:
-                raise ValidationError("You must have a higher role to modify this user's role.")
-        
-        return data
+    #def validate_role(self, data):
+    #    if not CampaignUsers.objects.get(user=self.context['request'].user, role='S'):
+    #        campaign_req = data['campaign']
+    #        role_req = data['role']
+    #        user_req = data['user']
+    #        requesting_user = CampaignUsers.objects.get(user=self.context['request'].user, campaign=campaign_req)
+    #        edit_user = CampaignUsers.objects.get(user=user_req, campaign=campaign_req)
+    #        roles = {
+    #            'V': 1,
+    #            'P': 2,
+    #            'A': 3,
+    #            'O': 4,
+    #            'S': 5
+    #        }
+    #    
+    #        if campaign_req != requesting_user.campaign:
+    #            raise ValidationError("You must be in the same campaign to modify roles.")
+    #        
+    #        if role_req == 'O' & CampaignUsers.objects.filter(campaign=campaign_req, role='O').exists():
+    #            raise ValidationError("There can only be one Owner per campaign.")
+    #        
+    #        if roles[role_req] <= roles[requesting_user.role]:
+    #            raise ValidationError("You cannot assign a higher role than your own role.")
+    #        
+    #        if roles[requesting_user.role] < roles[edit_user.role]:
+    #            raise ValidationError("You must have a higher role to modify this user's role.")
+    #    
+    #    return data
 
 class Party_Serial(serializers.ModelSerializer):
     class Meta:

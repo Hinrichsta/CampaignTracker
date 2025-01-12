@@ -1,54 +1,73 @@
 from rest_framework import permissions
 from .models import CampaignCore,CampaignUsers,PartyMember
 
-#Cannot edit other User's permissions yet...
+#Can Edit, but can edit anyones...  Maybe put in Validator again?
 class campaignPermissions(permissions.BasePermission):
     """
     
     """
     def has_permission(self, request, view):
         return request.user.is_authenticated
+
     def has_object_permission(self, request, view, obj):
         # Assume the campaign ID is passed in the URL
-        campaign_id = obj.id or obj.campaign.id
-
-        if not campaign_id:
+        #campaign_id = obj.id or obj.campaign.id
+        campaignId = view.kwargs.get('cid')
+        if "campaignusers" in request.path:
+            targetUserId = view.kwargs.get('pk')
+        
+        if not campaignId:
             return False
         
         try:
-            user_campaign_role = CampaignUsers.objects.get(user=request.user, campaign_id=campaign_id)
+            userCampaignRole = CampaignUsers.objects.get(user=request.user, campaign=campaignId)
         except CampaignUsers.DoesNotExist:
             return False
         
-        required_role = self.get_required_role(view)
+        requiredRole = self.getActionPerm(request, view)
 
-        if self.is_role_higher_or_equal(user_campaign_role.get_role_order(), required_role):
+        if targetUserId:
+            try:
+                targetUserRole = CampaignUsers.objects.get(user=targetUserId, campaign=campaignId)
+            except CampaignUsers.DoesNotExist:
+                return False
+            
+            if view.action == 'retrieve':
+                return True
+            
+            if not self.roleOrderHigher(userCampaignRole.getRoleOrder(), targetUserRole.getRoleOrder()):
+                return False
+
+        if self.roleOrderHigher(userCampaignRole.getRoleOrder(), requiredRole):
             return True
+        
         return False
     
-    def get_required_role(self, view):
+    def getActionPerm(self, request, view):
         """
         This method determines what role is required based on the action.
         """
-        if view.action == 'list':  # View permissions for listing campaigns
+        if view.action == 'list':  # View permissions for listing
             return 'V'  # Viewer
-        elif view.action == 'retrieve':  # View permissions for retrieving a campaign
+        elif view.action == 'retrieve':  # View permissions for retrieving 
             return 'V'  # Viewer
-        elif view.action == 'create':  # Only Admin or higher can create campaigns
+        elif view.action == 'create' and "campaignusers" not in request.path:  # Players can add items
+            return 'P'  # Player
+        elif view.action == 'create' and "campaignusers" in request.path:  # Only Admin can add players
+            return 'A'  # Player
+        elif view.action == 'update':  # Admins or higher can update items
             return 'A'  # Admin
-        elif view.action == 'update':  # Only Admin or higher can update campaigns
-            return 'A'  # Admin
-        elif view.action == 'destroy':  # Only Owner or higher can delete campaigns
-            return 'O'  # Owner
+        elif view.action == 'destroy':  # Admins or higher can delete items
+            return 'A'  # Owner
         return 'V'  # Default to Viewer if no specific condition is met
 
-    def is_role_higher_or_equal(self, user_role_order, required_role):
+    def roleOrderHigher(self, userRoleOrder, requiredRole):
         """
         Compare the user's role against the required role for an action.
         """
-        required_role_order = {'V': 0, 'P': 1, 'A': 2, 'O': 3, 'S': 4}
-        
-        return user_role_order >= required_role_order.get(required_role, 0)
+        roleOrder = {'V': 0, 'P': 1, 'A': 2, 'O': 3, 'S': 4}
+
+        return userRoleOrder > roleOrder.get(requiredRole, 0)
 
 class IsSuperAdmin(permissions.BasePermission):
     """

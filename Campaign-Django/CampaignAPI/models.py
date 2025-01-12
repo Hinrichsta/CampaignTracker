@@ -35,7 +35,7 @@ class CampaignUsers(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.role_types.get(self.role)}"
     
-    def get_role_order(self):
+    def getRoleOrder(self):
         """
         Helper method to define the role hierarchy for access control.
         """
