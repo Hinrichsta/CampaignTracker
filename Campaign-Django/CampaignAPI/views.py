@@ -49,7 +49,8 @@ class UserJoin_Views(viewsets.ModelViewSet):
         if self.request.method == 'POST':
             permission_classes = [permissions.AllowAny]
         else:
-            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
+            #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
+            permission_classes = [campaignPermissions]
         return [permission() for permission in permission_classes]
     
     def create(self, request, *args, **kwargs):
@@ -68,7 +69,8 @@ class User_Views(viewsets.ModelViewSet):
     '''
     queryset = User.objects.all()
     serializer_class = User_Serial
-    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
+    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
+    permission_classes = [campaignPermissions]
     filter_backends = [filters.SearchFilter]
     search_fields = ['username', 'email']
 
@@ -92,7 +94,8 @@ class CampaignCore_Views(viewsets.ModelViewSet):
     """
     queryset = CampaignCore.objects.all()
     serializer_class = CampaignCore_Serial
-    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    permission_classes = [campaignPermissions|CampaignIsPublic]
     filter_backends = [filters.SearchFilter]
     search_fields = ['campaign_name']
 
@@ -122,7 +125,8 @@ class CampaignUsers_Views(viewsets.ModelViewSet):
     """
     queryset = CampaignUsers.objects.all()
     serializer_class = CampaignUsers_Serial
-    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    permission_classes = [campaignPermissions]
     filter_backends = [filters.SearchFilter]
     search_fields = ['user__username', 'role']
 
@@ -193,9 +197,10 @@ class Receivable_Views(viewsets.ModelViewSet):
     """
     queryset = Receivable.objects.all()
     serializer_class = Receivable_Serial
-    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    permission_classes = [campaignPermissions|CampaignIsPublic]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['description', 'payer__username']
+    search_fields = ['description']
 
     def get_queryset(self):
         """
@@ -228,9 +233,10 @@ class Payable_Views(viewsets.ModelViewSet):
     """
     queryset = Payable.objects.all()
     serializer_class = Payable_Serial
-    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    permission_classes = [campaignPermissions|CampaignIsPublic]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['description', 'user__username', 'payee']
+    search_fields = ['description', 'payee']
 
     def get_queryset(self):
         """
@@ -299,7 +305,7 @@ class Hirelings_Views(viewsets.ModelViewSet):
     serializer_class = Hirelings_Serial
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['name', 'vehicle']
+    search_fields = ['name']
 
     def get_queryset(self):
         """

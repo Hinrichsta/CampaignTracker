@@ -74,6 +74,33 @@ class CampaignCore_Serial(serializers.ModelSerializer):
         fields = ['id','campaign_name','description','public']
         read_only_fields = ('id',)
 
+    def validate(self, attrs):
+        """
+        Add custom validation to ensure the user has the right permissions
+        """
+        user = self.context['request'].user
+        campaign_id = self.context['request'].data.get('campaign_id')
+
+        try:
+            user_role = CampaignUsers.objects.get(user=user, campaign_id=campaign_id)
+        except CampaignUsers.DoesNotExist:
+            raise serializers.ValidationError("You do not have access to this campaign.")
+
+        # Ensure user has appropriate role for action
+        if not self.is_user_authorized_for_action(user_role.role):
+            raise serializers.ValidationError("You do not have permission for this action.")
+        
+        return attrs
+    
+    def is_user_authorized_for_action(self, role):
+        """
+        Check if the user has a high enough role to perform the action
+        """
+        required_role = self.context['view'].get_required_role(self.context['view'])
+        role_order = {'V': 0, 'P': 1, 'A': 2, 'O': 3, 'S': 4}
+        
+        return role_order[role] >= role_order[required_role]
+
 class CampaignUsers_Serial(serializers.ModelSerializer):
     '''
     This is for individual roles within campaigns themselves.

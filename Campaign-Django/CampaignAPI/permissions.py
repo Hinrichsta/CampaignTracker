@@ -1,6 +1,55 @@
 from rest_framework import permissions
 from .models import CampaignCore,CampaignUsers,PartyMember
 
+#Cannot edit other User's permissions yet...
+class campaignPermissions(permissions.BasePermission):
+    """
+    
+    """
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
+    def has_object_permission(self, request, view, obj):
+        # Assume the campaign ID is passed in the URL
+        campaign_id = obj.id or obj.campaign.id
+
+        if not campaign_id:
+            return False
+        
+        try:
+            user_campaign_role = CampaignUsers.objects.get(user=request.user, campaign_id=campaign_id)
+        except CampaignUsers.DoesNotExist:
+            return False
+        
+        required_role = self.get_required_role(view)
+
+        if self.is_role_higher_or_equal(user_campaign_role.get_role_order(), required_role):
+            return True
+        return False
+    
+    def get_required_role(self, view):
+        """
+        This method determines what role is required based on the action.
+        """
+        if view.action == 'list':  # View permissions for listing campaigns
+            return 'V'  # Viewer
+        elif view.action == 'retrieve':  # View permissions for retrieving a campaign
+            return 'V'  # Viewer
+        elif view.action == 'create':  # Only Admin or higher can create campaigns
+            return 'A'  # Admin
+        elif view.action == 'update':  # Only Admin or higher can update campaigns
+            return 'A'  # Admin
+        elif view.action == 'destroy':  # Only Owner or higher can delete campaigns
+            return 'O'  # Owner
+        return 'V'  # Default to Viewer if no specific condition is met
+
+    def is_role_higher_or_equal(self, user_role_order, required_role):
+        """
+        Compare the user's role against the required role for an action.
+        """
+        required_role_order = {'V': 0, 'P': 1, 'A': 2, 'O': 3, 'S': 4}
+        
+        return user_role_order >= required_role_order.get(required_role, 0)
+
 class IsSuperAdmin(permissions.BasePermission):
     """
     Not Completed
