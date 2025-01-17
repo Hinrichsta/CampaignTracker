@@ -116,7 +116,24 @@ class CampaignUsers_Serial(serializers.ModelSerializer):
         """
         Custom Role Validation Logic
         """
+        campaign_req = data['campaign']
+        role_req = data['role']
+        user_req = data['user']
+        requesting_user = CampaignUsers.objects.get(user=self.context['request'].user, campaign=campaign_req)
+        edit_user = CampaignUsers.objects.get(user=user_req, campaign=campaign_req)
 
+        
+
+
+        def roleCheck(self, userRoleOrder, requiredRole):
+            """
+            Compare the user's role against the required role for an action.
+            """
+            roleOrder = {'V': 0, 'P': 1, 'A': 2, 'O': 3, 'S': 4}
+
+            return userRoleOrder > roleOrder.get(requiredRole, 0)
+        
+        self.roleOrderHigher(userCampaignRole.getRoleOrder(), targetUserRole.getRoleOrder())
     
     #def validate_role(self, data):
     #    if not CampaignUsers.objects.get(user=self.context['request'].user, role='S'):

@@ -74,6 +74,8 @@ class User_Views(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['username', 'email']
 
+
+    #This needs to get fixed, but need to sit down and figure out the best way to fix it
     #def get_queryset(self):
     #    if self.request.user.is_authenticated:
     #        if self.request.method in permissions.SAFE_METHODS:
