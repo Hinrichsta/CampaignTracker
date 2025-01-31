@@ -34,13 +34,6 @@ class CampaignUsers(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.role_types.get(self.role)}"
-    
-    def getRoleOrder(self):
-        """
-        Helper method to define the role hierarchy for access control.
-        """
-        role_order = {'V': 0, 'P': 1, 'A': 2, 'O': 3, 'S': 4}  # from Viewer to Super Admin
-        return role_order.get(self.role, -1)
 
 class PartyMember(models.Model):
     character_name = models.CharField(max_length=255)
