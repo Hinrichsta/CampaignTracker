@@ -32,9 +32,6 @@ class CampaignUsers(models.Model):
         #Set so that you can only have a user in a campaign once
         unique_together = ('campaign','user')
 
-    def __str__(self):
-        return f"{self.user.username} - {self.role_types.get(self.role)}"
-
 class PartyMember(models.Model):
     character_name = models.CharField(max_length=255)
     player = models.ForeignKey(User, on_delete=models.CASCADE,blank=True, null=True)

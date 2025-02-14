@@ -49,8 +49,7 @@ class UserJoin_Views(viewsets.ModelViewSet):
         if self.request.method == 'POST':
             permission_classes = [permissions.AllowAny]
         else:
-            #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
-            permission_classes = [campaignPermissions]
+            permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
         return [permission() for permission in permission_classes]
     
     def create(self, request, *args, **kwargs):
@@ -69,13 +68,10 @@ class User_Views(viewsets.ModelViewSet):
     '''
     queryset = User.objects.all()
     serializer_class = User_Serial
-    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
-    permission_classes = [campaignPermissions]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
     filter_backends = [filters.SearchFilter]
     search_fields = ['username', 'email']
 
-
-    #This needs to get fixed, but need to sit down and figure out the best way to fix it
     #def get_queryset(self):
     #    if self.request.user.is_authenticated:
     #        if self.request.method in permissions.SAFE_METHODS:
@@ -96,29 +92,9 @@ class CampaignCore_Views(viewsets.ModelViewSet):
     """
     queryset = CampaignCore.objects.all()
     serializer_class = CampaignCore_Serial
-    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
     filter_backends = [filters.SearchFilter]
     search_fields = ['campaign_name']
-
-    def get_permissions(self):
-        campaign_id = self.kwargs.get('cid')
-        public_campaigns = CampaignCore.objects.get(public=True,id=campaign_id)
-        if public_campaigns:
-            if self.action in ['list', 'retrieve']:
-                # Public campaigns are accessible to anyone
-                return [CampaignIsPublic()]
-        else:
-            if self.action == 'list':
-                # Public campaigns are accessible to anyone
-                return [IsCampaignViewer() | IsCampaignUser() | IsCampaignAdmin() | IsCampaignOwner()]
-            elif self.action == 'retrieve':
-                return [IsCampaignViewer() | IsCampaignUser() | IsCampaignAdmin() | IsCampaignOwner()]
-            elif self.action in ['update', 'partial_update']:
-                return [IsCampaignAdmin() | IsCampaignOwner()]
-            elif self.action == 'destroy':
-                return [IsCampaignOwner()]
-            elif self.action == 'create':
-                return [permissions.IsAuthenticated()]
 
     def get_queryset(self):
         """
@@ -146,19 +122,9 @@ class CampaignUsers_Views(viewsets.ModelViewSet):
     """
     queryset = CampaignUsers.objects.all()
     serializer_class = CampaignUsers_Serial
-    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
     filter_backends = [filters.SearchFilter]
     search_fields = ['user__username', 'role']
-
-    def get_permissions(self):
-        if self.action == 'update' or self.action == 'partial_update':
-            # Only Owner or Super Admin can update roles.
-            # Admin cannot elevate others to Owner or Super Admin.
-            return [permissions.IsAuthenticated() & (IsCampaignOwner() | IsCampaignAdmin())]
-        elif self.action == 'destroy':
-            # Only Owner or Super Admin can delete a user from a campaign.
-            return [permissions.IsAuthenticated() & IsCampaignOwner()]
-        return [IsCampaignViewer() | IsCampaignUser() | IsCampaignAdmin() | IsCampaignOwner()]
 
     def get_queryset(self):
         """
@@ -185,28 +151,6 @@ class CampaignUsers_Views(viewsets.ModelViewSet):
             return CampaignUsers.objects.filter(campaign=public_campaigns)
         return CampaignUsers.objects.none()
     
-    def perform_update(self, serializer):
-        # Get the current user trying to perform the update
-        edit_user = self.request.user
-        request = serializer.validated_data.get('user')
-        req_user = CampaignUsers.objects.filter(user=request.user)
-
-        # Check if the user is trying to change the Owner's role
-        if req_user.role == 'O' and edit_user != request.user:
-            raise permissions.PermissionDenied("Admins cannot modify the Owner's role.")
-
-        # Prevent admins from changing a user's role to Owner or Super Admin
-        new_role = serializer.validated_data.get('role')
-        edit_user = CampaignUsers.objects.filter(user = self.request.user)
-        if new_role == 'A' or new_role == 'O':
-            if edit_user.role != 'O':
-                raise permissions.PermissionDenied("You do not have permission to make a user an Admin.")
-        else:
-            if req_user.role == edit_user.role:
-                raise permissions.PermissionDenied("You do not have permission to edit this user's permissions.")
-
-        super().perform_update(serializer)
-    
 
 class Party_Views(viewsets.ModelViewSet):
     """
@@ -217,27 +161,6 @@ class Party_Views(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
     filter_backends = [filters.SearchFilter]
     search_fields = ['character_name', 'user__username']
-
-    def get_permissions(self):
-        campaign_id = self.kwargs.get('cid')
-        public_campaigns = CampaignCore.objects.get(public=True,id=campaign_id)
-        if public_campaigns:
-            if self.action in ['list', 'retrieve']:
-                # Public campaigns are accessible to anyone
-                return [CampaignIsPublic()]
-        else:
-            if self.action == 'list':
-                # Public campaigns are accessible to anyone
-                return [IsCampaignViewer() | IsCampaignUser() | IsCampaignAdmin() | IsCampaignOwner()]
-            elif self.action == 'retrieve':
-                return [IsCampaignViewer() | IsCampaignUser() | IsCampaignAdmin() | IsCampaignOwner()]
-            elif self.action == 'create':
-                return [IsCampaignUser() | IsCampaignAdmin() | IsCampaignOwner()]
-            elif self.action in ['update', 'partial_update']:
-                return [IsCampaignAdmin() | IsCampaignOwner()]
-            elif self.action == 'destroy':
-                return [IsCampaignOwner()]
-            
 
     def get_queryset(self):
         """
@@ -270,10 +193,9 @@ class Receivable_Views(viewsets.ModelViewSet):
     """
     queryset = Receivable.objects.all()
     serializer_class = Receivable_Serial
-    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
-    permission_classes = [campaignPermissions|CampaignIsPublic]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['description']
+    search_fields = ['description', 'payer__username']
 
     def get_queryset(self):
         """
@@ -306,10 +228,9 @@ class Payable_Views(viewsets.ModelViewSet):
     """
     queryset = Payable.objects.all()
     serializer_class = Payable_Serial
-    #permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
-    permission_classes = [campaignPermissions|CampaignIsPublic]
+    permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['description', 'payee']
+    search_fields = ['description', 'user__username', 'payee']
 
     def get_queryset(self):
         """
@@ -378,7 +299,7 @@ class Hirelings_Views(viewsets.ModelViewSet):
     serializer_class = Hirelings_Serial
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['name']
+    search_fields = ['name', 'vehicle']
 
     def get_queryset(self):
         """
