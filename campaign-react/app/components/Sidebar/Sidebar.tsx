@@ -33,7 +33,7 @@ const Sidebar: React.FC = () => {
 
     return(
         <div className="pt-5">
-            <div ref={sidebarRef} className={`fixed left-3 border rounded-sm bg-slate-600 shadow-md flex flex-col h-full w-38 md:w-44 lg:w-64 transform transition-transform duration-300 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+            <div ref={sidebarRef} className={`fixed left-3 border rounded-sm bg-slate-600 shadow-md flex flex-col h-full w-38 md:w-44 lg:w-64 transform transition-transform duration-500 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
                 <div className="fixed pt-6">
                     <button onClick={() => setSidebarOpen(!sidebarOpen)} className={`absolute bg-slate-400 text-black border-black border-2 rounded-full cursor-pointer shadow-xl z-30 ${sidebarOpen ? "translate-x-[122px]" : "-translate-x-[18px]"} md:translate-x-[155px] lg:translate-x-[235px]`}>
                             {sidebarOpen ? ( 
@@ -50,14 +50,14 @@ const Sidebar: React.FC = () => {
                         <Link href={`/campaign/${campaign_id}/party`}><li className="py-1" onClick={() => setSidebarOpen(!sidebarOpen)}>Party</li></Link>
                             <li className="py-1 relative" onClick={() => setSidebarOpen(!sidebarOpen)} onMouseEnter={(e) =>{const dropdown = e.currentTarget.querySelector('.dropdown'); if (dropdown) dropdown.classList.remove('hidden');}} onMouseLeave={(l) => {const dropdown = l.currentTarget.querySelector('.dropdown'); if (dropdown) dropdown.classList.add('hidden');}}>
                             <Link href={`/campaign/${campaign_id}/finances`}><div className="flex items-center space-x-2"><ChevronDownIcon className="h-4 w-4 justify-center items-center text-center"/><span>Transactions</span></div></Link>
-                                <ul className="dropdown hidden pl-8">
+                                <ul className="dropdown hidden pl-8 text-sm">
                                     <Link href={`/campaign/${campaign_id}/finances/income`}><li className="py-1" onClick={() => setSidebarOpen(!sidebarOpen)}>Income</li></Link>
                                     <Link href={`/campaign/${campaign_id}/finances/payments`}><li className="py-1" onClick={() => setSidebarOpen(!sidebarOpen)}>Payments</li></Link>
                                 </ul>
                             </li>
                             <li className="py-1 relative" onClick={() => setSidebarOpen(!sidebarOpen)} onMouseEnter={(e) =>{const dropdown = e.currentTarget.querySelector('.dropdown'); if (dropdown) dropdown.classList.remove('hidden');}} onMouseLeave={(l) => {const dropdown = l.currentTarget.querySelector('.dropdown'); if (dropdown) dropdown.classList.add('hidden');}}>
                             <Link href={`/campaign/${campaign_id}/items`}><div className="flex items-center space-x-2" onClick={() => setSidebarOpen(!sidebarOpen)}><ChevronDownIcon className="h-4 w-4 justify-center items-center text-center"/><span>Items</span></div></Link>
-                                <ul className="dropdown hidden pl-8">
+                                <ul className="dropdown hidden pl-8 text-sm">
                                     <Link href={`/campaign/${campaign_id}/items/magic-items`}><li className="py-1" onClick={() => setSidebarOpen(!sidebarOpen)}>Magic Items</li></Link>
                                     <Link href={`/campaign/${campaign_id}/items/consumable-items`}><li className="py-1" onClick={() => setSidebarOpen(!sidebarOpen)}>Consumable Items</li></Link>
                                 </ul>

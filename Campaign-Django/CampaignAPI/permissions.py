@@ -22,7 +22,7 @@ class IsCampaignOwner(permissions.BasePermission):
             campaign_req = request.campaign
         elif request.query_params.get('campaign') is not None:
             campaign_req = request.query_params.get('campaign')
-        elif view.kwargs.get('pk') is not None:
+        elif view.kwargs.get('pk') is not None or view.kwargs.get('user') is not None:
             if "campaigncore" in request.path:
                 campaign_req = obj.id
             else:
@@ -50,7 +50,7 @@ class IsCampaignAdmin(permissions.BasePermission):
             campaign_req = request.campaign
         elif request.query_params.get('campaign') is not None:
             campaign_req = request.query_params.get('campaign')
-        elif view.kwargs.get('pk') is not None:
+        elif view.kwargs.get('pk') is not None or view.kwargs.get('user') is not None:
             if "campaigncore" in request.path:
                 campaign_req = obj.id
             else:
@@ -80,7 +80,7 @@ class IsCampaignUser(permissions.BasePermission):
                 campaign_req = request.campaign
             elif request.query_params.get('campaign') is not None:
                 campaign_req = request.query_params.get('campaign')
-            elif view.kwargs.get('pk') is not None:
+            elif view.kwargs.get('pk') is not None or view.kwargs.get('user') is not None:
                 if "campaigncore" in request.path:
                     campaign_req = obj.id
                 else:
@@ -90,9 +90,10 @@ class IsCampaignUser(permissions.BasePermission):
             try:
                 campaign_user = CampaignUsers.objects.get(user=request.user, campaign=campaign_req)
                 if campaign_user.role == 'P':
-                    if PartyMember.objects.get(player=request.user):
-                        return True
-                    elif request.method in permissions.SAFE_METHODS:
+                    #if PartyMember.objects.get(player=request.user):
+                    #    return True
+                    #el
+                    if request.method in permissions.SAFE_METHODS:
                         return True
                 return False
             except CampaignUsers.DoesNotExist:

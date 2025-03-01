@@ -124,6 +124,7 @@ class CampaignUsers_Views(viewsets.ModelViewSet):
     serializer_class = CampaignUsers_Serial
     permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin|IsCampaignUser|IsCampaignViewer|CampaignIsPublic]
     filter_backends = [filters.SearchFilter]
+    lookup_field = 'user'
     search_fields = ['user__username', 'role']
 
     def get_queryset(self):

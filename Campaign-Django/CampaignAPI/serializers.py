@@ -92,13 +92,7 @@ class CampaignUsers_Serial(serializers.ModelSerializer):
             user_req = data['user']
             requesting_user = CampaignUsers.objects.get(user=self.context['request'].user, campaign=campaign_req)
             edit_user = CampaignUsers.objects.get(user=user_req, campaign=campaign_req)
-            roles = {
-                'V': 1,
-                'P': 2,
-                'A': 3,
-                'O': 4,
-                'S': 5
-            }
+            roles = {'V': 0, 'P': 1, 'A': 2, 'O': 3, 'S': 4}
         
             if campaign_req != requesting_user.campaign:
                 raise ValidationError("You must be in the same campaign to modify roles.")
