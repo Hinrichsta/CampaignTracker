@@ -1,0 +1,1 @@
+- Cant edit entries as and owner
