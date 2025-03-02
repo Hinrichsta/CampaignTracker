@@ -7,6 +7,7 @@
 'use client';
 
 import { XMarkIcon } from "@heroicons/react/24/outline"; 
+import { TrashIcon } from "@heroicons/react/16/solid";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 interface ModalProps {
@@ -59,10 +60,11 @@ const ModalTemplate: React.FC<ModalProps> = ({
                 <div className={`translate h-full ${modal ? 'opacity-100' : 'opacity-0'}`}>
                     <div className="w-full h-auto rounded-lg relative flex flex-col bg-slate-500">
                         <header className="flex items-center p-4 rounded-t-md justify-center border-b relative">
-                            <div onClick={handleModalClose} className="p-3 absolute right-2 hover:bg-slate-500 rounded-full cursor-pointer">
-                                <XMarkIcon className="size-8 justify-center"/>
-                            </div>
+
                             <h2 className="text-4xl font-bold text-white"> {title} </h2>
+                            <div onClick={handleModalClose} className="p-3 absolute right-2 hover:bg-slate-500 rounded-full cursor-pointer">
+                                <XMarkIcon className="size-8 items-center justify-center"/>
+                            </div> 
                         </header>
                         <section className="text-slate-100">
                            {content}

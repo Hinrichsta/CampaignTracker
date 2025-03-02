@@ -10,17 +10,19 @@
 import ModalTemplate from "../ModalTemplate";
 import { useEffect, useState } from "react";
 import { useRouter,useParams  } from "next/navigation";
-import useAddIncomeModal from "@/app/hooks/Modals/AddModals/useAddIncomeModal";
+import useEditIncomeModal from "@/app/hooks/Modals/EditModals/useEditIncomeModal";
 import CampaignJournal from "@/services/django";
 import { PartyMemberType } from "@/app/hooks/DjangoTypes";
+import { ReceivablesType } from "@/app/hooks/DjangoTypes";
 import FundsQuickView from "../../campaignHome/Funds";
 
 
-const AddIncomeModal = () => {
+const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
     const router = useRouter();
     const params = useParams();
     const { campaign_id } = params;
-    const incomeModal = useAddIncomeModal()
+    const incomeModal = useEditIncomeModal()
+    const [entryID, setEntryID] = useState(0);
     const [realDate, setRealDate] = useState("");
     const [worldDate, setworldDate] = useState("");
     const [description, setDescription] = useState("");
@@ -43,6 +45,19 @@ const AddIncomeModal = () => {
         getPartyMembers();
     }, []);
 
+    useEffect(() => {
+        setEntryID(entry.id)
+        setRealDate(String(entry.irl_date))
+        setworldDate(entry.ig_date)
+        setDescription(entry.description!)
+        setPlatinum(entry.pp)
+        setGold(entry.gp)
+        setSilver(entry.sp)
+        setCopper(entry.cp)
+        setPartyTrans(entry.party_trans)
+        setindivPayee(String(entry.payer))
+    }, [entry])
+
     const submitIncome = async () =>{
         const incomeData = {
             irl_date: realDate,
@@ -56,8 +71,8 @@ const AddIncomeModal = () => {
             payer: indivPayee,
             campaign: campaign_id
         }
-        const response = await CampaignJournal.post(
-            `/campaigncore/${campaign_id}/receivables/`,
+        const response = await CampaignJournal.update(
+            `/campaigncore/${campaign_id}/receivables/${entryID}/`,
             JSON.stringify(incomeData)
         );
         
@@ -98,7 +113,7 @@ const AddIncomeModal = () => {
                 <form className="" action={submitIncome}>
                     <div className="flex">
                         <div className="pt-3 px-2 flex-row w-1/2">
-                            <label className="px-2" htmlFor="date">Date</label>
+                            <label className="px-2" htmlFor="date">{entryID}</label>
                             <input onChange={(e) => setRealDate(e.target.value)} id="date" value={realDate} placeholder="Actual Date" type="date" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg" required/>
                         </div>
                         <div className="pt-3 flex-row w-1/2">
@@ -155,23 +170,24 @@ const AddIncomeModal = () => {
                     )}
                     {error.map((error, index) => {
                         return (
-                            <div key={`error_${index}`} className="text-red-600 text-lg">
+                            <div key={`error_${index}`} className="text-red-400 text-lg">
                                 <p>{error}<br /></p>
                             </div>
                         )
                     })}
-                    <div className="pt-6">
-                        <button className="hover:scale-105 w-full h-16 rounded-lg bg-blue-700 border-neutral-800 border-2 shadow-lg items-center justify-center text-center">
+                    <div className="flex pt-6">
+                        <button className="hover:scale-105 mx-2 w-20 h-16 rounded-lg bg-red-500 border-neutral-800 border-2 shadow-lg items-center justify-center text-center">
+                            Delete
+                        </button>
+                        <button className="hover:scale-105 mx-2 w-full h-16 rounded-lg bg-blue-700 border-neutral-800 border-2 shadow-lg items-center justify-center text-center">
                             Submit
                         </button>
                     </div>
-
                 </form>
             ) : (
                 //Success Modal
                 <div className="text-green-300 text-2xl text-center">
                     {successMessage}
-
                 </div>
             )}
         </div>
@@ -180,7 +196,7 @@ const AddIncomeModal = () => {
 
     return (
         <ModalTemplate 
-            title="Receive Income"
+            title="Edit Income"
             content={content}
             modalOpen={incomeModal.modalOpen}
             modalClose={incomeModal.close}
@@ -188,4 +204,4 @@ const AddIncomeModal = () => {
     )
 }
 
-export default AddIncomeModal;
+export default EditIncomeModal;

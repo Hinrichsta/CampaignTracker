@@ -12,6 +12,8 @@ import {
     SortingState,
     useReactTable,
   } from '@tanstack/react-table'
+import EditIncomeModal from "../modals/editModals/EditIncomeModal";
+import useEditIncomeModal from "@/app/hooks/Modals/EditModals/useEditIncomeModal";
 
 const IncomeList = () => {
     const params = useParams();
@@ -19,6 +21,8 @@ const IncomeList = () => {
     const [incomeData, setIncomeData] = useState<ReceivablesType[]>([]);
     const [partyMembers, setPartyMembers] = useState<PartyMemberType[]>([]);
     const [sorting, setSorting] = useState<SortingState>([{ id: 'irl_date', desc: true }]); //tanstack sorting
+    const [editEntry, setEditEntry] = useState<ReceivablesType>()
+    const IncomeModal = useEditIncomeModal();
 
     const getIncome = async () => {
         const party = await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`)
@@ -92,8 +96,18 @@ const IncomeList = () => {
         getSortedRowModel: getSortedRowModel(),
     });
 
+    const handleRowClick = (rowData: ReceivablesType) => {
+        setEditEntry(rowData); // Set the selected row data
+        IncomeModal.open();
+    }
+
     return (
         <div className="mx-5">
+            {editEntry !== undefined ? ( 
+                <EditIncomeModal entry={editEntry}/>
+            ) : (
+                <></>
+            )}
         {incomeData.length > 0 ? (
             <>
                 <div className="mb-4">
@@ -117,7 +131,7 @@ const IncomeList = () => {
                     </thead>
                     <tbody className="text-white ">
                         {table.getRowModel().rows.map(row => (
-                            <tr key={row.id} className="border-2 border-separate border-black even:bg-slate-500 odd:bg-transparent">
+                            <tr key={row.id} className="border-2 border-separate border-black even:bg-slate-500 odd:bg-transparent" onClick={() => handleRowClick(row.original)}>
                                 {row.getVisibleCells().map(cell => (
                                     <td key={cell.id} className="border-2 border-separate border-black">
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -129,8 +143,8 @@ const IncomeList = () => {
                 </table>
             </>
             ) : ( 
-                <div className="text-5xl text-center">
-                    <h1>
+                <div className="flex w-50% h-5 pt-10 items-center justify-center text-center align-bottom">
+                    <h1 className="text-5xl">
                         There are no transactions
                     </h1>
                 </div>

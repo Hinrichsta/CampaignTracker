@@ -59,6 +59,36 @@ const CampaignJournal = {
                 reject(error);
             }))
         })
+    },
+
+    update: async function(url: string, data: any): Promise<any> {
+        const token = await getAuthToken(NEXTJS);
+        let headers: { [key: string]: string } = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        };
+        if (token !== undefined){
+            headers['Authorization'] = `Bearer  ${token}`;
+        }
+
+        return new Promise((resolve, reject) => {
+            fetch(`${DJANGO}${url}`, {
+                method: 'PUT',
+                body: data,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then((json) => {
+                resolve(json);
+            })
+            .catch((error => {
+                reject(error);
+            }))
+        })
     }
 }
 
