@@ -46,6 +46,12 @@ const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
     }, []);
 
     useEffect(() => {
+    if (partyTrans) {
+        setindivPayee(String(null));  // Set indivPayee to null when partyTrans is true
+    }
+}, [partyTrans]);
+
+    useEffect(() => {
         setEntryID(entry.id)
         setRealDate(String(entry.irl_date))
         setworldDate(entry.ig_date)
@@ -69,7 +75,7 @@ const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
             sp: silver,
             cp: copper,
             party_trans: partyTrans,
-            payer: Number(indivPayee),
+            payer: partyTrans ? null : Number(indivPayee),
             campaign: Number(campaign_id)
         }
         const response = await CampaignJournal.update(
