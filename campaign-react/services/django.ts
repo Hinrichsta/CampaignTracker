@@ -89,6 +89,35 @@ const CampaignJournal = {
                 reject(error);
             }))
         })
+    },
+
+    delete: async function(url: string): Promise<any> {
+        const token = await getAuthToken(NEXTJS);
+        let headers: { [key: string]: string } = {
+            'Accept': 'application/json',
+        };
+        if (token !== undefined){
+            headers['Authorization'] = `Bearer  ${token}`;
+        }
+
+        return new Promise((resolve, reject) => {
+            fetch(`${DJANGO}${url}`, {
+                method: 'DELETE',
+                headers: headers,
+            })
+            .then(response => {
+                if (response.ok) {
+                    resolve({ status: response.status, message: 'Deleted successfully' });
+                } else {
+                    return response.json().then((json) => {
+                        reject(json);
+                    });
+                }
+            })
+            .catch((error) => {
+                reject(error);
+            });
+        });
     }
 }
 

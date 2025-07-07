@@ -112,7 +112,31 @@ const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
             } )
             setError(errors);
         }
-    }
+    };
+
+    const deleteIncome = async () => {
+        const response = await CampaignJournal.delete(
+            `/campaigncore/${campaign_id}/receivables/${entryID}/`
+        );
+
+        if (response.status === 204) {  // Status 204 means the delete was successful
+            // You can show a success message or handle the UI after deletion
+            setShowForm(false);
+            setSuccessMessage("Income Successfully Deleted");
+
+            setTimeout(() => {
+                incomeModal.close();
+                router.push(`/campaign/${campaign_id}/finances/income`);  // Redirect to the income list
+                setShowForm(true);
+                window.location.reload();  // Reload the page
+            }, 1000);
+        } else {
+            const errors: string[] = Object.values(response).map((error: any) => {
+                return error;
+            });
+            setError(errors);
+        }
+    };
 
     const content = (
         <div className="pr-10 pl-4 py-4">
@@ -183,10 +207,10 @@ const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
                         )
                     })}
                     <div className="flex pt-6">
-                        <button className="hover:scale-105 mx-2 w-20 h-16 rounded-lg bg-red-500 border-neutral-800 border-2 shadow-lg items-center justify-center text-center">
+                        <button onClick={deleteIncome} className="hover:scale-105 mx-2 w-20 h-16 rounded-lg bg-red-500 border-neutral-800 border-2 shadow-lg items-center justify-center text-center">
                             Delete
                         </button>
-                        <button className="hover:scale-105 mx-2 w-full h-16 rounded-lg bg-blue-700 border-neutral-800 border-2 shadow-lg items-center justify-center text-center">
+                        <button onClick={submitIncome} className="hover:scale-105 mx-2 w-full h-16 rounded-lg bg-blue-700 border-neutral-800 border-2 shadow-lg items-center justify-center text-center">
                             Submit
                         </button>
                     </div>

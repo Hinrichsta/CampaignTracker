@@ -12,12 +12,14 @@ import { useRouter,useParams  } from "next/navigation";
 import useAddPaymentsModal from "@/app/hooks/Modals/AddModals/useAddPaymentsModal";
 import CampaignJournal from "@/services/django";
 import { PartyMemberType } from "@/app/hooks/DjangoTypes";
+import { PayablesType } from "@/app/hooks/DjangoTypes";
 
-const AddPaymentModal = () => {
+const EditPaymentModal = ( { entry } : { entry:PayablesType }) => {
     const router = useRouter();
     const params = useParams();
     const { campaign_id } = params;
     const paymentModal = useAddPaymentsModal()
+    const [entryID, setEntryID] = useState(0);
     const [realDate, setRealDate] = useState("");
     const [worldDate, setworldDate] = useState("");
     const [description, setDescription] = useState("");
@@ -40,8 +42,29 @@ const AddPaymentModal = () => {
         getPartyMembers();
     }, []);
 
+    useEffect(() => {
+        if (partyTrans) {
+            setindivPayer(String(null));  // Set indivPayee to null when partyTrans is true
+        }
+    }, [partyTrans]);
+
+    useEffect(() => {
+        setEntryID(entry.id)
+        setRealDate(String(entry.irl_date))
+        setworldDate(entry.ig_date)
+        setDescription(entry.description!)
+        setPlatinum(entry.pp)
+        setGold(entry.gp)
+        setSilver(entry.sp)
+        setCopper(entry.cp)
+        setPayee(entry.payee)
+        setPartyTrans(entry.party_trans)
+        setindivPayer(String(entry.payer))
+    }, [entry])
+
     const submitPayment = async () =>{
         const PaymentData = {
+            id: entryID,
             irl_date: realDate,
             ig_date: worldDate,
             description: description,
@@ -51,10 +74,10 @@ const AddPaymentModal = () => {
             cp: copper,
             party_trans: partyTrans,
             payee: payee,
-            payer: indivPayer,
+            payer: partyTrans ? null : Number(indivPayer),
             campaign: campaign_id
         }
-        const response = await CampaignJournal.post(
+        const response = await CampaignJournal.update(
             `/campaigncore/${campaign_id}/payables/`,
             JSON.stringify(PaymentData)
         );
@@ -73,7 +96,7 @@ const AddPaymentModal = () => {
             setError([])
 
             setShowForm(false);//Success Modal
-            setSuccessMessage("Payment Successfully Logged"); //Success Modal
+            setSuccessMessage("Payment Successfully Updated"); //Success Modal
 
             setTimeout(() => { //Success Modal
                 paymentModal.close();
@@ -89,8 +112,6 @@ const AddPaymentModal = () => {
             setError(errors);
         }
     }
-
-
 
 
     const content = (
@@ -164,12 +185,14 @@ const AddPaymentModal = () => {
                             </div>
                         )
                     })}
-                    <div className="pt-6">
-                        <button className="w-full rounded-lg bg-blue-700 h-12 border-neutral-800 border-2 shadow-lg">
+                    <div className="flex pt-6">
+                        <button className="hover:scale-105 mx-2 w-20 h-16 rounded-lg bg-red-500 border-neutral-800 border-2 shadow-lg items-center justify-center text-center">
+                            Delete
+                        </button>
+                        <button className="hover:scale-105 mx-2 w-full h-16 rounded-lg bg-blue-700 border-neutral-800 border-2 shadow-lg items-center justify-center text-center">
                             Submit
                         </button>
                     </div>
-
                 </form>
             ) : (
                 //Success Modal
@@ -191,4 +214,4 @@ const AddPaymentModal = () => {
     )
 }
 
-export default AddPaymentModal;
+export default EditPaymentModal;
