@@ -70,7 +70,7 @@ const CampaignJournal = {
         if (token !== undefined){
             headers['Authorization'] = `Bearer  ${token}`;
         }
-
+        console.log(data)
         return new Promise((resolve, reject) => {
             fetch(`${DJANGO}${url}`, {
                 method: 'PUT',

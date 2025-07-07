@@ -38,6 +38,10 @@ const AddPaymentModal = () => {
 
     useEffect(() => {
         getPartyMembers();
+
+        const today = new Date();
+        const currentDate = today.toISOString().split('T')[0]; // This gives the date in "yyyy-mm-dd" format
+        setRealDate(currentDate);
     }, []);
 
     const submitPayment = async () =>{

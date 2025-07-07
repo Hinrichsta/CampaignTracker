@@ -69,10 +69,9 @@ const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
             sp: silver,
             cp: copper,
             party_trans: partyTrans,
-            payer: indivPayee,
-            campaign: campaign_id
+            payer: Number(indivPayee),
+            campaign: Number(campaign_id)
         }
-        console.log(incomeData)
         const response = await CampaignJournal.update(
             `/campaigncore/${campaign_id}/receivables/${entryID}/`,
             JSON.stringify(incomeData)
@@ -96,7 +95,7 @@ const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
 
             setTimeout(() => { //Success Modal
                 incomeModal.close();
-                router.push(`/campaign/${campaign_id}/receivables/`);
+                router.push(`/campaign/${campaign_id}/finances/income`);
                 setShowForm(true);
                 window.location.reload();
             }, 1000);
