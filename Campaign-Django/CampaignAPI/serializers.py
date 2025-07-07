@@ -30,6 +30,7 @@ class UserJoin_Serial(serializers.ModelSerializer):
             validate_password(attrs['password'])
         except ValidationError as error:
             raise serializers.ValidationError(str(error))
+        attrs.pop('pass2')
         return attrs
     
     def create(self, validated_data):
@@ -42,10 +43,10 @@ class UserJoin_Serial(serializers.ModelSerializer):
         user.save()
 
         token = RefreshToken.for_user(user)
-        user = User_Serial(user)
+        user_data = User_Serial(user)
         
         return {
-            'user': user,
+            'user': user_data.data,
             'refresh_token': str(token),
             'access_token': str(token.access_token),
         }

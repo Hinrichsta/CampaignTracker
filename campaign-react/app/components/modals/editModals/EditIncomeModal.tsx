@@ -60,6 +60,7 @@ const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
 
     const submitIncome = async () =>{
         const incomeData = {
+            id: entryID,
             irl_date: realDate,
             ig_date: worldDate,
             description: description,
@@ -71,6 +72,7 @@ const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
             payer: indivPayee,
             campaign: campaign_id
         }
+        console.log(incomeData)
         const response = await CampaignJournal.update(
             `/campaigncore/${campaign_id}/receivables/${entryID}/`,
             JSON.stringify(incomeData)
@@ -90,11 +92,11 @@ const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
             setError([])
 
             setShowForm(false);//Success Modal
-            setSuccessMessage("Income Successfully Logged"); //Success Modal
+            setSuccessMessage("Income Successfully Updated"); //Success Modal
 
             setTimeout(() => { //Success Modal
                 incomeModal.close();
-                router.push(`/campaign/${campaign_id}`);
+                router.push(`/campaign/${campaign_id}/receivables/`);
                 setShowForm(true);
                 window.location.reload();
             }, 1000);
@@ -113,7 +115,7 @@ const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
                 <form className="" action={submitIncome}>
                     <div className="flex">
                         <div className="pt-3 px-2 flex-row w-1/2">
-                            <label className="px-2" htmlFor="date">{entryID}</label>
+                            <label className="px-2" htmlFor="date">Date</label>
                             <input onChange={(e) => setRealDate(e.target.value)} id="date" value={realDate} placeholder="Actual Date" type="date" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg" required/>
                         </div>
                         <div className="pt-3 flex-row w-1/2">

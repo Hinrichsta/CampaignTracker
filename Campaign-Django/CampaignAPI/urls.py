@@ -11,7 +11,7 @@ User_List = User_Views.as_view({
     'get': 'list',
 })
 
-User_Create = User_Views.as_view({
+User_Create = UserJoin_Views.as_view({
     'post': 'create',
 })
 

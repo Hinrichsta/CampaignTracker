@@ -47,8 +47,10 @@ class UserJoin_Views(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.request.method == 'POST':
+            print("don't Need Auth")
             permission_classes = [permissions.AllowAny]
         else:
+            print("Need Auth")
             permission_classes = [permissions.IsAdminUser|IsCampaignOwner|IsCampaignAdmin]
         return [permission() for permission in permission_classes]
     
@@ -57,7 +59,7 @@ class UserJoin_Views(viewsets.ModelViewSet):
 
         if  serializer.is_valid():
             user = serializer.save()
-            response_data = serializer.save()
+            response_data = serializer.data
             return Response(response_data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
