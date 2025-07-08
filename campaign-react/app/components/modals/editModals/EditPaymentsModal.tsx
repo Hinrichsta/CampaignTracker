@@ -9,7 +9,7 @@
 import ModalTemplate from "../ModalTemplate";
 import { useEffect, useState } from "react";
 import { useRouter,useParams  } from "next/navigation";
-import useAddPaymentsModal from "@/app/hooks/Modals/AddModals/useAddPaymentsModal";
+import useEditPaymentsModal from "@/app/hooks/Modals/EditModals/useEditPaymentsModal";
 import CampaignJournal from "@/services/django";
 import { PartyMemberType } from "@/app/hooks/DjangoTypes";
 import { PayablesType } from "@/app/hooks/DjangoTypes";
@@ -18,7 +18,7 @@ const EditPaymentModal = ( { entry } : { entry:PayablesType }) => {
     const router = useRouter();
     const params = useParams();
     const { campaign_id } = params;
-    const paymentModal = useAddPaymentsModal()
+    const paymentModal = useEditPaymentsModal()
     const [entryID, setEntryID] = useState(0);
     const [realDate, setRealDate] = useState("");
     const [worldDate, setworldDate] = useState("");
@@ -81,6 +81,7 @@ const EditPaymentModal = ( { entry } : { entry:PayablesType }) => {
             `/campaigncore/${campaign_id}/payables/`,
             JSON.stringify(PaymentData)
         );
+
         if (response.id) {
 
             setRealDate("")
@@ -206,7 +207,7 @@ const EditPaymentModal = ( { entry } : { entry:PayablesType }) => {
 
     return (
         <ModalTemplate 
-            title="Make Payment"
+            title="Edit Payment"
             content={content}
             modalOpen={paymentModal.modalOpen}
             modalClose={paymentModal.close}
