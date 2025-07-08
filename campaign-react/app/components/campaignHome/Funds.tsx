@@ -64,9 +64,9 @@ const FundsQuickView = () => {
     const userIndivFund = user !== null ? indivFunds.find(fund => fund.id === user) : undefined;
 
     return ( 
-        <div className="flex pb-8 h-full w-full">
-            <div className="flex-col h-full w-full">
-                <div className="pb-7 h-1/2 w-full bg-blue-700 border-neutral-800 rounded-lg border-2 shadow-lg items-center justify-center text-center">
+        <div className="flex pb-8 h-full w-full justify-center">
+            <div className="flex flex-col pb-2 h-full w-full items-center justify-center">
+                <div className="pb-7 h-1/2 w-11/12 bg-blue-700 border-neutral-800 rounded-lg border-2 shadow-lg text-center">
                     <h4 className="text-2xl">Total Group Funds</h4>
                     {totalFunds !== undefined ? (
                         <div className="p-5 h-full w-full border-neutral-800 border-t-2 items-center justify-center">
@@ -78,7 +78,7 @@ const FundsQuickView = () => {
                         </div>
                     )}
                 </div>
-                <div className="pb-7 h-1/2 w-full bg-blue-700 border-neutral-800 rounded-lg border-2 shadow-lg items-center justify-center text-center">
+                <div className="pb-7 h-1/2 w-11/12 bg-blue-700 border-neutral-800 rounded-lg border-2 shadow-lg items-center justify-center text-center">
                     <h4 className="text-2xl">Your Personal Funds</h4>
                     {userIndivFund ? (
                         <div className="p-5 h-full w-full border-neutral-800 border-t-2 items-center justify-center">
