@@ -78,7 +78,7 @@ const EditPaymentModal = ( { entry } : { entry:PayablesType }) => {
             campaign: campaign_id
         }
         const response = await CampaignJournal.update(
-            `/campaigncore/${campaign_id}/payables/`,
+            `/campaigncore/${campaign_id}/payables/${entryID}/`,
             JSON.stringify(PaymentData)
         );
 
@@ -101,7 +101,7 @@ const EditPaymentModal = ( { entry } : { entry:PayablesType }) => {
 
             setTimeout(() => { //Success Modal
                 paymentModal.close();
-                router.push(`/campaign/${campaign_id}`);
+                router.refresh();
                 setShowForm(true);
                 window.location.reload();
             }, 1000);
@@ -136,19 +136,19 @@ const EditPaymentModal = ( { entry } : { entry:PayablesType }) => {
                     <div className="flex">
                         <div className="pt-3 flex-row w-1/4">
                             <label className="px-2" htmlFor="pp">Platinum</label>
-                            <input onChange={(e) => setPlatinum(Number(e.target.value))} id="pp" placeholder="Platinum" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
+                            <input onChange={(e) => setPlatinum(Number(e.target.value))} id="pp" value={platinum} placeholder="Platinum" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                         </div>
                         <div className="pt-3 flex-row w-1/4">
                             <label className="px-2" htmlFor="gp">Gold</label>
-                            <input onChange={(e) => setGold(Number(e.target.value))} id="gp" placeholder="Gold" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
+                            <input onChange={(e) => setGold(Number(e.target.value))} id="gp" value={gold} placeholder="Gold" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                         </div>
                         <div className="pt-3 flex-row w-1/4">
                             <label className="px-2" htmlFor="sp">Silver</label>
-                            <input onChange={(e) => setSilver(Number(e.target.value))} id="sp" placeholder="Silver" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
+                            <input onChange={(e) => setSilver(Number(e.target.value))} id="sp" value={silver} placeholder="Silver" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                         </div>
                         <div className="pt-3 flex-row w-1/4">
                             <label className="px-2" htmlFor="cp">Copper</label>
-                            <input onChange={(e) => setCopper(Number(e.target.value))} id="cp" placeholder="Copper" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
+                            <input onChange={(e) => setCopper(Number(e.target.value))} id="cp" value={copper} placeholder="Copper" type="text" className="px-4 h-12 w-full text-black border-neutral-800 border-2 shadow-lg rounded-lg"/>
                         </div>
                     </div>
                     <div className="pt-3 px-2">

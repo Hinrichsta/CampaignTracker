@@ -14,6 +14,9 @@ import {
   } from '@tanstack/react-table'
 import EditPaymentModal from "../modals/editModals/EditPaymentsModal";
 import useEditPaymentsModal from "@/app/hooks/Modals/EditModals/useEditPaymentsModal";
+import AddPaymentModal from "@/app/components/modals/addModals/AddPaymentsModal";
+import useAddPaymentsModal from "@/app/hooks/Modals/AddModals/useAddPaymentsModal";
+
 
 const PaymentsList = () => {
     const params = useParams();
@@ -22,7 +25,8 @@ const PaymentsList = () => {
     const [partyMembers, setPartyMembers] = useState<PartyMemberType[]>([]);
     const [sorting, setSorting] = useState<SortingState>([{ id: 'irl_date', desc: true }]); //tanstack sorting
     const [editEntry, setEditEntry] = useState<PayablesType>()
-    const PaymentsModal = useEditPaymentsModal();
+    const editPaymentsModal = useEditPaymentsModal();
+    const addPaymentsModal = useAddPaymentsModal();
 
     const getPayments = async () => {
         const party = await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`)
@@ -102,7 +106,7 @@ const PaymentsList = () => {
 
     const handleRowClick = (rowData: PayablesType) => {
         setEditEntry(rowData); // Set the selected row data
-        PaymentsModal.open();
+        editPaymentsModal.open();
     }
 
     return (
@@ -114,8 +118,21 @@ const PaymentsList = () => {
             )}
         {paymentsData.length > 0 ? (
             <>
-                <div className="mb-4">
-                    <input type="text" value={''} onChange={(e) => table.setGlobalFilter(String(e.target.value))} placeholder="Search" className="p-2 border rounded text-black"/>
+                <AddPaymentModal />
+                <div className="flex w-full">
+                    <div className="py-4 px-2 flex w-full justify-start">
+                        <input
+                            type="text"
+                            placeholder="Search"
+                            className="p-2 border rounded text-black"
+                            onChange={(e) => table.setGlobalFilter?.(e.target.value)}
+                        />
+                    </div>
+                    <div className="p-2 flex justify-end">
+                        <button className="hover:scale-105 p-2 w-32 h-16 rounded-lg bg-red-700 border-neutral-800 border-2 shadow-lg" onClick={() => {addPaymentsModal.open();}}>
+                            Add Payment
+                        </button>
+                    </div>
                 </div>
                 <table className="w-full text-center table-fixed border-black">
                     <thead className="bg-blue-700 text-white border-b-4 border-black">
@@ -158,79 +175,3 @@ const PaymentsList = () => {
 }
 
 export default PaymentsList;
-
-//'use client'
-//
-//import { useState, useEffect } from "react";
-//import { ReceivablesType,PartyMemberType } from "@/app/hooks/DjangoTypes";
-//import CampaignJournal from "@/services/django";
-//import { calcSingleTransaction } from "@/app/hooks/calculations";
-//import { useParams  } from "next/navigation";
-//
-//
-//const PaymentsList = () => {
-//    const params = useParams();
-//    const { campaign_id } = params;
-//    const [PaymentsData, setPaymentsData] = useState<ReceivablesType[]>([]);
-//    const [partyMembers, setPartyMembers] = useState<PartyMemberType[]>([]);
-//
-//    const getPayments = async () => {
-//        const party = await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`)
-//        setPartyMembers(party);
-//        const payments = await CampaignJournal.get(`/campaigncore/${campaign_id}/payables/`);
-//        setPaymentsData(payments);
-//    }
-//
-//    useEffect(() => {
-//        getPayments();
-//    }, []);
-//
-//    return (
-//        <div className="mx-5">
-//        {PaymentsData.length > 0 ? (
-//            <table className="w-full text-center table-fixed border-black">
-//                <thead className="bg-blue-700 text-white border-b-4 border-black">
-//                    <tr className="border-black">
-//                        <th className="w-10 border-2 border-separate border-black">Date</th>
-//                        <th className="w-16 border-2 border-separate border-black">Game Date</th>
-//                        <th className="w-36 border-2 border-separate border-black">Description</th>
-//                        <th className="w-10 border-2 border-separate border-black">Platinum</th>
-//                        <th className="w-10 border-2 border-separate border-black">Gold</th>
-//                        <th className="w-10 border-2 border-separate border-black">Silver</th>
-//                        <th className="w-10 border-2 border-separate border-black">Copper</th>
-//                        <th className="w-10 border-2 border-separate border-black">Total in GP</th>
-//                        <th className="w-10 border-2 border-separate border-black">Owner</th>
-//                    </tr>
-//                </thead>
-//                <tbody className="text-white ">
-//                    {PaymentsData.map((entry) => (
-//                        <tr key={entry.id} className="border-2 border-separate border-black even:bg-slate-500 odd:bg-transparent">
-//                            <td className="border-2 border-separate border-black">{String(entry.irl_date)}</td>
-//                            <td className="border-2 border-separate border-black">{entry.ig_date}</td>
-//                            <td className="border-2 border-separate border-black">{entry.description}</td>
-//                            <td className="border-2 border-separate border-black">{entry.pp}</td>
-//                            <td className="border-2 border-separate border-black">{entry.gp}</td>
-//                            <td className="border-2 border-separate border-black">{entry.sp}</td>
-//                            <td className="border-2 border-separate border-black">{entry.cp}</td>
-//                            <td className="border-2 border-separate border-black">{calcSingleTransaction(entry)}</td>
-//                            { entry.party_trans ? ( 
-//                                <td className="border-2 border-separate border-black">Party</td>
-//                            ) : ( 
-//                                <td className="border-2 border-separate border-black">{partyMembers[partyMembers.findIndex(index => index.id === entry.payer)].character_name}</td>
-//                            )}
-//                        </tr>
-//                    ))}
-//                </tbody>
-//            </table>
-//            ) : ( 
-//                <div className="text-5xl text-center">
-//                    <h1>
-//                        There are no transactions
-//                    </h1>
-//                </div>
-//            )}
-//        </div>
-//    )
-//}
-//
-//export default PaymentsList;

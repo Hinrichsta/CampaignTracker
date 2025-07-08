@@ -14,6 +14,8 @@ import {
   } from '@tanstack/react-table'
 import EditIncomeModal from "../modals/editModals/EditIncomeModal";
 import useEditIncomeModal from "@/app/hooks/Modals/EditModals/useEditIncomeModal";
+import AddIncomeModal from "@/app/components/modals/addModals/AddIncomeModal";
+import useAddIncomeModal from "@/app/hooks/Modals/AddModals/useAddIncomeModal";
 
 const IncomeList = () => {
     const params = useParams();
@@ -22,7 +24,8 @@ const IncomeList = () => {
     const [partyMembers, setPartyMembers] = useState<PartyMemberType[]>([]);
     const [sorting, setSorting] = useState<SortingState>([{ id: 'irl_date', desc: true }]); //tanstack sorting
     const [editEntry, setEditEntry] = useState<ReceivablesType>()
-    const IncomeModal = useEditIncomeModal();
+    const editIncomeModal = useEditIncomeModal();
+    const addIncomeModal = useAddIncomeModal();
 
     const getIncome = async () => {
         const party = await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`)
@@ -98,7 +101,7 @@ const IncomeList = () => {
 
     const handleRowClick = (rowData: ReceivablesType) => {
         setEditEntry(rowData); // Set the selected row data
-        IncomeModal.open();
+        editIncomeModal.open();
     }
 
     return (
@@ -110,8 +113,21 @@ const IncomeList = () => {
             )}
         {incomeData.length > 0 ? (
             <>
-                <div className="mb-4">
-                    <input type="text" value={''} onChange={(e) => table.setGlobalFilter(String(e.target.value))} placeholder="Search" className="p-2 border rounded text-black"/>
+                <AddIncomeModal />
+                <div className="flex w-full">
+                    <div className="py-4 px-2 flex w-full justify-start">
+                        <input
+                            type="text"
+                            placeholder="Search"
+                            className="p-2 border rounded text-black"
+                            onChange={(e) => table.setGlobalFilter?.(e.target.value)}
+                        />
+                    </div>
+                    <div className="p-2 flex justify-end">
+                        <button className="hover:scale-105 p-2 w-32 h-16 rounded-lg bg-green-700 border-neutral-800 border-2 shadow-lg" onClick={() => {addIncomeModal.open();}}>
+                            Add Income
+                        </button>
+                    </div>
                 </div>
                 <table className="w-full text-center table-fixed border-black">
                     <thead className="bg-blue-700 text-white border-b-4 border-black">

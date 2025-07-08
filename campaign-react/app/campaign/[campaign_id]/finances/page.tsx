@@ -1,16 +1,10 @@
-import IncomeList from "@/app/components/finances/IncomeList"
-import PaymentsList from "@/app/components/finances/PaymentsList"
+import FinancesList from "@/app/components/finances/FinancesList"
 
 export default function FinancesOverviewPage() {
 
     return (
         <div>
-            <div>
-                <IncomeList />
-            </div>
-            <div>
-                <PaymentsList />
-            </div>
+            <FinancesList />
         </div>
     )
 }

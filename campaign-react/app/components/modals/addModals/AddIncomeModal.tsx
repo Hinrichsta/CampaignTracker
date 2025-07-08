@@ -83,7 +83,7 @@ const AddIncomeModal = () => {
 
             setTimeout(() => { //Success Modal
                 incomeModal.close();
-                router.push(`/campaign/${campaign_id}`);
+                router.refresh();
                 setShowForm(true);
                 window.location.reload();
             }, 1000);

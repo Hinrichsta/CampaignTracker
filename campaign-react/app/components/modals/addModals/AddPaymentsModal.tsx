@@ -81,7 +81,7 @@ const AddPaymentModal = () => {
 
             setTimeout(() => { //Success Modal
                 paymentModal.close();
-                router.push(`/campaign/${campaign_id}`);
+                router.refresh();
                 setShowForm(true);
                 window.location.reload();
             }, 1000);

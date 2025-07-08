@@ -47,7 +47,7 @@ const AuthModal = () => {
 
             setTimeout(() => { //Success Modal
                 authModal.close();
-                router.push('/home');
+                router.refresh();
                 setShowForm(true);
             }, 1000);
             
