@@ -7,7 +7,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from "react";
-import { UserCircleIcon } from "@heroicons/react/24/outline"; 
+import { UserCircleIcon as OutlineUserCircleIcon } from "@heroicons/react/24/outline"; 
+import { UserCircleIcon as SolidUserCircleIcon } from "@heroicons/react/24/solid";
 import MenuLinks from "./MenuLinks";
 import useAuthModal from "@/app/hooks/Modals/useAuthModal";
 import useJoinModal from "@/app/hooks/Modals/useJoinModal";
@@ -41,12 +42,22 @@ const UserButton: React.FC<UserButtonProps> = ({
 
     return(
         <div className="flex order-last justify-end object-right relative">
-            <button
-                ref={userRef}
-                onClick={() => setUserDropdown(!userDropdown)}
-            >
-                <UserCircleIcon className="size-16 justify-end" />
-            </button>
+            {userAuth ? ( 
+                <button
+                    ref={userRef}
+                    onClick={() => setUserDropdown(!userDropdown)}
+                >
+                    <SolidUserCircleIcon className="size-16 justify-end text-black" />
+                </button>
+            ) : (
+                <button
+                    ref={userRef}
+                    onClick={() => setUserDropdown(!userDropdown)}
+                >
+                    <OutlineUserCircleIcon className="size-16 justify-end" />
+                </button>
+            )}
+
             
             {userDropdown && (
                 <div ref={dropdownRef} className="w-40 top-20 absolute -right-4 border rounded-lg bg-slate-600 shadow-md flex flex-col cursor-pointer transition">
