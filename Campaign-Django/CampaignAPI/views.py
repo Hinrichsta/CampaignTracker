@@ -74,19 +74,6 @@ class User_Views(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['username', 'email']
 
-    #def get_queryset(self):
-    #    if self.request.user.is_authenticated:
-    #        if self.request.method in permissions.SAFE_METHODS:
-    #            if self.request.query_params.get('username') is not None:
-    #                user = self.request.query_params.get('username')
-    #                return User.objects.filter(user in user)
-    #            elif self.kwargs.get('pk') is not None:
-    #                user = self.kwargs.get('pk')
-    #                return User.objects.filter(user__id=user)
-    #        if self.request.user == User.objects.filter(user=self.request.user):
-    #            return User.objects.filter(user=self.request.user)
-    #    return CampaignCore.objects.none()
-
 
 class CampaignCore_Views(viewsets.ModelViewSet):
     """

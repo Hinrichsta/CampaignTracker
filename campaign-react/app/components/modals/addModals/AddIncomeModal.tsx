@@ -13,7 +13,6 @@ import { useRouter,useParams  } from "next/navigation";
 import useAddIncomeModal from "@/app/hooks/Modals/AddModals/useAddIncomeModal";
 import CampaignJournal from "@/services/django";
 import { PartyMemberType } from "@/app/hooks/DjangoTypes";
-import FundsQuickView from "../../campaignHome/Funds";
 
 
 const AddIncomeModal = () => {
@@ -41,7 +40,6 @@ const AddIncomeModal = () => {
 
     useEffect(() => {
         getPartyMembers();
-
         const today = new Date();
         const currentDate = today.toISOString().split('T')[0]; // This gives the date in "yyyy-mm-dd" format
         setRealDate(currentDate);
@@ -66,7 +64,6 @@ const AddIncomeModal = () => {
         );
         
         if (response.id) {         
-
             setRealDate("")
             setworldDate("")
             setDescription("")

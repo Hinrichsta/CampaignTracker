@@ -11,6 +11,14 @@ export type CampaignCoreType = {
     public: boolean;
 }
 
+export type UserType = {
+    id: number;
+    username: string;
+    email: string;
+    first_name: string | null;
+    last_name: string | null;
+}
+
 export type UserRolesType = {
     campaign: number | null;
     user: number;

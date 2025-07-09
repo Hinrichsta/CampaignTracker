@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+import re
 
 
 class UserJoin_Serial(serializers.ModelSerializer):
@@ -16,16 +17,20 @@ class UserJoin_Serial(serializers.ModelSerializer):
     It then creates the user and returns an access code for them to be logged in automatically.
     '''
     pass2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+    
 
     class Meta:
         model = User
-        fields = ['id','username','password','email', 'pass2']
+        fields = ['id','username','password','email','first_name','last_name','pass2']
         write_only_fields = ('password',)
         read_only_fields = ('id',)
     
     def validate(self, attrs):
+        email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
         if attrs['password'] != attrs['pass2']:
             raise serializers.ValidationError({"password": "The passwords do not match"})
+        if not re.match(email_regex,attrs['email']):
+            raise serializers.ValidationError({"email": "Not a valid email address"})
         try:
             validate_password(attrs['password'])
         except ValidationError as error:
@@ -36,7 +41,9 @@ class UserJoin_Serial(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create(
             username=validated_data['username'],
-            email=validated_data['email']
+            email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name']
         )
 
         user.set_password(validated_data['password']) # Needed or else you get the following error and users cannot login. error: Invalid password format or unknown hashing algorithm.
@@ -65,7 +72,7 @@ class TokenObtainPair_Serial(TokenObtainPairSerializer):
 class User_Serial(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id','username','email']
+        fields = ['id','username','email','first_name','last_name']
         read_only_fields = ('id',)
 
 

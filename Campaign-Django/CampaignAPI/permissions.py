@@ -19,14 +19,25 @@ class IsCampaignOwner(permissions.BasePermission):
     
     def has_object_permission(self, request, view, obj):
         try:
-            campaign_req = view.kwargs.get('cid')
+            if "/user" in request.path:
+                campaign_req = request.query_params.get('campaign')
+            else:
+                campaign_req = view.kwargs.get('cid')
             if not campaign_req:
                 campaign_req = obj.campaign.id if hasattr(obj, 'campaign') else view.kwargs.get('pk')
             if not campaign_req:
+                print("No Campaign Request")
                 return False
         except:
             return False
-        
+        if "/user" in request.path:
+            try:
+                requested_user = CampaignUsers.objects.get(user=view.kwargs.get('pk'), campaign=campaign_req)
+                if not requested_user:
+                    return False
+            except:
+                print("Requested User Failed")
+                return False
         try:
             campaign_user = CampaignUsers.objects.get(user=request.user, campaign=campaign_req)
             if campaign_user.role == 'O':
@@ -34,27 +45,6 @@ class IsCampaignOwner(permissions.BasePermission):
             return False
         except CampaignUsers.DoesNotExist:
             return False
-            
-    
-    #def has_object_permission(self, request, view, obj):
-    #    if hasattr(request, 'campaign'):
-    #        campaign_req = request.campaign
-    #    elif request.query_params.get('campaign') is not None:
-    #        campaign_req = request.query_params.get('campaign')
-    #    elif view.kwargs.get('pk') is not None or view.kwargs.get('user') is not None:
-    #        if "campaigncore" in request.path:
-    #            campaign_req = obj.id
-    #        else:
-    #            campaign_req = obj.campaign.id
-    #    else:
-    #        return False
-    #    try:
-    #        campaign_user = CampaignUsers.objects.get(user=request.user, campaign=campaign_req)
-    #        if campaign_user.role == 'O':
-    #            return True
-    #        return False
-    #    except CampaignUsers.DoesNotExist:
-    #        return False
         
     
 class IsCampaignAdmin(permissions.BasePermission):
@@ -66,13 +56,25 @@ class IsCampaignAdmin(permissions.BasePermission):
     
     def has_object_permission(self, request, view, obj):
         try:
-            campaign_req = view.kwargs.get('cid')
+            if "/user" in request.path:
+                campaign_req = request.query_params.get('campaign')
+            else:
+                campaign_req = view.kwargs.get('cid')
             if not campaign_req:
                 campaign_req = obj.campaign.id if hasattr(obj, 'campaign') else view.kwargs.get('pk')
             if not campaign_req:
+                print("No Campaign Request")
                 return False
         except:
             return False
+        if "/user" in request.path:
+            try:
+                requested_user = CampaignUsers.objects.get(user=view.kwargs.get('pk'), campaign=campaign_req)
+                if not requested_user:
+                    return False
+            except:
+                print("Requested User Failed")
+                return False
         try:
             campaign_user = CampaignUsers.objects.get(user=request.user, campaign=campaign_req)
             if campaign_user.role == 'A':
