@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { ReceivablesType, PayablesType, PartyMemberType } from "@/app/hooks/DjangoTypes";
 import CampaignJournal from "@/services/django";
-import { calcSingleTransaction } from "@/app/hooks/calculations";
+import { calcSingleTransaction,calcIndivFunds, calcTotalFunds } from "@/app/hooks/calculations";
 import { useParams  } from "next/navigation";
 import {
     flexRender,
@@ -20,10 +20,23 @@ import AddIncomeModal from "@/app/components/modals/addModals/AddIncomeModal";
 import useAddIncomeModal from "@/app/hooks/Modals/AddModals/useAddIncomeModal";
 import AddPaymentModal from "@/app/components/modals/addModals/AddPaymentsModal";
 import useAddPaymentsModal from "@/app/hooks/Modals/AddModals/useAddPaymentsModal";
+import FinancesListItem from "./FinancesListItem";
 
 type FinanceRow =
-  | (ReceivablesType & { type: 'income'; payee?: undefined })
-  | (PayablesType & { type: 'payment' });
+    | (ReceivablesType & { type: 'income'; payee?: undefined })
+    | (PayablesType & { type: 'payment' });
+
+interface Funds {
+    TotalGold: number;
+    totalIncome: number;
+    totalPayments: number;
+}
+
+interface IndivFund {
+    id: string;
+    name: string;
+    totalFunds: number;
+}
 
 
 const FinancesList = () => {
@@ -40,6 +53,9 @@ const FinancesList = () => {
     const addIncomeModal = useAddIncomeModal();
     const addPaymentsModal = useAddPaymentsModal();
     const [mergedData, setMergedData] = useState<FinanceRow[]>([]);
+
+    const [totalFunds, setTotalFunds] = useState<Funds | undefined>(undefined);
+    const [indivFunds, setIndivFunds] = useState<IndivFund[]>([]);
 
 
     const getData = async () => {
@@ -64,6 +80,16 @@ const FinancesList = () => {
     useEffect(() => {
         getData();
     }, []);
+
+    useEffect(() => {
+        const getFunds = async () => {
+            const total = await calcTotalFunds(incomeData,paymentsData);
+            setTotalFunds(total);
+            const indiv = await calcIndivFunds(incomeData,paymentsData,partyMembers);
+            setIndivFunds(indiv);
+        }
+        getFunds();
+    }, [partyMembers, incomeData, paymentsData])
     
     const columns = [
         {
@@ -153,14 +179,46 @@ const FinancesList = () => {
                     <div className="flex w-full min-h-60 border-b-2 border-black items-center">
                         <div className="flex w-1/4 h-full items-center justify-center">
                             <div className="flex flex-col hover:scale-105 border-black rounded-lg min-w-80 m-6 shadow-xl bg-blue-800 cursor-pointer">
-                                <div className="w-full text-center ">
-                                    <div className="p-1 text-2xl font-bold text-white border-b-black border-b">
+                                <div className="flex flex-col w-full min-h-32 text-center justify-between">
+                                    <div className="p-1 text-3xl font-bold text-white border-b-black border-b">
                                         <h1>Party Finances</h1>
+                                    </div>
+                                    <div className="p-1 text-2xl font-bold text-white flex-grow flex items-center justify-center">
+                                    {totalFunds !== undefined ? ( 
+                                        <h2>{totalFunds.TotalGold} GP</h2>
+                                    ) : (
+                                        <h2>Loading...</h2>
+                                    )}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="flex w-3/4 h-full items-center justify-center">
+                        <div className="flex flex-wrap w-3/4 h-full items-center justify-center">
+                            {indivFunds.filter((entry) => {
+                                const member = partyMembers.find((member) => member.id === Number(entry.id));
+                                return member && (member.active || entry.totalFunds !== 0);
+                            })
+                            .sort((a, b) => {
+                                const aMember = partyMembers.find((member) => member.id === Number(a.id));
+                                const bMember = partyMembers.find((member) => member.id === Number(b.id));
+                            
+                                const aInactive = aMember && !aMember.active;
+                                const bInactive = bMember && !bMember.active;
+                            
+                                // Sort inactive members to the bottom of the list
+                                if (aInactive && !bInactive) return 1;
+                                if (!aInactive && bInactive) return -1;
+                            
+                                // If both are either active or both are inactive, maintain the current order
+                                return 0;
+                            })
+                            .map((entry) => (
+                                <FinancesListItem
+                                    key={entry.id}
+                                    indivFunds={entry}
+                                    active={(partyMembers.find((member) => member.id === Number(entry.id))?.active)}
+                                />
+                            ))}
 
                         </div>
                     </div>

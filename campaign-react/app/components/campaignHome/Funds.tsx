@@ -61,7 +61,7 @@ const FundsQuickView = () => {
         getFunds();
     }, [partyMembers, receivables, payables])
 
-    const userIndivFund = user !== null ? indivFunds.find(fund => fund.id === user) : undefined;
+    const userIndivFund = user !== null ? indivFunds.find(fund => Number(fund.id) === (partyMembers.find(member => member.player === Number(user)))?.id) : undefined;
 
     return ( 
         <div className="flex pb-8 h-full w-full justify-center">
@@ -82,7 +82,7 @@ const FundsQuickView = () => {
                     <h4 className="text-2xl">Your Personal Funds</h4>
                     {userIndivFund ? (
                         <div className="p-5 h-full w-full border-neutral-800 border-t-2 items-center justify-center">
-                            <p className="align-middle text-xl">{userIndivFund.totalFunds} GP</p>
+                            <p className="align-middle text-xl">{userIndivFund.totalFunds} GP {userIndivFund.id}</p>
                         </div>
                     ) : (
                         <div className="p-5 h-full w-full border-neutral-800 border-t-2 items-center justify-center">

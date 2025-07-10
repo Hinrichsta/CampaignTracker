@@ -19,11 +19,15 @@ interface IndivFundsObject {
     [key: string]: IndividualFunds;
 }
 
+function truncateTo2Decimals(num: number): number {
+    return Math.floor(num * 100) / 100;
+}
+
 export function calcSingleTransaction(incomeData?:ReceivablesType,paymentData?:PayablesType){
     if (incomeData) {
-        return parseFloat(((incomeData.pp * 10) + incomeData.gp + (incomeData.sp/10) + (incomeData.cp/100)).toFixed(2));
+        return truncateTo2Decimals(((incomeData.pp * 10) + incomeData.gp + (incomeData.sp/10) + (incomeData.cp/100)));
     } else if (paymentData){
-        return parseFloat(((paymentData.pp * 10) + paymentData.gp + (paymentData.sp/10) + (paymentData.cp/100)).toFixed(2));
+        return truncateTo2Decimals(((paymentData.pp * 10) + paymentData.gp + (paymentData.sp/10) + (paymentData.cp/100)));
     } else {
         return 0
     }
@@ -31,15 +35,15 @@ export function calcSingleTransaction(incomeData?:ReceivablesType,paymentData?:P
 
 export async function calcTotalFunds(incomeData:ReceivablesType[],paymentData:PayablesType[]){
     
-    const incomePlatinum = parseFloat(incomeData.reduce((currentCoin:number, coin) => currentCoin + (coin.pp * 10), 0).toFixed(2));
-    const incomeGold = parseFloat(incomeData.reduce((currentCoin:number, coin) => currentCoin + coin.gp, 0).toFixed(2));
-    const incomeSilver = parseFloat(incomeData.reduce((currentCoin:number, coin) => currentCoin + (coin.sp/10), 0).toFixed(2));
-    const incomeCopper = parseFloat(incomeData.reduce((currentCoin:number, coin) => currentCoin + (coin.cp/100), 0).toFixed(2));
+    const incomePlatinum = truncateTo2Decimals(incomeData.reduce((currentCoin:number, coin) => currentCoin + (coin.pp * 10), 0));
+    const incomeGold = truncateTo2Decimals(incomeData.reduce((currentCoin:number, coin) => currentCoin + coin.gp, 0));
+    const incomeSilver = truncateTo2Decimals(incomeData.reduce((currentCoin:number, coin) => currentCoin + (coin.sp/10), 0));
+    const incomeCopper = truncateTo2Decimals(incomeData.reduce((currentCoin:number, coin) => currentCoin + (coin.cp/100), 0));
 
-    const paymentPlatinum = parseFloat(paymentData.reduce((currentCoin:number, coin) => currentCoin + (coin.pp * 10), 0).toFixed(2));
-    const paymentGold = parseFloat(paymentData.reduce((currentCoin:number, coin) => currentCoin + coin.gp, 0).toFixed(2));
-    const paymentSilver = parseFloat(paymentData.reduce((currentCoin:number, coin) => currentCoin + (coin.sp/10), 0).toFixed(2));
-    const paymentCopper = parseFloat(paymentData.reduce((currentCoin:number, coin) => currentCoin + (coin.cp/100), 0).toFixed(2));
+    const paymentPlatinum = truncateTo2Decimals(paymentData.reduce((currentCoin:number, coin) => currentCoin + (coin.pp * 10), 0));
+    const paymentGold = truncateTo2Decimals(paymentData.reduce((currentCoin:number, coin) => currentCoin + coin.gp, 0));
+    const paymentSilver = truncateTo2Decimals(paymentData.reduce((currentCoin:number, coin) => currentCoin + (coin.sp/10), 0));
+    const paymentCopper = truncateTo2Decimals(paymentData.reduce((currentCoin:number, coin) => currentCoin + (coin.cp/100), 0));
 
     const totalIncome = incomePlatinum + incomeGold + incomeSilver + incomeCopper
     const totalPayments = paymentPlatinum + paymentGold + paymentSilver + paymentCopper
@@ -75,7 +79,7 @@ export async function calcIndivFunds(incomeData:ReceivablesType[],paymentData:Pa
                 indivFunds[memberID].totalIncome += (coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0)
             }
         } else {
-            const tmp = parseFloat((((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0))/memberCount).toFixed(2));
+            const tmp = truncateTo2Decimals((((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0))/memberCount));
 
             Object.values(indivFunds).forEach(indiv => {
                 indiv.totalIncome += tmp
@@ -91,7 +95,7 @@ export async function calcIndivFunds(incomeData:ReceivablesType[],paymentData:Pa
                 indivFunds[memberID].totalPayments += (coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0)
             }
         } else {
-            const tmp = parseFloat((((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0))/memberCount).toFixed(2));
+            const tmp = truncateTo2Decimals((((coin.pp ? (coin.pp * 10) : 0) + (coin.gp ? coin.gp : 0) + (coin.sp ? (coin.sp/10) : 0) + (coin.cp ? (coin.cp/100) : 0))/memberCount));
 
             Object.values(indivFunds).forEach(indiv => {
                 indiv.totalPayments += tmp
@@ -102,7 +106,7 @@ export async function calcIndivFunds(incomeData:ReceivablesType[],paymentData:Pa
     const result = Object.keys(indivFunds).map((memberId) => {
         const funds = indivFunds[memberId];
 
-        const totalFunds = parseFloat((funds.totalIncome - funds.totalPayments).toFixed(2))
+        const totalFunds = truncateTo2Decimals((funds.totalIncome - funds.totalPayments))
 
         return {
             id: memberId,
