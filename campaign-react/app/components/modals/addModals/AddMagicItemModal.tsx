@@ -10,42 +10,72 @@
 
 import ModalTemplate from "../ModalTemplate";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import useAuthModal from "@/app/hooks/Modals/useAuthModal";
-import { handleLogin } from "../../../hooks/actions";
+import { useRouter,useParams  } from "next/navigation";
+import useAddMagicItemModal from "@/app/hooks/Modals/AddModals/useAddMagicItemModal";
 import CampaignJournal from "@/services/django";
+import { PartyMemberType } from "@/app/hooks/DjangoTypes";
 
-const AuthModal = () => {
+const AddMagicItemModal = () => {
     const router = useRouter();
-    const authModal = useAuthModal()
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const params = useParams();
+    const { campaign_id } = params;
+    const magicItemModal = useAddMagicItemModal();
+
+    const [realDate, setRealDate] = useState("");
+    const [worldDate, setworldDate] = useState("");
+    const [name, setName] = useState("");
+    const [notes, setNotes] = useState("");
+    const [rarity, setRarity] = useState("");
+    const [status, setStatus] = useState("");
+    const [creator, setCreator] = useState("");
+    const [link, setLink] = useState("");
+    const [partyOwner, setPartyOwner] = useState(0);
+    const [vehicleOwner, setVehicleOwner] = useState(0);
+    const [hirelingOwner, setHirelingOwner] = useState(0);
+
+    
     const [error, setError] = useState<string[]>([]);
     const [successMessage, setSuccessMessage] = useState<string | null>(null); //Success Modal
     const [showForm, setShowForm] = useState(true); //Success Modal
 
-    const submitAuth = async () =>{
-        const authData = {
-            username: username,
-            password: password
+    const submitMagicItem = async () =>{
+        const magicItemData = {
+            irl_date: realDate,
+            ig_date: worldDate,
+            name: name,
+            notes: notes,
+            rarity: rarity,
+            status: status,
+            creator: creator,
+            link: link,
+            powner: partyOwner,
+            vowner: vehicleOwner,
+            howner: hirelingOwner,
+            campaign: campaign_id
         }
         const response = await CampaignJournal.post(
-            '/auth/login/',
-            JSON.stringify(authData)
+            `/campaigncore/${campaign_id}/magic-items/`,
+            JSON.stringify(magicItemData)
         );
-        if (response.access) {
-            handleLogin(response.id as string,response.access,response.refresh)
-            
-
-            setUsername("")
-            setPassword("")
+        if (response.id) {
+            setRealDate("")
+            setworldDate("")
+            setName("")
+            setNotes("")
+            setRarity("")
+            setStatus("")
+            setCreator("")
+            setLink("")
+            setPartyOwner(0)
+            setVehicleOwner(0)
+            setHirelingOwner(0)
             setError([])
 
             setShowForm(false);//Success Modal
-            setSuccessMessage("Successfully Authenticated!"); //Success Modal
+            setSuccessMessage("Magic Item Succesfully Added"); //Success Modal
 
             setTimeout(() => { //Success Modal
-                authModal.close();
+                magicItemModal.close();
                 router.refresh();
                 setShowForm(true);
             }, 1000);
@@ -87,12 +117,12 @@ const AuthModal = () => {
 
     return (
         <ModalTemplate 
-            title="Login"
+            title="Log Magic Item"
             content={content}
-            modalOpen={authModal.modalOpen}
-            modalClose={authModal.close}
+            modalOpen={magicItemModal.modalOpen}
+            modalClose={magicItemModal.close}
         />
     )
 }
 
-export default AuthModal;
+export default AddMagicItemModal;
