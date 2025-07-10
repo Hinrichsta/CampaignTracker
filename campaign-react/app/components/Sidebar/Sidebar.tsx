@@ -49,7 +49,7 @@ const Sidebar: React.FC = () => {
                         <Link href={`/campaign/${campaign_id}`}><li className="py-1" onClick={() => setSidebarOpen(!sidebarOpen)}>Home</li></Link>
                         <Link href={`/campaign/${campaign_id}/party`}><li className="py-1" onClick={() => setSidebarOpen(!sidebarOpen)}>Party</li></Link>
                             <li className="py-1 relative" onClick={() => setSidebarOpen(!sidebarOpen)} onMouseEnter={(e) =>{const dropdown = e.currentTarget.querySelector('.dropdown'); if (dropdown) dropdown.classList.remove('hidden');}} onMouseLeave={(l) => {const dropdown = l.currentTarget.querySelector('.dropdown'); if (dropdown) dropdown.classList.add('hidden');}}>
-                            <Link href={`/campaign/${campaign_id}/finances`}><div className="flex items-center space-x-2"><ChevronDownIcon className="h-4 w-4 justify-center items-center text-center"/><span>Transactions</span></div></Link>
+                            <Link href={`/campaign/${campaign_id}/finances`}><div className="flex items-center space-x-2"><ChevronDownIcon className="h-4 w-4 justify-center items-center text-center"/><span>Finances</span></div></Link>
                                 <ul className="dropdown hidden pl-8 text-sm">
                                     <Link href={`/campaign/${campaign_id}/finances/income`}><li className="py-1" onClick={() => setSidebarOpen(!sidebarOpen)}>Income</li></Link>
                                     <Link href={`/campaign/${campaign_id}/finances/payments`}><li className="py-1" onClick={() => setSidebarOpen(!sidebarOpen)}>Payments</li></Link>

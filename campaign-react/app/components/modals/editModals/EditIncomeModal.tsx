@@ -46,10 +46,10 @@ const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
     }, []);
 
     useEffect(() => {
-    if (partyTrans) {
-        setindivPayee(String(null));  // Set indivPayee to null when partyTrans is true
-    }
-}, [partyTrans]);
+        if (partyTrans) {
+            setindivPayee(String(null));  // Set indivPayee to null when partyTrans is true
+        }
+    }, [partyTrans]);
 
     useEffect(() => {
         setEntryID(entry.id)

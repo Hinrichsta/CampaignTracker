@@ -31,7 +31,7 @@ const CampaignTitle = () => {
     }, []);
 
     return (
-        <div className="flex w-50% h-5 pt-10 items-center justify-center text-center align-bottom">
+        <div className="flex w-50% items-center justify-center text-center align-bottom border-b-2 border-black">
             {campaign !== undefined ? (
                 <Link href={`/campaign/${campaign_id}`}><h1 className="text-6xl">{campaign.campaign_name}</h1></Link>
             ) : (

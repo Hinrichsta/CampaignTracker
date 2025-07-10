@@ -111,9 +111,9 @@ const IncomeList = () => {
             ) : (
                 <></>
             )}
+            <AddIncomeModal />
         {incomeData.length > 0 ? (
             <>
-                <AddIncomeModal />
                 <div className="flex w-full">
                     <div className="py-4 px-2 flex w-full justify-start">
                         <input
@@ -147,7 +147,7 @@ const IncomeList = () => {
                     </thead>
                     <tbody className="text-white ">
                         {table.getRowModel().rows.map(row => (
-                            <tr key={row.id} className="border-2 border-separate border-black even:bg-slate-500 odd:bg-transparent" onClick={() => handleRowClick(row.original)}>
+                            <tr key={row.id} className="border-2 border-separate border-black even:bg-slate-500 odd:bg-transparent cursor-pointer" onClick={() => handleRowClick(row.original)}>
                                 {row.getVisibleCells().map(cell => (
                                     <td key={cell.id} className="border-2 border-separate border-black">
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}

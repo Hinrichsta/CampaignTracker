@@ -149,7 +149,21 @@ const FinancesList = () => {
             <AddPaymentModal />
 
             {mergedData.length > 0 ? (
-                <>
+                <div>
+                    <div className="flex w-full min-h-60 border-b-2 border-black items-center">
+                        <div className="flex w-1/4 h-full items-center justify-center">
+                            <div className="flex flex-col hover:scale-105 border-black rounded-lg min-w-80 m-6 shadow-xl bg-blue-800 cursor-pointer">
+                                <div className="w-full text-center ">
+                                    <div className="p-1 text-2xl font-bold text-white border-b-black border-b">
+                                        <h1>Party Finances</h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex w-3/4 h-full items-center justify-center">
+
+                        </div>
+                    </div>
                     <div className="flex w-full">
                         <div className="py-4 px-2 flex w-full justify-start">
                             <input
@@ -193,7 +207,7 @@ const FinancesList = () => {
                                     onClick={() => handleRowClick(row.original)}
                                     className={`border-2 border-separate border-black cursor-pointer ${
                                         row.original.type === 'income' ? 'bg-green-700' : 'bg-red-700'
-                                    } hover:opacity-80`}
+                                    }`}
                                 >
                                     {row.getVisibleCells().map(cell => (
                                         <td key={cell.id} className="border-2 border-black">
@@ -204,7 +218,7 @@ const FinancesList = () => {
                             ))}
                         </tbody>
                     </table>
-                </>
+                </div>
             ) : (
                 <div className="flex w-full h-5 pt-10 items-center justify-center text-center">
                     <h1 className="text-5xl">There are no transactions</h1>
