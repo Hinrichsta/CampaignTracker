@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  django:
+    build:
+      context: ./Campaign-Django
+      dockerfile: Dockerfile.prod
+    command: gunicorn Campaign-Django.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - static_volume:/usr/src/app/staticfiles
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - path: ".env"
+        required: true
+    expose:
+      - "8000"
+
+  react:
+    build:
+      context: ./campaign-react
+      dockerfile: Dockerfile.prod
+    command: npm run start
+    depends_on:
+      - django
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=/api/v1
+    expose:
+      - "3000"
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/prod.conf:/etc/nginx/nginx.conf
+      - static_volume:/usr/src/app/staticfiles
+    ports:
+      - "80:80"
+    depends_on:
+      - django
+      - react
+
+volumes:
+  static_volume: {}
