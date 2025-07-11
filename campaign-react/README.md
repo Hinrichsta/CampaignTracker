@@ -52,7 +52,7 @@ useEffect(() => {
 }, [getCampaign]);
 
 
-remove from dockerdile.prod
-RUN NEXT_DISABLE_ESLINT=true npm run build
-to 
-RUN npm run build
+remove from next.config.ts
+  eslint: {
+    ignoreDuringBuilds: true,
+  }
