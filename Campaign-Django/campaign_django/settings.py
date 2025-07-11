@@ -64,7 +64,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-ROOT_URLCONF = 'Campaign-Django.urls'
+ROOT_URLCONF = 'campaign_django.urls'
 
 TEMPLATES = [
     {
@@ -82,7 +82,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Campaign-Django.wsgi.application'
+WSGI_APPLICATION = 'campaign_django.wsgi.application'
 
 
 # Database

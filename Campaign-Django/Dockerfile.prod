@@ -12,6 +12,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # copy all the files to the container
 COPY . .
 
-ENV DJANGO_SETTINGS_MODULE=Campaign-Django.settings.production
+ENV DJANGO_SETTINGS_MODULE=campaign_django.settings.production
 
 RUN python manage.py collectstatic --noinput
