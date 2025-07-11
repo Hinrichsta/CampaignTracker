@@ -38,3 +38,21 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 Date and Time stuff here: https://youtu.be/7nw9wh2ZCIY?si=Niw87p-5myQ6mDwm&t=1364
 Automatic Page Refresh here: https://youtu.be/63yjsvrV6_4?si=tceboCiCPQPXtHCm&t=3528
+
+
+Fix ESLINT Isues
+// ❌ Bad
+useEffect(() => {
+  getCampaign();
+}, []);
+
+// ✅ Good
+useEffect(() => {
+  getCampaign();
+}, [getCampaign]);
+
+
+remove from dockerdile.prod
+RUN NEXT_DISABLE_ESLINT=true npm run build
+to 
+RUN npm run build
