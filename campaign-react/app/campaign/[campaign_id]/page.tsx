@@ -5,6 +5,7 @@
 
 import AddIncomeModal from "@/app/components/modals/addModals/AddIncomeModal";
 import AddPaymentModal from "@/app/components/modals/addModals/AddPaymentsModal";
+import AddMagicItemModal from "@/app/components/modals/addModals/AddMagicItemModal";
 import QuickAdd from "@/app/components/campaignHome/QuickAdd";
 import FundsQuickView from "@/app/components/campaignHome/Funds";
 
@@ -14,6 +15,7 @@ export default function CampaignHomePage () {
         <div className="flex h-full mx-10">
             <AddIncomeModal />
             <AddPaymentModal />
+            <AddMagicItemModal />
             <div className="flex-row w-full">
                 <div className="h-64 my-12 bg-slate-500 text-white border-black border-4 rounded-xl shadow-xl text-center">
                     <h3 className="text-2xl">Funds</h3>

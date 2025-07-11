@@ -88,7 +88,8 @@ const AddPartyMemberModal = () => {
 
             setTimeout(() => { //Success Modal
                 partyMemberModal.close();
-                router.refresh();
+                //router.refresh();
+                window.location.reload();
                 setShowForm(true);
                 window.location.reload();
             }, 1000);
@@ -103,7 +104,7 @@ const AddPartyMemberModal = () => {
 
 
     const content = (
-        <div className="pr-10 pl-4 py-4">
+        <div className= "px-4 py-4">
             {showForm ? ( 
                 <form className="" action={addPartyMember}>
                     <div className="flex">

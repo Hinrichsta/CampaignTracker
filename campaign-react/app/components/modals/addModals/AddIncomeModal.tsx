@@ -45,6 +45,12 @@ const AddIncomeModal = () => {
         setRealDate(currentDate);
     }, []);
 
+    useEffect(() => {
+        if (partyTrans) {
+            setindivPayee(String(null));  // Set indivPayee to null when partyTrans is true
+        }
+    }, [partyTrans]);
+
     const submitIncome = async () =>{
         const incomeData = {
             irl_date: realDate,
@@ -80,7 +86,8 @@ const AddIncomeModal = () => {
 
             setTimeout(() => { //Success Modal
                 incomeModal.close();
-                router.refresh();
+                //router.refresh();
+                window.location.reload();
                 setShowForm(true);
                 window.location.reload();
             }, 1000);
@@ -94,7 +101,7 @@ const AddIncomeModal = () => {
     }
 
     const content = (
-        <div className="pr-10 pl-4 py-4">
+        <div className= "px-4 py-4">
             {showForm ? (
                 <form className="" action={submitIncome}>
                     <div className="flex">

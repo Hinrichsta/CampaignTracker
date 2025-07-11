@@ -10,17 +10,17 @@
 
 import ModalTemplate from "../ModalTemplate";
 import { useEffect, useState } from "react";
-import { useRouter,useParams  } from "next/navigation";
-import useAddMagicItemModal from "@/app/hooks/Modals/AddModals/useAddMagicItemModal";
+import { useRouter,useParams, } from "next/navigation";
+import useEditMagicItemModal from "@/app/hooks/Modals/EditModals/useEditMagicItemModal";
 import CampaignJournal from "@/services/django";
-import { PartyMemberType } from "@/app/hooks/DjangoTypes";
+import { PartyMemberType, MagicItemsType } from "@/app/hooks/DjangoTypes";
 
-const AddMagicItemModal = () => {
+const EditMagicItemModal = ( { entry } : {entry:MagicItemsType } ) => {
     const router = useRouter();
     const params = useParams();
     const { campaign_id } = params;
-    const magicItemModal = useAddMagicItemModal();
-
+    const magicItemModal = useEditMagicItemModal();
+    const [entryID, setEntryID] = useState(0);
     const [realDate, setRealDate] = useState("");
     const [worldDate, setworldDate] = useState("");
     const [name, setName] = useState("");
@@ -46,9 +46,6 @@ const AddMagicItemModal = () => {
 
     useEffect(() => {
         getPartyMembers();
-        const today = new Date();
-        const currentDate = today.toISOString().split('T')[0]; // This gives the date in "yyyy-mm-dd" format
-        setRealDate(currentDate);
     }, []);
 
     useEffect(() => {
@@ -59,8 +56,34 @@ const AddMagicItemModal = () => {
         }
     }, [status]);
 
+    useEffect(() => {
+        setEntryID(entry.id)
+        setRealDate(String(entry.irl_date))
+        setworldDate(entry.ig_date)
+        setName(entry.name)
+        setNotes(entry.notes)
+        setRarity(entry.rarity)
+        setStatus(entry.status)
+        setCreator(entry.creator)
+        setLink(entry.link)
+        setPartyOwner(String(entry.powner))
+        setVehicleOwner(String(entry.vowner))
+        setHirelingOwner(String(entry.howner))
+
+        if (entry.vowner !== null) {
+            setOwnerOption("V")
+        }else if (entry.howner !== null) {
+            setOwnerOption("H")
+        }else if (entry.powner !== null){
+            setOwnerOption("P")
+        }else {
+            setOwnerOption("")
+        }
+    }, [entry])
+
     const submitMagicItem = async () =>{
         const magicItemData = {
+            id: entryID,
             irl_date: realDate,
             ig_date: worldDate,
             name: name,
@@ -74,8 +97,9 @@ const AddMagicItemModal = () => {
             howner: ownerOption === "H" ? Number(hirelingOwner) : null,
             campaign: campaign_id
         }
-        const response = await CampaignJournal.post(
-            `/campaigncore/${campaign_id}/magic-items/`,
+        console.log(JSON.stringify(magicItemData))
+        const response = await CampaignJournal.update(
+            `/campaigncore/${campaign_id}/magic-items/${entryID}/`,
             JSON.stringify(magicItemData)
         );
         if (response.id) {
@@ -94,7 +118,7 @@ const AddMagicItemModal = () => {
             setError([])
 
             setShowForm(false);//Success Modal
-            setSuccessMessage("Magic Item Succesfully Added"); //Success Modal
+            setSuccessMessage("Magic Item Succesfully Updated"); //Success Modal
 
             setTimeout(() => { //Success Modal
                 magicItemModal.close();
@@ -220,8 +244,8 @@ const AddMagicItemModal = () => {
 
                     {error.map((error, index) => {
                         return (
-                            <div key={`error_${index}`} className="text-red-600 text-lg">
-                                <p>{error}<br /></p>
+                            <div key={`error_${index}`} className="text-red-300 text-lg">
+                                <p>{hirelingOwner}-{error}<br /></p>
                             </div>
                         )
                     })}
@@ -243,7 +267,7 @@ const AddMagicItemModal = () => {
 
     return (
         <ModalTemplate 
-            title="Log Magic Item"
+            title="Edit Magic Item"
             content={content}
             modalOpen={magicItemModal.modalOpen}
             modalClose={magicItemModal.close}
@@ -251,4 +275,4 @@ const AddMagicItemModal = () => {
     )
 }
 
-export default AddMagicItemModal;
+export default EditMagicItemModal;

@@ -141,7 +141,7 @@ class MagicItems(models.Model):
         "H": "Homebrew"
     }
     irl_date = models.DateField()
-    ig_date = models.CharField(max_length=255)
+    ig_date = models.CharField(max_length=255, blank=True)
     name = models.CharField(max_length=255)
     notes = models.TextField(blank=True)
     rarity = models.CharField(max_length=1, choices=rarity_types)

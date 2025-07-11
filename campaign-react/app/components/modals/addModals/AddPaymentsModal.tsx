@@ -44,6 +44,12 @@ const AddPaymentModal = () => {
         setRealDate(currentDate);
     }, []);
 
+    useEffect(() => {
+        if (partyTrans) {
+            setindivPayer(String(null));  // Set indivPayee to null when partyTrans is true
+        }
+    }, [partyTrans]);
+
     const submitPayment = async () =>{
         const PaymentData = {
             irl_date: realDate,
@@ -81,7 +87,8 @@ const AddPaymentModal = () => {
 
             setTimeout(() => { //Success Modal
                 paymentModal.close();
-                router.refresh();
+                //router.refresh();
+                window.location.reload();
                 setShowForm(true);
                 window.location.reload();
             }, 1000);
@@ -94,11 +101,8 @@ const AddPaymentModal = () => {
         }
     }
 
-
-
-
     const content = (
-        <div className="pr-10 pl-4 py-4">
+        <div className= "px-4 py-4">
             {showForm ? (
                 <form className="" action={submitPayment}>
                     <div className="flex">

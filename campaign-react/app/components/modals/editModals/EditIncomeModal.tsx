@@ -14,7 +14,6 @@ import useEditIncomeModal from "@/app/hooks/Modals/EditModals/useEditIncomeModal
 import CampaignJournal from "@/services/django";
 import { PartyMemberType } from "@/app/hooks/DjangoTypes";
 import { ReceivablesType } from "@/app/hooks/DjangoTypes";
-import FundsQuickView from "../../campaignHome/Funds";
 
 
 const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
@@ -139,7 +138,7 @@ const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
     };
 
     const content = (
-        <div className="pr-10 pl-4 py-4">
+        <div className= "px-4 py-4">
             {showForm ? (
                 <form className="" action={submitIncome}>
                     <div className="flex">

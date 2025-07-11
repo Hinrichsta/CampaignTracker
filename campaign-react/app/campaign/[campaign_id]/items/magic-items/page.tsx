@@ -1,8 +1,10 @@
+import MagicItemsList from "@/app/components/items/MagicItemsList"
+
 export default function MagicItemsOverviewPage() {
 
     return (
         <div>
-            Magic Items Overview
+            <MagicItemsList />
         </div>
     )
 }

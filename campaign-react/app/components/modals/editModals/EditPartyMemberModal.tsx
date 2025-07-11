@@ -107,7 +107,8 @@ const EditPartyMemberModal = ( { member } : { member:PartyMemberType}) => {
 
             setTimeout(() => { //Success Modal
                 partyMemberModal.close();
-                router.refresh();
+                //router.refresh();
+                window.location.reload();
                 setShowForm(true);
                 window.location.reload();
             }, 1000);
@@ -122,7 +123,7 @@ const EditPartyMemberModal = ( { member } : { member:PartyMemberType}) => {
 
 
     const content = (
-        <div className="pr-10 pl-4 py-4">
+        <div className= "px-4 py-4">
             {showForm ? ( 
                 <form className="" action={editPartyMember}>
                     <div className="flex">
