@@ -60,7 +60,7 @@ export async function updateToken(response:string) {
     try {
         const refreshToken = await getRefreshToken();
     
-        const accessToken = await fetch('http://localhost:8000/api/v1/auth/renew/', {
+        const accessToken = await fetch('/api/v1/auth/renew/', {
             method: 'POST',
             body: JSON.stringify({
                 refresh: refreshToken
