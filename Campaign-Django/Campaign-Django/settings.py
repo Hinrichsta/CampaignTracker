@@ -142,6 +142,7 @@ STATIC_ROOT = os.environ.get('DJANGO_STATIC_ROOT', '/usr/src/app/static')
 MEDIA_ROOT = os.environ.get('DJANGO_MEDIA_ROOT', '/usr/src/app/media')
 MEDIA_URL = '/media/'
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

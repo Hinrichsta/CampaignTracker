@@ -25,9 +25,8 @@ services:
       postgres:
         condition: "service_started"
     env_file:
-      - path: ".env"
-        required: false
-  
+      - ".env"
+
   react:
     build: ./campaign-react
     ports: 
@@ -36,11 +35,11 @@ services:
     depends_on:
       - django
     env_file:
-      - path: ".env"
+      - ".env"
+
     environment:
       - NODE_ENV=development
       - NEXT_PUBLIC_API_URL=http://127.0.0.1:8000/api/v1
     
-
 volumes:
   postgres_data: {}

@@ -1,26 +1,13 @@
 services:
-  postgres:
-    image: postgres:17
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: "${POSTGRES_USER:-Campaign}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-insecure561!$}"
-      POSTGRES_DB: "${POSTGRES_DB:-CampaignTracker}"
-    restart: always
-    env_file:
-      - .env.prod
-
   django:
     build:
       context: ./Campaign-Django
       dockerfile: Dockerfile.prod
     volumes:
       - static_volume:/usr/src/app/static
-    depends_on:
-      - postgres
     env_file:
       - .env.prod
+    restart: always
 
   react:
     build:
@@ -30,6 +17,7 @@ services:
       - django
     env_file:
       - .env.prod
+    restart: always
 
   nginx:
     image: nginx:stable-alpine
@@ -42,7 +30,7 @@ services:
     depends_on:
       - django
       - react
+    restart: always
 
 volumes:
-  postgres_data:
   static_volume:
