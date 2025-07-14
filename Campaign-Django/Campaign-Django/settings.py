@@ -22,12 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-jtkoo45j8!tcog_w)eb8&mha#cc_a8*szkg(3%%mc1bpg(t6e=')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ["192.168.100.50"]
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',') if os.environ.get('DJANGO_ALLOWED_HOSTS') else []
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
@@ -91,11 +91,11 @@ WSGI_APPLICATION = 'Campaign-Django.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("POSTGRES_DB", "CampaignTracker"),
-        'USER': os.getenv("POSTGRES_USER", "Campaign"),
-        'PASSWORD': os.getenv("POSTGRES_PASSWORD", "insecure561!$"),
-        'HOST': os.getenv("POSTGRES_HOST", "postgres"),
-        'PORT': os.getenv("POSTGRES_PORT", "5432"),
+        'NAME': os.environ.get("DJANGO_DB_NAME", os.environ.get("POSTGRES_DB", "CampaignTracker")),
+        'USER': os.environ.get("DJANGO_DB_USER", os.environ.get("POSTGRES_USER", "Campaign")),
+        'PASSWORD': os.environ.get("DJANGO_DB_PASSWORD", os.environ.get("POSTGRES_PASSWORD", "insecure561!$")),
+        'HOST': os.environ.get("DJANGO_DB_HOST", os.environ.get("POSTGRES_HOST", "postgres")),
+        'PORT': os.environ.get("DJANGO_DB_PORT", os.environ.get("POSTGRES_PORT", "5432")),
     }
 }
 
@@ -138,7 +138,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.environ.get('DJANGO_STATIC_ROOT', '/usr/src/app/static')
+MEDIA_ROOT = os.environ.get('DJANGO_MEDIA_ROOT', '/usr/src/app/media')
+MEDIA_URL = '/media/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -156,7 +159,7 @@ REST_FRAMEWORK = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://192.168.100.50",
+    "http://localhost",
 ]
 
 #CORS_ALLOW_ALL_ORIGINS = True

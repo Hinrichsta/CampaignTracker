@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { PartyMemberType, PayablesType } from "@/app/hooks/DjangoTypes";
 import CampaignJournal from "@/services/django";
 import { calcSingleTransaction } from "@/app/hooks/calculations";
@@ -28,21 +28,22 @@ const PaymentsList = () => {
     const editPaymentsModal = useEditPaymentsModal();
     const addPaymentsModal = useAddPaymentsModal();
 
-    const getPayments = async () => {
-        const party = await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`)
+    const getPayments = useCallback(async () => {
+        const party = await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`);
         setPartyMembers(party);
         const payments = await CampaignJournal.get(`/campaigncore/${campaign_id}/payables/`);
         setPaymentsData(payments);
-    }
+    }, [campaign_id]);
 
     useEffect(() => {
         getPayments();
-    }, []);
+    }, [getPayments]);
 
     const columns = [
         {
             accessorKey: 'irl_date',
             header: 'Date',
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cell: (info: any) => String(info.getValue()),
         },
         {
@@ -80,12 +81,14 @@ const PaymentsList = () => {
         {
             accessorKey: 'total_gp',
             header: 'Total in Gold',
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cell: (info: any) => calcSingleTransaction(info.row.original),
             enableSorting: true,
         },
         {
             accessorKey: 'payer',
             header: 'Owner',
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cell: (info: any) => {
                 const partyMember = partyMembers.find((member) => member.id === info.getValue());
                 return partyMember ? partyMember.character_name : 'Party';

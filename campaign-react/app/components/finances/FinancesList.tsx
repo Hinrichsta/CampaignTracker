@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ReceivablesType, PayablesType, PartyMemberType } from "@/app/hooks/DjangoTypes";
 import CampaignJournal from "@/services/django";
 import { calcSingleTransaction,calcIndivFunds, calcTotalFunds } from "@/app/hooks/calculations";
@@ -58,7 +58,7 @@ const FinancesList = () => {
     const [indivFunds, setIndivFunds] = useState<IndivFund[]>([]);
 
 
-    const getData = async () => {
+    const getData = useCallback(async () => {
         const party = await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`);
         setPartyMembers(party);
 
@@ -75,11 +75,11 @@ const FinancesList = () => {
             ...payments.map((entry: PayablesType) => ({ ...entry, type: 'payment' as const })),
         ];
         setMergedData(merged);
-    };
+    }, [campaign_id]);
 
     useEffect(() => {
         getData();
-    }, []);
+    }, [getData]);
 
     useEffect(() => {
         const getFunds = async () => {
@@ -95,6 +95,7 @@ const FinancesList = () => {
         {
             accessorKey: 'irl_date',
             header: 'Date',
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cell: (info: any) => String(info.getValue()),
         },
         {
@@ -108,6 +109,7 @@ const FinancesList = () => {
         {
             accessorKey: 'payee',
             header: 'Paid To',
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cell: (info: any) => info.getValue() ?? '',
         },
         {
@@ -133,12 +135,14 @@ const FinancesList = () => {
         {
             accessorKey: 'total_gp',
             header: 'Total in Gold',
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cell: (info: any) => calcSingleTransaction(info.row.original),
             enableSorting: true,
         },
         {
             accessorKey: 'payer',
             header: 'Owner',
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cell: (info: any) => {
                 const partyMember = partyMembers.find((member) => member.id === info.getValue());
                 return partyMember ? partyMember.character_name : 'Party';

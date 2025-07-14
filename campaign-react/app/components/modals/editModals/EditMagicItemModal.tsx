@@ -6,17 +6,18 @@
 * CURRENTLY IN PROGRESS
 */
 
+
 'use client';
+import React from "react";
 
 import ModalTemplate from "../ModalTemplate";
 import { useEffect, useState } from "react";
-import { useRouter,useParams, } from "next/navigation";
+import { useParams, } from "next/navigation";
 import useEditMagicItemModal from "@/app/hooks/Modals/EditModals/useEditMagicItemModal";
 import CampaignJournal from "@/services/django";
 import { PartyMemberType, MagicItemsType } from "@/app/hooks/DjangoTypes";
 
 const EditMagicItemModal = ( { entry } : {entry:MagicItemsType } ) => {
-    const router = useRouter();
     const params = useParams();
     const { campaign_id } = params;
     const magicItemModal = useEditMagicItemModal();
@@ -39,14 +40,13 @@ const EditMagicItemModal = ( { entry } : {entry:MagicItemsType } ) => {
     const [successMessage, setSuccessMessage] = useState<string | null>(null); //Success Modal
     const [showForm, setShowForm] = useState(true); //Success Modal
     const [partyMembers, setPartyMembers] = useState<PartyMemberType[]>([]);
-    const getPartyMembers = async() => {
+    const getPartyMembers = React.useCallback(async () => {
         setPartyMembers(await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`));
-        
-    }
+    }, [campaign_id]);
 
     useEffect(() => {
         getPartyMembers();
-    }, []);
+    }, [getPartyMembers]);
 
     useEffect(() => {
         if (status !== "A") {
@@ -126,11 +126,14 @@ const EditMagicItemModal = ( { entry } : {entry:MagicItemsType } ) => {
                 window.location.reload();
                 setShowForm(true);
             }, 1000);
-            
         } else {
-            const errors: string[] = Object.values(response).map((error: any) => {
-                return error
-            } )
+            // Type guard for error mapping
+            const errors: string[] = Object.values(response).map((error) => {
+                if (typeof error === "string") return error;
+                if (Array.isArray(error)) return error.join(", ");
+                if (typeof error === "object" && error !== null) return JSON.stringify(error);
+                return String(error);
+            });
             setError(errors);
             setRarity(rarity);
             setStatus(status);

@@ -1,17 +1,14 @@
+# Production Dockerfile for Django
 FROM python:3.13.5-slim
 
-# set a directory for the app
 WORKDIR /usr/src/app
 
-# Copy the reuirements for installation
 COPY requirements.txt .
-
-# install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# copy all the files to the container
 COPY . .
 
-ENV DJANGO_SETTINGS_MODULE=Campaign-Django.settings
-
+# Collect static files
 RUN python manage.py collectstatic --noinput
+
+CMD ["gunicorn", "Campaign-Django.wsgi:application", "--bind", "0.0.0.0:8000"]

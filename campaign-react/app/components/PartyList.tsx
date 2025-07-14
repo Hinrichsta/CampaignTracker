@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react";
+import { useCallback } from "react";
 import { useParams  } from "next/navigation";
 import { PartyMemberType, UserType } from "@/app/hooks/DjangoTypes";
 import CampaignJournal from "@/services/django";
@@ -19,7 +20,7 @@ const PartyList = () => {
     const addPartyMemberModal = useAddPartyMemberModal();
     const editPartyMemberModal = useEditPartyMemberModal();
 
-    const getParty = async () => {
+    const getParty = useCallback(async () => {
         const party = await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`)
         const userDetails = await Promise.all(
             party.map(async (member: PartyMemberType) => {
@@ -35,11 +36,11 @@ const PartyList = () => {
         )
         setPartyMembers(party);
         setPartyUsers(userDetails.filter((u): u is UserType => u !== null));
-    }
+    }, [campaign_id]);
 
     useEffect(() => {
         getParty();
-    }, []);
+    }, [getParty]);
 
     const handleCardClick = (cardData: PartyMemberType) => {
         setEditMember(cardData);

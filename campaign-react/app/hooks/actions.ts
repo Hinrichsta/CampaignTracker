@@ -6,10 +6,8 @@
 
 'use server';
 
-import { request } from "http";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import type { NextRequest } from 'next/server'
 
 export async function handleLogin(user:string, accessToken:string, refreshToken:string) {
     const cookieStore = await cookies();
@@ -57,10 +55,11 @@ export async function clearAuth(response:string) {
 }
 
 export async function updateToken(response:string) {
+    const DJANGO = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
     try {
         const refreshToken = await getRefreshToken();
     
-        const accessToken = await fetch('/api/v1/auth/renew/', {
+        const accessToken = await fetch(`${DJANGO}/auth/renew/`, {
             method: 'POST',
             body: JSON.stringify({
                 refresh: refreshToken
@@ -87,7 +86,7 @@ export async function updateToken(response:string) {
         } else {
             return clearAuth(response);
         }
-    } catch (error) {
+    } catch {
         return clearAuth(response);
     }
 }
@@ -102,7 +101,7 @@ export async function getAuth() {
 export async function getAuthToken(response:string) {
     const cookieStore = await cookies();
     let accessToken = cookieStore.get('session_access')?.value;
-    let refreshToken = cookieStore.get('session_refresh')?.value;
+    const refreshToken = cookieStore.get('session_refresh')?.value;
 
     if (!accessToken && refreshToken){
         const update = await updateToken(response);
@@ -116,7 +115,7 @@ export async function getAuthToken(response:string) {
 
 export async function getRefreshToken() {
     const cookieStore = await cookies();
-    let refreshToken = cookieStore.get('session_refresh')?.value;
+    const refreshToken = cookieStore.get('session_refresh')?.value;
 
     return refreshToken;
 }

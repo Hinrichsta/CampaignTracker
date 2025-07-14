@@ -1,4 +1,3 @@
-import { PartyMemberType} from "@/app/hooks/DjangoTypes";
 
 interface IndivFund {
     id: string;

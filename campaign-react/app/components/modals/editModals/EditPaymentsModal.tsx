@@ -4,18 +4,19 @@
 * It will take the information from the form and pass it to the backend to be added to the database
 */
 
+
 'use client';
+import React from "react";
 
 import ModalTemplate from "../ModalTemplate";
 import { useEffect, useState } from "react";
-import { useRouter,useParams  } from "next/navigation";
+import { useParams  } from "next/navigation";
 import useEditPaymentsModal from "@/app/hooks/Modals/EditModals/useEditPaymentsModal";
 import CampaignJournal from "@/services/django";
 import { PartyMemberType } from "@/app/hooks/DjangoTypes";
 import { PayablesType } from "@/app/hooks/DjangoTypes";
 
 const EditPaymentModal = ( { entry } : { entry:PayablesType }) => {
-    const router = useRouter();
     const params = useParams();
     const { campaign_id } = params;
     const paymentModal = useEditPaymentsModal()
@@ -34,13 +35,13 @@ const EditPaymentModal = ( { entry } : { entry:PayablesType }) => {
     const [successMessage, setSuccessMessage] = useState<string | null>(null); //Success Modal
     const [showForm, setShowForm] = useState(true); //Success Modal
     const [partyMembers, setPartyMembers] = useState<PartyMemberType[]>([]);
-    const getPartyMembers = async() => {
+    const getPartyMembers = React.useCallback(async () => {
         setPartyMembers(await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`));
-    }
+    }, [campaign_id]);
 
     useEffect(() => {
         getPartyMembers();
-    }, []);
+    }, [getPartyMembers]);
 
     useEffect(() => {
         if (partyTrans) {
@@ -101,16 +102,18 @@ const EditPaymentModal = ( { entry } : { entry:PayablesType }) => {
 
             setTimeout(() => { //Success Modal
                 paymentModal.close();
-                //router.refresh();
                 window.location.reload();
                 setShowForm(true);
                 window.location.reload();
             }, 1000);
-            
         } else {
-            const errors: string[] = Object.values(response).map((error: any) => {
-                return error
-            } )
+            // Type guard for error mapping
+            const errors: string[] = Object.values(response).map((error) => {
+                if (typeof error === "string") return error;
+                if (Array.isArray(error)) return error.join(", ");
+                if (typeof error === "object" && error !== null) return JSON.stringify(error);
+                return String(error);
+            });
             setError(errors);
         }
     }

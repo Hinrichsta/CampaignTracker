@@ -7,7 +7,7 @@
 'use client';
 
 interface MenuProps {
-    label: String;
+    label: string;
     onClick: () => void;
 }
 

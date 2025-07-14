@@ -4,7 +4,6 @@
 * Template for each item in the campaign lists.
 */
 
-import Link from "next/link";
 import { PartyMemberType,UserType } from "@/app/hooks/DjangoTypes";
 
 interface PartyProps {

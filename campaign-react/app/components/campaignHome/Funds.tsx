@@ -5,7 +5,7 @@
 
 'use client'
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { PartyMemberType, ReceivablesType, PayablesType } from "@/app/hooks/DjangoTypes";
 import CampaignJournal from "@/services/django";
 import { calcIndivFunds, calcTotalFunds } from "@/app/hooks/calculations";
@@ -35,7 +35,7 @@ const FundsQuickView = () => {
         totalFunds: number;
     }
 
-    const fundsData = async () => {
+    const fundsData = useCallback(async (): Promise<void> => {
         const party = await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`)
         setPartyMembers(party);
         const user = await getAuth()
@@ -44,11 +44,11 @@ const FundsQuickView = () => {
         setReceivables(income);
         const payments = await CampaignJournal.get(`/campaigncore/${campaign_id}/payables/`);
         setPayables(payments);
-    }
+    }, [campaign_id]);
 
     useEffect(() => {
         fundsData();
-    }, []);
+    }, [fundsData]);
     
 
     useEffect(() => {

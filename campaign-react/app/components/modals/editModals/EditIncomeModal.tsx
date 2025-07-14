@@ -5,11 +5,13 @@
 */
 
 
+
 'use client';
+import React from "react";
 
 import ModalTemplate from "../ModalTemplate";
 import { useEffect, useState } from "react";
-import { useRouter,useParams  } from "next/navigation";
+import { useParams  } from "next/navigation";
 import useEditIncomeModal from "@/app/hooks/Modals/EditModals/useEditIncomeModal";
 import CampaignJournal from "@/services/django";
 import { PartyMemberType } from "@/app/hooks/DjangoTypes";
@@ -17,7 +19,6 @@ import { ReceivablesType } from "@/app/hooks/DjangoTypes";
 
 
 const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
-    const router = useRouter();
     const params = useParams();
     const { campaign_id } = params;
     const incomeModal = useEditIncomeModal()
@@ -35,14 +36,13 @@ const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
     const [successMessage, setSuccessMessage] = useState<string | null>(null); //Success Modal
     const [showForm, setShowForm] = useState(true); //Success Modal
     const [partyMembers, setPartyMembers] = useState<PartyMemberType[]>([]);
-    const getPartyMembers = async() => {
+    const getPartyMembers = React.useCallback(async () => {
         setPartyMembers(await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`));
-        
-    }
+    }, [campaign_id]);
 
     useEffect(() => {
         getPartyMembers();
-    }, []);
+    }, [getPartyMembers]);
 
     useEffect(() => {
         if (partyTrans) {
@@ -100,15 +100,18 @@ const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
 
             setTimeout(() => { //Success Modal
                 incomeModal.close();
-                router.refresh();
+                window.location.reload();
                 setShowForm(true);
                 window.location.reload();
             }, 1000);
-            
         } else {
-            const errors: string[] = Object.values(response).map((error: any) => {
-                return error
-            } )
+            // Type guard for error mapping
+            const errors: string[] = Object.values(response).map((error) => {
+                if (typeof error === "string") return error;
+                if (Array.isArray(error)) return error.join(", ");
+                if (typeof error === "object" && error !== null) return JSON.stringify(error);
+                return String(error);
+            });
             setError(errors);
         }
     };
@@ -125,13 +128,16 @@ const EditIncomeModal = ( { entry } : { entry:ReceivablesType }) => {
 
             setTimeout(() => {
                 incomeModal.close();
-                router.push(`/campaign/${campaign_id}/finances/income`);  // Redirect to the income list
                 setShowForm(true);
                 window.location.reload();  // Reload the page
             }, 1000);
         } else {
-            const errors: string[] = Object.values(response).map((error: any) => {
-                return error;
+            // Type guard for error mapping
+            const errors: string[] = Object.values(response).map((error) => {
+                if (typeof error === "string") return error;
+                if (Array.isArray(error)) return error.join(", ");
+                if (typeof error === "object" && error !== null) return JSON.stringify(error);
+                return String(error);
             });
             setError(errors);
         }

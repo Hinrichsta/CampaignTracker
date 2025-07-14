@@ -7,7 +7,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronRightIcon, ChevronLeftIcon, ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { ChevronRightIcon, ChevronLeftIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useParams } from 'next/navigation';
 
