@@ -15,6 +15,9 @@ docker-compose run django bash
 python Campaign-Django/manage.py migrate
 python Campaign-Django/manage.py createsuperuser
 exit
+
+docker-compose -f docker-compose.prod.yml exec django python manage.py migrate
+docker-compose -f docker-compose.prod.yml exec django python manage.py createsuperuser
 ```
 
 For Better Security you will need to create the environmental Variables.  Copy the .env.example, rename it to .env, and edit the default values to your liking.  Then run the commands above.
