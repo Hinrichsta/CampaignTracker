@@ -4,8 +4,6 @@
 * Stores, Gets, and Clears cookies.
 */
 
-'use server';
-
 import Cookies from 'js-cookie';
 
 export function handleLogin(user: string, accessToken: string, refreshToken: string) {
