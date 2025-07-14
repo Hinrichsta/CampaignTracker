@@ -2,11 +2,10 @@ import { getAuthToken } from "@/app/hooks/actions";
 import { get } from "http";
 
 const DJANGO = process.env.NEXT_PUBLIC_API_URL || '/api/v1';
-const NEXTJS = 'http://localhost:3000'
 
 const CampaignJournal = {
     get: async function(url: string): Promise<any> {
-        const token = await getAuthToken(NEXTJS);
+        const token = await getAuthToken();
 
         let headers: { [key: string]: string } = {
             'Content-Type': 'application/json',
@@ -32,7 +31,7 @@ const CampaignJournal = {
     },
 
     post: async function(url: string, data: any): Promise<any> {
-        const token = await getAuthToken(NEXTJS);
+        const token = await getAuthToken();
         let headers: { [key: string]: string } = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -58,7 +57,7 @@ const CampaignJournal = {
     },
 
     update: async function(url: string, data: any): Promise<any> {
-        const token = await getAuthToken(NEXTJS);
+        const token = await getAuthToken();
         let headers: { [key: string]: string } = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -84,7 +83,7 @@ const CampaignJournal = {
     },
 
     delete: async function(url: string): Promise<any> {
-        const token = await getAuthToken(NEXTJS);
+        const token = await getAuthToken();
         let headers: { [key: string]: string } = {
             'Accept': 'application/json',
         };
