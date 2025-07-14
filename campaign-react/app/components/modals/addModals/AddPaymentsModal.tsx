@@ -7,14 +7,13 @@
 'use client';
 
 import ModalTemplate from "../ModalTemplate";
-import { useEffect, useState } from "react";
-import { useRouter,useParams  } from "next/navigation";
+import { useEffect, useState, useCallback } from "react";
+import { useParams  } from "next/navigation";
 import useAddPaymentsModal from "@/app/hooks/Modals/AddModals/useAddPaymentsModal";
 import CampaignJournal from "@/services/django";
 import { PartyMemberType } from "@/app/hooks/DjangoTypes";
 
 const AddPaymentModal = () => {
-    const router = useRouter();
     const params = useParams();
     const { campaign_id } = params;
     const paymentModal = useAddPaymentsModal()
@@ -32,17 +31,16 @@ const AddPaymentModal = () => {
     const [successMessage, setSuccessMessage] = useState<string | null>(null); //Success Modal
     const [showForm, setShowForm] = useState(true); //Success Modal
     const [partyMembers, setPartyMembers] = useState<PartyMemberType[]>([]);
-    const getPartyMembers = async() => {
+    const getPartyMembers = useCallback(async () => {
         setPartyMembers(await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`));
-    }
+    }, [campaign_id]);
 
     useEffect(() => {
         getPartyMembers();
-
         const today = new Date();
         const currentDate = today.toISOString().split('T')[0]; // This gives the date in "yyyy-mm-dd" format
         setRealDate(currentDate);
-    }, []);
+    }, [getPartyMembers]);
 
     useEffect(() => {
         if (partyTrans) {
@@ -87,16 +85,21 @@ const AddPaymentModal = () => {
 
             setTimeout(() => { //Success Modal
                 paymentModal.close();
-                //router.refresh();
                 window.location.reload();
                 setShowForm(true);
                 window.location.reload();
             }, 1000);
             
         } else {
-            const errors: string[] = Object.values(response).map((error: any) => {
-                return error
-            } )
+            const errors: string[] = Object.values(response).map((error: unknown) => {
+                if (Array.isArray(error)) {
+                    return error.filter((e): e is string => typeof e === 'string').join(' ');
+                }
+                if (typeof error === 'string') {
+                    return error;
+                }
+                return '';
+            });
             setError(errors);
         }
     }

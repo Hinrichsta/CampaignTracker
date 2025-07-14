@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { MagicItemsType, PartyMemberType } from "@/app/hooks/DjangoTypes";
 import CampaignJournal from "@/services/django";
 import { useParams  } from "next/navigation";
@@ -26,16 +26,16 @@ const MagicItemsList = () => {
     const editMagicItemModal = useEditMagicItemModal();
     const addMagicItemModal = useAddMagicItemModal();
 
-    const getMagicItems = async () => {
+    const getMagicItems = useCallback(async () => {
         const party = await CampaignJournal.get(`/campaigncore/${campaign_id}/party/`)
         setPartyMembers(party);
         const income = await CampaignJournal.get(`/campaigncore/${campaign_id}/magic-items/`);
         setMagicItemData(income);
-    }
+    }, [campaign_id]);
 
     useEffect(() => {
         getMagicItems();
-    }, []);
+    }, [getMagicItems]);
 
     const rarityMapping: { [key: string]: string } = {
         C: "Common",
@@ -65,7 +65,7 @@ const MagicItemsList = () => {
             {
                 accessorKey: 'irl_date',
                 header: 'Date',
-                cell: (info: any) => String(info.getValue()),
+                cell: (info: { getValue: () => unknown }) => String(info.getValue()),
             },
             {
                 accessorKey: 'ig_date',
@@ -83,19 +83,19 @@ const MagicItemsList = () => {
             {
                 accessorKey: 'rarity',
                 header: 'Rarity',
-                cell: (info: any) => rarityMapping[info.getValue()] || 'Unknown',
+                cell: (info: { getValue: () => string }) => rarityMapping[info.getValue()] || 'Unknown',
                 enableSorting: true,
             },
             {
                 accessorKey: 'status',
                 header: 'Current Status',
-                cell: (info: any) => statusMapping[info.getValue()] || 'Unknown',
+                cell: (info: { getValue: () => string }) => statusMapping[info.getValue()] || 'Unknown',
                 enableSorting: true,
             },
             {
                 accessorKey: 'creator',
                 header: 'Source',
-                cell: (info: any) => sourceMapping[info.getValue()] || 'Unknown',
+                cell: (info: { getValue: () => string }) => sourceMapping[info.getValue()] || 'Unknown',
                 enableSorting: true,
             },
             {
@@ -118,17 +118,16 @@ const MagicItemsList = () => {
             {
                 accessorKey: 'owner_value',
                 header: 'Owner',
-                cell: (info: any) => {
+                cell: (info: { row: { original: MagicItemsType } }) => {
                     const { status, powner, vowner, howner } = info.row.original;
-
                     if (status === 'A') {
                         if (powner) {
                             const partyMember = partyMembers.find((member) => member.id === powner);
                             return partyMember ? partyMember.character_name : 'Unknown Party Member';
-                        };  // You can adjust to show name based on your logic
+                        }
                         if (vowner){
                             return `#${vowner}`;
-                        } 
+                        }
                         if (howner) {
                             return `#${howner}`;
                         }

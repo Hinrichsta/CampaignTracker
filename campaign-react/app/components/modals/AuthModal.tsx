@@ -7,7 +7,7 @@
 'use client';
 
 import ModalTemplate from "./ModalTemplate";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import useAuthModal from "@/app/hooks/Modals/useAuthModal";
 import { handleLogin } from "../../hooks/actions";
@@ -49,9 +49,15 @@ const AuthModal = () => {
             }, 1000);
             
         } else {
-            const errors: string[] = Object.values(response).map((error: any) => {
-                return error
-            } )
+            const errors: string[] = Object.values(response).map((error: unknown) => {
+                if (Array.isArray(error)) {
+                    return error.join(' ');
+                }
+                if (typeof error === 'string') {
+                    return error;
+                }
+                return '';
+            });
             setError(errors);
         }
     }

@@ -8,22 +8,22 @@
 
 'use client'
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import CampaignListItem from "./CampaignListItem";
 import CampaignJournal from "@/services/django";
 import { CampaignCoreType } from "../hooks/DjangoTypes";
 
 const PublicCampaignList = () => {
     const [campaigns, setCampaigns] = useState<CampaignCoreType[]>([]);
-    const getCampaigns = async () => {
+    const getCampaigns = useCallback(async () => {
         const endpoint = '/campaigncore/?public=True';
         const tmpCampaigns = await CampaignJournal.get(endpoint)
         setCampaigns(tmpCampaigns);
-    };
+    }, []);
 
     useEffect(() => {
         getCampaigns();
-    }, []);
+    }, [getCampaigns]);
 
     return (
         <div className="flex flex-row flex-wrap p-6">
@@ -33,8 +33,8 @@ const PublicCampaignList = () => {
                 ))
             ) : (
                 <div className="flex-col items-center justify-center text-center text-xl">
-                    <p>Unfortunately There doesn't appear to be any Public Campaigns available...</p>
-                    <p>Why don't you join us and share your campaign for everyone to view!</p>
+                    <p>Unfortunately There doesn&apos;t appear to be any Public Campaigns available...</p>
+                    <p>Why don&apos;t you join us and share your campaign for everyone to view!</p>
                 </div>
             )}
         </div>

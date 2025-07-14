@@ -8,15 +8,13 @@
 'use client';
 
 import ModalTemplate from "../ModalTemplate";
-import { useEffect, useState } from "react";
-import { useRouter,useParams  } from "next/navigation";
+import { useEffect, useState, useCallback } from "react";
+import { useParams  } from "next/navigation";
 import useAddPartyMemberModal from "@/app/hooks/Modals/AddModals/useAddPartyMemberModal";
 import CampaignJournal from "@/services/django";
 import { UserRolesType, UserType } from "@/app/hooks/DjangoTypes";
 
 const AddPartyMemberModal = () => {
-
-    const router = useRouter();
     const params = useParams();
     const { campaign_id } = params;
     const partyMemberModal = useAddPartyMemberModal();
@@ -29,7 +27,7 @@ const AddPartyMemberModal = () => {
     const [joinDate, setJoinDate] = useState("");
     const [leaveDate, setLeaveDate] = useState<string | null>(null);
     const [campaignUsers, setCampaignUsers] = useState<UserType[]>([]);
-    const getCampaignUsers = async() => {
+    const getCampaignUsers = useCallback(async () => {
         try {
             const response = await CampaignJournal.get(`/campaigncore/${campaign_id}/campaignusers/`);
             const campaignUsersList: UserRolesType[] = response?.array || response;
@@ -45,7 +43,7 @@ const AddPartyMemberModal = () => {
         } catch (error) {
             console.error('Error fetching campaign users or user roles:', error);
         }
-    }
+    }, [campaign_id]);
 
     const [error, setError] = useState<string[]>([]);
     const [successMessage, setSuccessMessage] = useState<string | null>(null); //Success Modal
@@ -53,7 +51,7 @@ const AddPartyMemberModal = () => {
 
     useEffect(() => {
         getCampaignUsers();
-    }, []);
+    }, [getCampaignUsers]);
 
     const addPartyMember = async () => {
         const memberData = {
@@ -88,16 +86,21 @@ const AddPartyMemberModal = () => {
 
             setTimeout(() => { //Success Modal
                 partyMemberModal.close();
-                //router.refresh();
                 window.location.reload();
                 setShowForm(true);
                 window.location.reload();
             }, 1000);
             
         } else {
-            const errors: string[] = Object.values(response).map((error: any) => {
-                return error
-            } )
+            const errors: string[] = Object.values(response).map((error: unknown) => {
+                if (Array.isArray(error)) {
+                    return error.filter((e): e is string => typeof e === 'string').join(' ');
+                }
+                if (typeof error === 'string') {
+                    return error;
+                }
+                return '';
+            });
             setError(errors);
         }
     }

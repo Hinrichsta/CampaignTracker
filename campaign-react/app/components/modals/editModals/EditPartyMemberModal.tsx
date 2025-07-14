@@ -5,17 +5,18 @@
 */
 
 
+
 'use client';
+import React from "react";
 
 import ModalTemplate from "../ModalTemplate";
 import { useEffect, useState } from "react";
-import { useRouter,useParams  } from "next/navigation";
+import { useParams  } from "next/navigation";
 import useEditPartyMemberModal from "@/app/hooks/Modals/EditModals/useEditPartyMemberModal";
 import CampaignJournal from "@/services/django";
 import { UserRolesType, UserType, PartyMemberType } from "@/app/hooks/DjangoTypes";
 
 const EditPartyMemberModal = ( { member } : { member:PartyMemberType}) => {
-    const router = useRouter();
     const params = useParams();
     const { campaign_id } = params;
     const partyMemberModal = useEditPartyMemberModal();
@@ -29,7 +30,7 @@ const EditPartyMemberModal = ( { member } : { member:PartyMemberType}) => {
     const [joinDate, setJoinDate] = useState("");
     const [leaveDate, setLeaveDate] = useState<string | null>(null);
     const [campaignUsers, setCampaignUsers] = useState<UserType[]>([]);
-    const getCampaignUsers = async() => {
+    const getCampaignUsers = React.useCallback(async () => {
         try {
             const response = await CampaignJournal.get(`/campaigncore/${campaign_id}/campaignusers/`);
             const campaignUsersList: UserRolesType[] = response?.array || response;
@@ -45,7 +46,7 @@ const EditPartyMemberModal = ( { member } : { member:PartyMemberType}) => {
         } catch (error) {
             console.error('Error fetching campaign users or user roles:', error);
         }
-    }
+    }, [campaign_id]);
 
     const [error, setError] = useState<string[]>([]);
     const [successMessage, setSuccessMessage] = useState<string | null>(null); //Success Modal
@@ -53,7 +54,7 @@ const EditPartyMemberModal = ( { member } : { member:PartyMemberType}) => {
 
     useEffect(() => {
         getCampaignUsers();
-    }, []);
+    }, [getCampaignUsers]);
 
     useEffect(() => {
         setEntryID(member.id)
@@ -112,11 +113,14 @@ const EditPartyMemberModal = ( { member } : { member:PartyMemberType}) => {
                 setShowForm(true);
                 window.location.reload();
             }, 1000);
-            
         } else {
-            const errors: string[] = Object.values(response).map((error: any) => {
-                return error
-            } )
+            // Type guard for error mapping
+            const errors: string[] = Object.values(response).map((error) => {
+                if (typeof error === "string") return error;
+                if (Array.isArray(error)) return error.join(", ");
+                if (typeof error === "object" && error !== null) return JSON.stringify(error);
+                return String(error);
+            });
             setError(errors);
         }
     }

@@ -1,7 +1,7 @@
 import { getAuthToken } from "@/app/hooks/actions";
 import { get } from "http";
 
-const DJANGO = 'http://localhost:8000/api/v1'
+const DJANGO = process.env.NEXT_PUBLIC_API_URL || '/api/v1';
 const NEXTJS = 'http://localhost:3000'
 
 const CampaignJournal = {
@@ -45,11 +45,7 @@ const CampaignJournal = {
             fetch(`${DJANGO}${url}`, {
                 method: 'POST',
                 body: data,
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
+                headers: headers
             })
             .then(response => response.json())
             .then((json) => {
@@ -75,11 +71,7 @@ const CampaignJournal = {
             fetch(`${DJANGO}${url}`, {
                 method: 'PUT',
                 body: data,
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
+                headers: headers
             })
             .then(response => response.json())
             .then((json) => {

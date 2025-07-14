@@ -9,14 +9,12 @@
 'use client';
 
 import ModalTemplate from "../ModalTemplate";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import useAuthModal from "@/app/hooks/Modals/useAuthModal";
 import { handleLogin } from "../../../hooks/actions";
 import CampaignJournal from "@/services/django";
 
 const AuthModal = () => {
-    const router = useRouter();
     const authModal = useAuthModal()
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -36,26 +34,26 @@ const AuthModal = () => {
         );
 
         if (response.access) {
-            handleLogin(response.id as string,response.access,response.refresh)
-            
-
-            setUsername("")
-            setPassword("")
-            setError([])
-
-            setShowForm(false);//Success Modal
+            handleLogin(response.id as string, response.access, response.refresh);
+            setUsername("");
+            setPassword("");
+            setError([]);
+            setShowForm(false); //Success Modal
             setSuccessMessage("Successfully Authenticated!"); //Success Modal
-
-            setTimeout(() => { //Success Modal
+            setTimeout(() => {
                 authModal.close();
-                router.refresh();
                 setShowForm(true);
             }, 1000);
-            
         } else {
-            const errors: string[] = Object.values(response).map((error: any) => {
-                return error
-            } )
+            const errors: string[] = Object.values(response).map((error: unknown) => {
+                if (Array.isArray(error)) {
+                    return error.filter((e): e is string => typeof e === 'string').join(' ');
+                }
+                if (typeof error === 'string') {
+                    return error;
+                }
+                return '';
+            });
             setError(errors);
         }
     }

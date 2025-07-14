@@ -62,9 +62,15 @@ const JoinModal = () => {
             }, 1000);
 
         } else {
-            const errors: string[] = Object.values(response).map((error: any) => {
-                return error
-            } )
+            const errors: string[] = Object.values(response).map((error: unknown) => {
+                if (Array.isArray(error)) {
+                    return error.join(' ');
+                }
+                if (typeof error === 'string') {
+                    return error;
+                }
+                return '';
+            });
             setError(errors);
         }
     }

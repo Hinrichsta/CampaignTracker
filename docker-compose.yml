@@ -28,18 +28,18 @@ services:
       - path: ".env"
         required: false
   
-#  react:
-#    build: ./campaign-react
-#    ports: 
-#      - 3000:3000
-#    command: npm run dev
-#    depends_on:
-#      - django
-#    env_file:
-#      - path: ".env"
-#    environment:
-#      - NODE_ENV=development
-#      - NEXT_PUBLIC_API_URL=http://127.0.0.1:8000/api/v1
+  react:
+    build: ./campaign-react
+    ports: 
+      - 3000:3000
+    command: npm run dev
+    depends_on:
+      - django
+    env_file:
+      - path: ".env"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://127.0.0.1:8000/api/v1
     
 
 volumes:
