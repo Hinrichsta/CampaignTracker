@@ -10,7 +10,7 @@ import ModalTemplate from "./ModalTemplate";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import useAuthModal from "@/app/hooks/Modals/useAuthModal";
-import { handleLogin } from "../../hooks/actions";
+import { login } from "@/services/auth";
 import CampaignJournal from "@/services/django";
 
 const AuthModal = () => {
@@ -21,33 +21,31 @@ const AuthModal = () => {
     const [error, setError] = useState<string[]>([]);
     const [successMessage, setSuccessMessage] = useState<string | null>(null); //Success Modal
     const [showForm, setShowForm] = useState(true); //Success Modal
+    
 
-    const submitAuth = async () =>{
-        const authData = {
-            username: username,
-            password: password
-        }
-        const response = await CampaignJournal.post(
-            '/auth/login/',
-            JSON.stringify(authData)
-        );
+    const submitAuth = async () => {
+            const authData = {
+                username: username,
+                password: password
+            };
+            // Authenticate with Django API
+            const response = await CampaignJournal.post(
+                '/auth/login/',
+                JSON.stringify(authData)
+            );
         if (response.access) {
-            handleLogin(response.id as string,response.access,response.refresh)
-            
-
-            setUsername("")
-            setPassword("")
-            setError([])
-
-            setShowForm(false);//Success Modal
+            login(response)
+            setUsername("");
+            setPassword("");
+            setError([]);
+            setShowForm(false); //Success Modal
             setSuccessMessage("Successfully Authenticated!"); //Success Modal
-
-            setTimeout(() => { //Success Modal
+            setTimeout(() => {
                 authModal.close();
-                router.push('/home');
+                // Reload page to update SSR state
+                window.location.href = '/home';
                 setShowForm(true);
             }, 1000);
-            
         } else {
             const errors: string[] = Object.values(response).map((error: unknown) => {
                 if (Array.isArray(error)) {
@@ -60,7 +58,7 @@ const AuthModal = () => {
             });
             setError(errors);
         }
-    }
+    };
 
     const content = (
         <div className="p-6">

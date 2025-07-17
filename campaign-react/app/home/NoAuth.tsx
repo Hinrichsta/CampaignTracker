@@ -12,7 +12,7 @@ import useJoinModal from "@/app/hooks/Modals/useJoinModal";
 const NoAuthButtons = () => {
     const authModal = useAuthModal();
     const joinModal = useJoinModal();
-
+    
     return (
         <div className="flex-col  items-center justify-center text-center">
             <h2 className="text-2xl">Please Log In to View Campaigns</h2>
@@ -25,7 +25,7 @@ const NoAuthButtons = () => {
             </button>
             <h2 className="text-2xl">Or Feel free to look around at some of the Publically Viewable Campaigns</h2>
         </div>
-    )
+    );
 }
 
 export default NoAuthButtons;

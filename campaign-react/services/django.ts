@@ -1,17 +1,17 @@
-import { getAuthToken } from "@/app/hooks/actions";
+import { getAccess } from "./auth";
 import { get } from "http";
 
 const DJANGO = process.env.NEXT_PUBLIC_API_URL || '/api/v1';
 
 const CampaignJournal = {
     get: async function(url: string): Promise<any> {
-        const token = await getAuthToken();
+        const token = await getAccess();
 
         let headers: { [key: string]: string } = {
             'Content-Type': 'application/json',
         };
         
-        if (token !== null){
+        if (token !== null || undefined){
             headers['Authorization'] = `Bearer  ${token}`;
         }
         
@@ -31,12 +31,12 @@ const CampaignJournal = {
     },
 
     post: async function(url: string, data: any): Promise<any> {
-        const token = await getAuthToken();
+        const token = await getAccess();
         let headers: { [key: string]: string } = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         };
-        if (token !== undefined){
+        if (token !== null || undefined){
             headers['Authorization'] = `Bearer  ${token}`;
         }
 
@@ -57,12 +57,12 @@ const CampaignJournal = {
     },
 
     update: async function(url: string, data: any): Promise<any> {
-        const token = await getAuthToken();
+        const token = await getAccess();
         let headers: { [key: string]: string } = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         };
-        if (token !== undefined){
+        if (token !== null || undefined){
             headers['Authorization'] = `Bearer  ${token}`;
         }
         console.log(data)
@@ -83,11 +83,11 @@ const CampaignJournal = {
     },
 
     delete: async function(url: string): Promise<any> {
-        const token = await getAuthToken();
+        const token = await getAccess();
         let headers: { [key: string]: string } = {
             'Accept': 'application/json',
         };
-        if (token !== undefined){
+        if (token !== null || undefined){
             headers['Authorization'] = `Bearer  ${token}`;
         }
 

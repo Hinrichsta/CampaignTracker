@@ -11,8 +11,7 @@ services:
       - '5432:5432'
     restart: "always"
     env_file:
-      - path: ".env"
-        required: false
+      - ".env"
   
   django:
     build: ./Campaign-Django
@@ -36,10 +35,6 @@ services:
       - django
     env_file:
       - ".env"
-
-    environment:
-      - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://127.0.0.1:8000/api/v1
     
 volumes:
   postgres_data: {}

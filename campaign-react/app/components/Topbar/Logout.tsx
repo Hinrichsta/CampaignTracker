@@ -5,23 +5,19 @@
 */
 
 'use client';
-
-import { useRouter } from "next/navigation";
-import { logOut } from "@/app/hooks/actions";
+import { redirect } from "next/navigation";
+import { logout } from "@/services/auth";
 import MenuLinks from "./MenuLinks";
 
 const Logout: React.FC = () => {
-    const router = useRouter();
-
-    const logout = async () => {
-        logOut();
-        router.push('/home')
+    const remove = async () => {
+        logout();
+        redirect('/home')
     }
-
     return (
         <MenuLinks 
             label='Logout'
-            onClick={logout}
+            onClick={remove}
         />
     )
 }

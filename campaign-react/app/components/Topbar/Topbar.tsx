@@ -6,11 +6,13 @@
 
 import Link from "next/link";
 import UserButton from "./UserButton";
-import { getAuth } from "@/app/hooks/actions";
+import { getUserID } from "@/services/auth";
 import CreateCampaignButton from "./CreateCampaign";
 
+
+
 const Topbar = async() => {
-    const userAuth = await getAuth();
+    const userAuth = await getUserID();
 
     return(
         <div className="flex h-24 shrink-0 items-center justify-items-center rounded-lg bg-blue-900 p-4">

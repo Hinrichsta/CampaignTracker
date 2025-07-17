@@ -1,43 +1,46 @@
-import { NextRequest, NextResponse } from "next/server";
+import { encrypt } from "./auth";
+import { cookies } from "next/headers";
+import CampaignJournal from "@/services/django";
 
-export async function POST(req: NextRequest) {
-  try {
-    const { user, accessToken, refreshToken } = await req.json();
 
-    if (!user || !accessToken || !refreshToken) {
-      return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
+export async function login(username: string, password: string) {
+    const cookieStore = await cookies();
+    const authData = {
+        username: username,
+        password: password
+    };
+    // Authenticate with Django API
+    const response = await CampaignJournal.post(
+        '/auth/login/',
+        JSON.stringify(authData)
+    );
+    
+    if (response.access) {
+        const userID = encrypt(response, "1 day")
+        const accessToken = encrypt(response.access, "1 hour")
+        const refreshToken = encrypt(response.refresh, "1 day")
+
+        cookieStore.set('session_id', String(userID), {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 86400, //One day in seconds
+            sameSite: 'strict',
+            path: '/'
+        });
+        cookieStore.set('session_access', String(accessToken), {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 3600, //60 minutes in seconds
+            path: '/'
+        });
+        cookieStore.set('session_refresh', String(refreshToken), {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 86400, //One day in seconds
+            sameSite: 'strict',
+            path: '/'
+        });
+        return response;
     }
-
-    const res = NextResponse.json({ success: true });
-
-    // Set secure, HttpOnly cookies
-    res.cookies.set('session_user', user, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 86400, // 1 day
-      sameSite: 'strict',
-      path: '/',
-    });
-
-    res.cookies.set('session_access', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 3600, // 1 hour
-      sameSite: 'strict',
-      path: '/',
-    });
-
-    res.cookies.set('session_refresh', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 86400,
-      sameSite: 'strict',
-      path: '/',
-    });
-
-    return res;
-
-  } catch (error) {
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
-  }
+    return response;
 }
