@@ -157,4 +157,9 @@ REST_FRAMEWORK = {
     ),
 }
 
-CORS_ALLOWED_ORIGINS = os.environ.get('DJANGO_CORS_HOSTS', '').split(',') if os.environ.get('DJANGO_CORS_HOSTS') else []
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost",
+]
+
+#CORS_ALLOW_ALL_ORIGINS = True
