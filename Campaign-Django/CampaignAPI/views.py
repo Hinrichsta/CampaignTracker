@@ -58,9 +58,8 @@ class UserJoin_Views(viewsets.ModelViewSet):
         serializer = UserJoin_Serial(data=request.data)
 
         if  serializer.is_valid():
-            user = serializer.save()
-            response_data = serializer.data
-            return Response(response_data, status=status.HTTP_201_CREATED)
+            response = serializer.save()
+            return Response(response, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
