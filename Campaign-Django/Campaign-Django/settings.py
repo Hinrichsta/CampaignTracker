@@ -96,6 +96,9 @@ DATABASES = {
         'PASSWORD': os.environ.get("DJANGO_DB_PASSWORD", os.environ.get("POSTGRES_PASSWORD", "insecure561!$")),
         'HOST': os.environ.get("DJANGO_DB_HOST", os.environ.get("POSTGRES_HOST", "postgres")),
         'PORT': os.environ.get("DJANGO_DB_PORT", os.environ.get("POSTGRES_PORT", "5432")),
+        'OPTIONS': {
+            'sslmode': os.environ.get("DJANGO_DB_SSL"),
+            },
     }
 }
 
