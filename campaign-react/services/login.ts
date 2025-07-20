@@ -24,20 +24,21 @@ export async function login(username: string, password: string) {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             maxAge: 86400, //One day in seconds
-            sameSite: 'strict',
+            sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax",
             path: '/'
         });
         cookieStore.set('session_access', String(accessToken), {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             maxAge: 3600, //60 minutes in seconds
+            sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax",
             path: '/'
         });
         cookieStore.set('session_refresh', String(refreshToken), {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             maxAge: 86400, //One day in seconds
-            sameSite: 'strict',
+            sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax",
             path: '/'
         });
         return response;
